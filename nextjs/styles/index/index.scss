@@ -1,3 +1,54 @@
+@import '../variables.scss';
+// reset
 body {
-    display: none;
+    margin: 0;
+    font-family: 'Karla', sans-serif;
+}
+a {
+    text-decoration: none;
+}
+li {
+    list-style: none;
+}
+
+.container {
+    max-width: 1264px;
+    width: 100%;
+    margin: 0 auto;
+}
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 73px;
+    padding: 0 16px;
+    &__link {
+        display: inline-block;
+        padding: 0 8px;
+        font-size: 25px;
+        &:last-of-type {
+            padding-right: 0;
+        }
+        a {
+            color: $black;
+        }
+    }
+}
+.banner {
+    display: flex;
+    padding: 200px 0 0;
+    justify-content: space-between;
+    color: $black;
+    &__desc {
+        width: 50%;
+    }
+    &__heading {
+        font-size: 67px;
+        line-height: 78px;
+    }
+    &__text {
+        font-size: 28px;
+        line-height: 33px;
+        font-weight: 300;
+        padding-bottom: 10px;
+    }
 }

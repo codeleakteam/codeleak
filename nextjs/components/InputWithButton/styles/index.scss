@@ -1,0 +1,45 @@
+@import '../../../styles/variables.scss';
+.early-access {
+    &__container {
+        height: 71px;
+        box-sizing: border-box;
+        display: flex;
+    }
+    &__input {
+        border: 1px solid $green;
+        font-size: 25px;
+        padding: 0 30px;
+        height: 100%;
+        box-sizing: border-box;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        &::placeholder {
+            color: $black;
+            font-size: 25px;
+        }
+        &:focus,
+        &:active {
+            outline: none;
+        }
+    }
+    &__button {
+        -webkit-appearance: button;
+        border: 0;
+        background-color: $green;
+        color: white;
+        height: 100%;
+        box-sizing: border-box;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        font-size: 25px;
+        padding: 0 15px;
+        cursor: pointer;
+        &:focus,
+        &:active {
+            outline: none;
+        }
+    }
+    &__msg {
+        color: red;
+    }
+}
