@@ -21,15 +21,18 @@ li {
     justify-content: space-between;
     margin-top: 73px;
     padding: 0 16px;
-    &__link {
+    &__list-item {
         display: inline-block;
         padding: 0 8px;
         font-size: 25px;
         &:last-of-type {
             padding-right: 0;
         }
-        a {
-            color: $black;
+    }
+    &__link {
+        color: $black;
+        &--active {
+            color: $green;
         }
     }
 }

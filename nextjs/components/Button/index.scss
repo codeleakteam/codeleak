@@ -1,0 +1,26 @@
+@import '../../styles/variables.scss';
+
+.button {
+    -webkit-appearance: button;
+    border: 0;
+    color: white;
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 25px;
+    padding: 0 15px;
+    cursor: pointer;
+    border: 1px solid;
+    &--green {
+        color: white;
+        border-color: $green;
+        background-color: $green;
+    }
+    &--subscribe {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+    &:focus,
+    &:active {
+        outline: none;
+    }
+}

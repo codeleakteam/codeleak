@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import Button from '../Button'
 import './styles/index.scss'
 
 class InputWithButton extends Component {
@@ -29,9 +29,11 @@ class InputWithButton extends Component {
                         onChange={this.handleEmail}
                         value={this.state.email}
                     />
-                    <button className="early-access__button" onClick={this.submitEmail}>
-                        Get Early Access
-                    </button>
+                    <Button
+                        className="button--green button--subscribe"
+                        onClick={this.submitEmail}
+                        text="Get Early Access"
+                    />
                 </div>
                 {!this.state.valid && this.state.email && (
                     <span className="early-access__msg">Email Address is not valid!</span>

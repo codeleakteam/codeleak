@@ -22,23 +22,6 @@
             outline: none;
         }
     }
-    &__button {
-        -webkit-appearance: button;
-        border: 0;
-        background-color: $green;
-        color: white;
-        height: 100%;
-        box-sizing: border-box;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        font-size: 25px;
-        padding: 0 15px;
-        cursor: pointer;
-        &:focus,
-        &:active {
-            outline: none;
-        }
-    }
     &__msg {
         color: red;
     }
