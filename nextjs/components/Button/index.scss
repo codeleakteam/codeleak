@@ -1,4 +1,5 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .button {
     -webkit-appearance: button;
@@ -18,6 +19,11 @@
     &--subscribe {
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
+        min-width: 153px;
+        @include breakpoint($tablet) {
+            width: 20%;
+            font-size: 18px;
+        }
     }
     &:focus,
     &:active {
