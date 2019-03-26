@@ -2,31 +2,32 @@
 @import '../../styles/mixins.scss';
 
 .button {
-    -webkit-appearance: button;
-    border: 0;
+  -webkit-appearance: button;
+  border: 0;
+  color: white;
+  height: 100%;
+  box-sizing: border-box;
+  font-size: 25px;
+  padding: 0 15px;
+  cursor: pointer;
+  border: 1px solid;
+  &--subscribe {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    min-width: 153px;
     color: white;
-    height: 100%;
-    box-sizing: border-box;
-    font-size: 25px;
-    padding: 0 15px;
-    cursor: pointer;
-    border: 1px solid;
-    &--green {
-        color: white;
-        border-color: $green;
-        background-color: $green;
+    border-color: $green;
+    background-color: $green;
+    @include breakpoint($tablet) {
+      width: 20%;
+      font-size: 18px;
     }
-    &--subscribe {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        min-width: 153px;
-        @include breakpoint($tablet) {
-            width: 20%;
-            font-size: 18px;
-        }
+    @include breakpoint($mobile) {
+      min-width: 110px;
     }
-    &:focus,
-    &:active {
-        outline: none;
-    }
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
 }

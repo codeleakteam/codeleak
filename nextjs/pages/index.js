@@ -4,8 +4,9 @@ import Head from 'next/head'
 import InputWithButton from '../components/InputWithButton'
 import BurgerMenu from '../components/BurgerMenu'
 import SideMenu from '../components/SideMenu'
+import Navigation from '../components/Navigation'
 
-import '../styles/index/index.scss'
+import classes from '../styles/index/index.scss'
 
 class Index extends Component {
   state = {
@@ -20,58 +21,39 @@ class Index extends Component {
     return (
       <React.Fragment>
         <Head>
-          <title>Codeile</title>
+          <title>codeLeak</title>
         </Head>
-        <div className="container">
-          <nav className="navigation">
-            <div className="navigation__logo">
-              <img src="https://dummyimage.com/50x50/000/fff" />
-            </div>
-            <ul className="navigation__list">
-              <li className="navigation__list-item">
-                <Link href="/">
-                  <a className="navigation__link">Blog</a>
-                </Link>
-              </li>
-              <li className="navigation__list-item">
-                <Link href="/">
-                  <a className="navigation__link navigation__link--active">Get early access</a>
-                </Link>
-              </li>
-            </ul>
-            <BurgerMenu menuActive={this.state.menuActive} handleBurgerMenu={this.handleBurgerMenu} />
-          </nav>
-          <section className="banner">
-            <div className="banner__desc">
-              <h1 className="banner__heading">Codeile</h1>
-              <h3 className="banner__text">
+
+        <div className={classes.container}>
+          <Navigation
+            menuActive={this.state.menuActive}
+            handleBurgerMenu={this.handleBurgerMenu}
+            logo={true}
+            burger={true}
+            responsive={false}
+          />
+          <section className={classes.banner}>
+            <div className={classes.banner__desc}>
+              <h1 className={classes.banner__heading}>codeLeak</h1>
+              <h3 className={classes.banner__text}>
                 An online-editor based question and answer platform for front-end developers
               </h3>
               <InputWithButton />
             </div>
-            <div className="banner__image">
+            <div className={classes.banner__image}>
               <img src="https://dummyimage.com/300x300/000/fff" />
             </div>
           </section>
         </div>
+
         <SideMenu menuActive={this.state.menuActive}>
-          <nav className="navigation--responsive">
-            <div className="navigation__logo--responsive">
-              <img src="https://dummyimage.com/50x50/000/fff" />
-            </div>
-            <ul className="navigation__list--responsive">
-              <li className="navigation__list-item">
-                <Link href="/">
-                  <a className="navigation__link">Blog</a>
-                </Link>
-              </li>
-              <li className="navigation__list-item">
-                <Link href="/">
-                  <a className="navigation__link navigation__link--active">Get early access</a>
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <Navigation
+            menuActive={this.state.menuActive}
+            handleBurgerMenu={this.handleBurgerMenu}
+            logo={false}
+            burger={false}
+            responsive={true}
+          />
         </SideMenu>
       </React.Fragment>
     )

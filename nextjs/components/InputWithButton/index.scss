@@ -1,0 +1,49 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.container {
+  height: 71px;
+  box-sizing: border-box;
+  display: flex;
+  @include breakpoint($tablet) {
+    height: 60px;
+  }
+}
+.input {
+  border: 1px solid $green;
+  font-size: 25px;
+  padding: 0 30px;
+  height: 100%;
+  box-sizing: border-box;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  flex: 1;
+  width: 100%;
+  &::placeholder {
+    color: $black;
+    font-size: 25px;
+    @include breakpoint($tablet) {
+      font-size: 18px;
+    }
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
+  @include breakpoint($tablet) {
+    width: 80%;
+    font-size: 18px;
+  }
+}
+
+.msg {
+  font-weight: 700;
+  display: block;
+  padding: 4px 0;
+  &--error {
+    color: red;
+  }
+  &--success {
+    color: green;
+  }
+}

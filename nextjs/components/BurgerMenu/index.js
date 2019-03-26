@@ -1,14 +1,20 @@
 import React from 'react'
-import './index.scss'
+import PropTypes from 'prop-types'
 
-const BurgerMenu = props => {
-    return (
-        <div className="burger" onClick={props.handleBurgerMenu}>
-            <div />
-            <div />
-            <div />
-        </div>
-    )
+import classes from './index.scss'
+
+const BurgerMenu = ({ handleBurgerMenu }) => {
+  return (
+    <div className={classes.burger} onClick={handleBurgerMenu}>
+      <div />
+      <div />
+      <div />
+    </div>
+  )
+}
+
+BurgerMenu.propTypes = {
+  handleBurgerMenu: PropTypes.func.isRequired,
 }
 
 export default BurgerMenu
