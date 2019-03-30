@@ -16,8 +16,8 @@
     border-bottom-right-radius: 3px;
     min-width: 153px;
     color: white;
-    border-color: $green;
-    background-color: $green;
+    border-color: $blue;
+    background-color: $blue;
     @include breakpoint($tablet) {
       width: 20%;
       font-size: 18px;
