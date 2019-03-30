@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button } from 'antd'
 
 import classes from '../styles/signupAndSignIn/index.scss'
 
-class SignUp extends Component {
+class SignIn extends Component {
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
@@ -55,30 +55,12 @@ class SignUp extends Component {
             )}
           </Form.Item>
           <Form.Item>
-            {getFieldDecorator(
-              'repeatPassword',
-              {
-                rules: [{ required: true, message: 'Please repeat your Password!' }],
-              },
-              {
-                validator: this.compareToFirstPass,
-              }
-            )(
-              <Input
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type="password"
-                placeholder="Repeat password"
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className={['login-form-button', classes['btn--register']].join(' ')}
-            >
-              Register
+            <Button type="primary" htmlType="submit" className={['login-form-button', classes['btn--login']].join(' ')}>
+              Login
             </Button>
+            <a className="login-form-forgot" href="">
+              Forgot password
+            </a>
           </Form.Item>
         </Form>
       </div>
@@ -86,6 +68,6 @@ class SignUp extends Component {
   }
 }
 
-const WrapperSignUpForm = Form.create({ name: 'signup' })(SignUp)
+const WrapperSignInForm = Form.create({ name: 'signin' })(SignIn)
 
-export default WrapperSignUpForm
+export default WrapperSignInForm
