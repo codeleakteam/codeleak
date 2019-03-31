@@ -1,0 +1,18 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 1px solid $lightBlack;
+  padding: 8px;
+  border-radius: 4px;
+}
+.tag {
+  width: 28%;
+  margin: 4px 0;
+  text-align: center;
+  @include breakpoint($tablet) {
+    width: 45%;
+  }
+}
