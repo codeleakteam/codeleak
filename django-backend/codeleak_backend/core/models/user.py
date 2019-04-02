@@ -1,6 +1,12 @@
 from django.db import models
 from django.utils import timezone
 
+GENDER_CHOICES = (
+    ('MALE', 'Male'),
+    ('FEMALE', 'Female'),
+    ('OTHER', 'Other'),
+)
+
 class User(models.Model):
     # Required
     email = models.EmailField()
@@ -8,6 +14,7 @@ class User(models.Model):
     password_hash = models.CharField(max_length=255, blank=False, null=False)
     # Optional
     full_name = models.CharField(max_length=255, blank=True, null=True)
+    avatar = models.URLField(blank=True, null=True)
     biography = models.CharField(max_length=255, blank=True, null=True)
     website_url = models.URLField(blank=True, null=True)
     cv_url = models.URLField(blank=True, null=True)
@@ -17,7 +24,7 @@ class User(models.Model):
     company_headquarters = models.CharField(max_length=100, blank=True, null=True)
     role_in_company = models.CharField(max_length=150, blank=True, null=True)
     location = models.CharField(max_length=150, blank=True, null=True)
-    gender = models.CharField(max_length=10, blank=True, null=True)
+    gender = models.CharField(max_length=10, blank=True, null=True, choices=GENDER_CHOICES)
     birth = models.DateField(blank=True, null=True)
     # Flags
     student = models.BooleanField(default=False, blank=True, null=False)

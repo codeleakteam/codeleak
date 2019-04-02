@@ -11,3 +11,6 @@ class Tag(models.Model):
     created_at = models.DateTimeField(default=timezone.now, blank=True, null=False)
     modified_at = models.DateTimeField(auto_now=True, blank=True, null=False)
     deleted_at = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.title

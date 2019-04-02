@@ -7,3 +7,6 @@ class Editor(models.Model):
     # Timestmaps
     created_at = models.DateTimeField(default=timezone.now, blank=True, null=False)
     modified_at = models.DateTimeField(auto_now=True, blank=True, null=False)
+    
+    def __str__(self):
+        return self.name
