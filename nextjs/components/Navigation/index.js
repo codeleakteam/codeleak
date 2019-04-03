@@ -1,29 +1,21 @@
 import React from 'react'
-import Link from 'next/link'
-import BurgerMenu from '../BurgerMenu'
 import Logo from '../Logo'
 import PropTypes from 'prop-types'
+import LoggedInNav from './LoggedInNav'
+import LoggedOutNav from './LoggedOutNav'
 
 import classes from './index.scss'
 
-const Navigation = ({ menuActive, handleBurgerMenu, logo, burger, responsive }) => {
-  let responsiveMenu = responsive ? classes['navigation__list--responsive'] : classes.navigation__list
+const Navigation = ({ menuActive, handleBurgerMenu, logo, burger, responsive, loggedIn }) => {
+  let renderNav = loggedIn ? (
+    <LoggedInNav menuActive={menuActive} handleBurgerMenu={handleBurgerMenu} responsive={responsive} burger={burger} />
+  ) : (
+    <LoggedOutNav responsive={responsive} menuActive={menuActive} handleBurgerMenu={handleBurgerMenu} burger={burger} />
+  )
   return (
-    <nav className={classes.navigation}>
+    <nav className={classes.navigation__container}>
       {logo && <Logo />}
-      <ul className={responsiveMenu}>
-        <li className={classes.navigation__listItem}>
-          <Link href="/">
-            <a className={classes.navigation__link}>Blog</a>
-          </Link>
-        </li>
-        <li className={classes.navigation__listItem}>
-          <Link href="/">
-            <a className={[classes.navigation__link, classes.navigation__linkActive].join(' ')}>Get early access</a>
-          </Link>
-        </li>
-      </ul>
-      {burger && <BurgerMenu menuActive={menuActive} handleBurgerMenu={handleBurgerMenu} />}
+      {renderNav}
     </nav>
   )
 }

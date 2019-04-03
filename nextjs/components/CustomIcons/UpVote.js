@@ -2,8 +2,6 @@ import React from 'react'
 import { Icon } from 'antd'
 
 const quoraUpvote = props => {
-  console.log(props)
-
   return (
     <svg
       // width={props.width}

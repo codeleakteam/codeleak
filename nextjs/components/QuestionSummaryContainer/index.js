@@ -1,9 +1,11 @@
 import React from 'react'
 import QuestionSummary from '../QuestionSummary'
 
-const QuestionSummaryContainer = props => {
+import classes from './index.scss'
+
+const QuestionSummaryContainer = ({ loggedIn }) => {
   return (
-    <React.Fragment>
+    <div className={!loggedIn ? classes['summary__container--logged-out'] : null}>
       <QuestionSummary />
       <QuestionSummary />
       <QuestionSummary />
@@ -14,7 +16,7 @@ const QuestionSummaryContainer = props => {
       <QuestionSummary />
       <QuestionSummary />
       <QuestionSummary />
-    </React.Fragment>
+    </div>
   )
 }
 

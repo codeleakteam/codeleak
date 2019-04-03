@@ -72,6 +72,17 @@ class SignUp extends Component {
             )}
           </Form.Item>
           <Form.Item>
+            {getFieldDecorator('displayName', {
+              rules: [{ required: true, message: 'Please input display name!' }],
+            })(
+              <Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type="text"
+                placeholder="Display name "
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
