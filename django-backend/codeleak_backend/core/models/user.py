@@ -2,9 +2,9 @@ from django.db import models
 from django.utils import timezone
 
 GENDER_CHOICES = (
-    ('MALE', 'Male'),
-    ('FEMALE', 'Female'),
-    ('OTHER', 'Other'),
+    ('Male', 'Male'),
+    ('Female', 'Female'),
+    ('Other', 'Other'),
 )
 
 class User(models.Model):
