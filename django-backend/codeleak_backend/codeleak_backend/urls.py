@@ -16,10 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
-from core.views.home import home_get
+from core.views.home import HomeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home', home_get),
+    path('api/home', HomeView.as_view()),
     url(r'^api-auth/', include('rest_framework.urls'))
 ]

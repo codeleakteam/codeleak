@@ -10,4 +10,4 @@ class QuestionSerializer(serializers.ModelSerializer):
     tags = TagSerializerMinimal(many=True)
     class Meta:
         model = Question
-        fields = '__all__' 
+        fields = '__all__'

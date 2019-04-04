@@ -1,3 +1,3 @@
-from .home import home_get
+from .home import HomeView
 
-__all__ = ['home_get']
+__all__ = ['HomeView']
