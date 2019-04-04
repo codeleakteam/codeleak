@@ -25,6 +25,7 @@
     margin: 0 auto;
     z-index: 1;
     position: relative;
+    margin-bottom: 36px;
     @include breakpoint($mobile) {
       margin-top: 16px;
     }
