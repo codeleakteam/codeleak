@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
-from core.views import HomeView, user_question_tag_search
+from core.views import HomeView, QuestionView, user_question_tag_search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/home', HomeView.as_view()),
+    path('api/questions', QuestionView.as_view()),
     path('api/search', user_question_tag_search),
     url(r'^api-auth/', include('rest_framework.urls'))
 ]

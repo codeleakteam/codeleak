@@ -4,7 +4,7 @@ from .tag import Tag
 
 class Question(models.Model):
     # Required
-    title = models.CharField(max_length=150, blank=True, null=True)
+    title = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
     slug = models.SlugField(blank=False, null=False)
     # Optional
