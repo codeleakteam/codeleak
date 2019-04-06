@@ -3,6 +3,8 @@ import { Input, Button } from 'antd'
 import InputLabel from '../InputLabel'
 import TechnologyStack from '../TechnologyStack'
 
+import classes from './index.scss'
+
 const { TextArea } = Input
 
 const AskQuestion = () => {
@@ -18,7 +20,9 @@ const AskQuestion = () => {
       <Input placeholder="Enter codeSandbox url" type="primary" />
       <InputLabel text="Tags" />
       <Input placeholder="Enter tags" type="primary" />
-      <Button type="primary">Post question</Button>
+      <Button type="primary" className={classes['ask-question__btn']}>
+        Post question
+      </Button>
     </div>
   )
 }

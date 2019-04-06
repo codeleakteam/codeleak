@@ -2,7 +2,7 @@
 @import '../../styles/variables.scss';
 .question {
   &__container {
-    border: 1px solid $lightBlack;
+    border: 1px solid $antGray;
     border-radius: 3px;
     padding: 8px;
     display: flex;
@@ -53,7 +53,7 @@
     }
   }
   &__name {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 28px;
     color: $blue;
     margin-right: 8px;
@@ -79,6 +79,7 @@
     right: 4px;
     bottom: 0;
     display: block;
+    color: $lightBlack;
     max-width: 130px;
     cursor: pointer;
     @include breakpoint($mobile) {
@@ -89,10 +90,9 @@
 
 .icon,
 .icon svg {
-  font-size: 20px;
-  width: 20px;
+  // font-size: 20px;
+
   @include breakpoint($mobile) {
-    font-size: 15px;
-    width: 15px;
+    // font-size: 15px;
   }
 }

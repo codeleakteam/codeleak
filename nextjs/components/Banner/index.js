@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd'
+import Logo from '../Logo'
 
 import classes from './index.scss'
 
@@ -19,7 +20,7 @@ class Banner extends Component {
       <div className={classes.banner}>
         <div className={classes.banner__container}>
           <div className={classes.banner__text}>
-            <h2 className={classes.banner__heading}>codeLeak</h2>
+            <Logo />
             <p className={classes.banner__description}>
               An online-editor based question and answer platform for front-end developers
             </p>

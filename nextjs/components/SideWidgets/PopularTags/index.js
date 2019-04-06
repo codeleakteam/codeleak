@@ -1,5 +1,5 @@
 import React from 'react'
-import TagWithLink from '../TagWithLink'
+import TagWithLink from '../../TagWithLink'
 
 import classes from './index.scss'
 

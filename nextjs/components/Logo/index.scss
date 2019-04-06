@@ -4,5 +4,9 @@
 .logo {
   font-size: 32px;
   color: $black;
+  font-weight: 500;
   cursor: pointer;
+  &__blue-side {
+    color: $clblue;
+  }
 }
