@@ -1,4 +1,5 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 .tech {
   &__container {
     display: flex;
@@ -7,10 +8,32 @@
   }
   &__box {
     border: 1px solid $black;
-    min-width: 150px;
+    flex: 1;
     padding: 8px;
     margin: 4px;
     color: white;
+    background-color: #1c2021;
     border-radius: 3px;
+    display: inline-block;
+    cursor: pointer;
+    @include breakpoint($tablet) {
+      width: 33%;
+      flex: auto;
+      &:last-child {
+        width: 100%;
+      }
+    }
+    @include breakpoint($mobile) {
+      width: 100%;
+    }
+    &--dropdown {
+      display: block;
+      margin: 4px 0;
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+  &__dropdown-arrow {
+    margin-left: auto;
   }
 }

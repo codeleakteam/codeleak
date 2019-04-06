@@ -2,7 +2,7 @@ import React from 'react'
 import App, { Container } from 'next/app'
 import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
-import PopularTags from '../components/PopularTags'
+// import PopularTags from '../components/PopularTags'
 import Footer from '../components/Footer'
 
 import TwoSideLayout from '../components/TwoSideLayout'

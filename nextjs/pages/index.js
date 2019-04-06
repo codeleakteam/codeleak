@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from 'antd'
 import QuestionSummaryContainer from '../components/QuestionSummaryContainer'
 import Banner from '../components/Banner'
-import PopularTags from '../components/PopularTags'
+import PopularTags from '../components/SideWidgets/PopularTags'
 
 import TwoSideLayout from '../components/TwoSideLayout'
 
@@ -20,7 +20,7 @@ class Index extends Component {
         {!this.props.loggedIn && <Banner />}
         <div className={classes.section__heading}>
           <h2>Questions</h2>
-          <Link href="/ask">
+          <Link href="/questions/ask">
             <Button type="primary">Ask a question</Button>
           </Link>
         </div>

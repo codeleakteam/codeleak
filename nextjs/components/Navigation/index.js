@@ -14,7 +14,7 @@ const Navigation = ({ menuActive, handleBurgerMenu, logo, burger, responsive, lo
   )
   return (
     <nav className={classes.navigation__container}>
-      {logo && <Logo />}
+      {logo && <Logo type="short" />}
       {renderNav}
     </nav>
   )

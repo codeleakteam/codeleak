@@ -1,53 +1,99 @@
 import React from 'react'
 import Link from 'next/link'
+import { Menu, Dropdown, Icon } from 'antd'
 
 import classes from './index.scss'
 
-const techs = [
+const mainTechs = [
+  {
+    name: 'Basic',
+    color: 'white',
+    url: '/',
+  },
   {
     name: 'React',
-    color: 'blue',
+    color: '#61dafb',
+    url: '/',
   },
   {
     name: 'Angular',
-    color: 'red',
+    color: '#dc0030',
+    url: '/',
   },
   {
     name: 'Vue',
-    color: 'green',
+    color: '#41b883',
+    url: '/',
   },
+]
+const otherTechs = [
   {
     name: 'Gatsby',
-    color: 'purple',
+    color: '#653298',
+    url: '/',
   },
   {
     name: 'Next.js',
-    color: 'green',
+    color: '#fefefe',
+    url: '/',
   },
   {
     name: 'Nuxt.js',
-    color: 'black',
+    color: '#3a7f6f',
+    url: '/',
+  },
+  {
+    name: 'Preact',
+    color: '#ac77db',
+    url: '/',
+  },
+  {
+    name: 'Reason',
+    color: '#dc4a38',
+    url: '/',
   },
   {
     name: 'React + TS',
-    color: 'blue',
+    color: '#61dafb',
+    url: '/',
   },
 ]
+
+const renderOtherTechs = (
+  <div>
+    {otherTechs.map(t => {
+      return (
+        <Link href={t.url}>
+          <a className={[classes.tech__box, classes['tech__box--dropdown']].join(' ')}>
+            <div>
+              <span style={{ color: t.color }}>{t.name}</span>
+            </div>
+          </a>
+        </Link>
+      )
+    })}
+  </div>
+)
 
 const TechnologyStack = () => {
   return (
     <div className={classes.tech__container}>
-      {techs.map(t => {
+      {mainTechs.map(t => {
         return (
-          <Link href="" key={t.name}>
-            <a>
-              <div className={classes.tech__box} style={{ backgroundColor: t.color }}>
-                <span>{t.name}</span>
+          <Link href={t.url} key={t.name}>
+            <a className={classes.tech__box}>
+              <div>
+                <span style={{ color: t.color }}>{t.name}</span>
               </div>
             </a>
           </Link>
         )
       })}
+      <Dropdown overlay={renderOtherTechs}>
+        <div className={classes.tech__box}>
+          <span style={{ color: 'white' }}>Other techs</span>
+        </div>
+      </Dropdown>
     </div>
   )
 }
