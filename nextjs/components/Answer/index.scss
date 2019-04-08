@@ -1,10 +1,8 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
-.question {
+.answer {
   &__container {
-    border-bottom: 1px solid $antGray;
-    padding-bottom: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 32px;
   }
   &__name {
     font-size: 27px;
@@ -41,9 +39,6 @@
     line-height: 22px;
   }
   &__tags-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 16px;
   }
   &__text {
