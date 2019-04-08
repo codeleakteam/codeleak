@@ -28,7 +28,7 @@ const LoggedInNav = ({ menuActive, handleBurgerMenu, responsive, burger }) => {
             </Link>
           </li>
           <li className={classes.navigation__listItem}>
-            <Link href="/">
+            <Link href="/profile">
               <div className={classes.navigation__profile} />
             </Link>
           </li>

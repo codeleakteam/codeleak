@@ -7,13 +7,13 @@ import Comment from '../Comment'
 
 import classes from './index.scss'
 
-const Question = () => {
-  const questionOptions = (
+const Answer = props => {
+  const answerOptions = (
     <Menu>
       <Menu.Item>
-        <Link href="/questions/ask">
-          <a>Edit question</a>
-        </Link>
+        <a target="_blank" rel="noopener noreferrer" href="/">
+          1st menu item
+        </a>
       </Menu.Item>
       <Menu.Item>
         <a target="_blank" rel="noopener noreferrer" href="/">
@@ -28,70 +28,59 @@ const Question = () => {
     </Menu>
   )
   return (
-    <div className={classes.question__container}>
-      <h3 className={classes.question__name}>How do next.js applications optimize for mobile screens?</h3>
-      <div className={classes.question__info}>
-        <div className={classes.question__detail}>
-          <Link href="/" className={classes.question__avatar}>
+    <div className={classes.answer__container}>
+      <div className={classes.answer__info}>
+        <div className={classes.answer__detail}>
+          <Link href="/" className={classes.answer__avatar}>
             <div>
               <img
                 src="https://dummyimage.com/43x43/000/fff"
                 alt="user alt"
-                className={classes['question__avatar-img']}
+                className={classes['answer__avatar-img']}
               />
             </div>
           </Link>
-          <span className={classes.question__rep}>100</span>
+          <span className={classes.answer__rep}>100</span>
         </div>
-        <div className={classes['question__user-info']}>
+        <div className={classes['answer__user-info']}>
           <Link href="/">
             <a>
-              <span className={classes.question__user}>Jadranka Barjaktarevic</span>
+              <span className={classes.answer__user}>Jadranka Barjaktarevic</span>
             </a>
           </Link>
 
-          <span className={classes.question__time}>18 hours ago</span>
+          <span className={classes.answer__time}>18 hours ago</span>
         </div>
       </div>
-      <div className={classes['question__tags-wrapper']}>
-        <div>
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-        </div>
+      <div className={classes['answer__tags-wrapper']}>
         <div>
           <Link href="/">
             <Button type="primary">Open in editor</Button>
           </Link>
         </div>
       </div>
-      <div className={classes.question__text}>
+      <div className={classes.answer__text}>
         <p>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
           standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
           make a type specimen book.
         </p>
       </div>
-      <div className={classes.question__controls}>
-        <Button className={classes.question__upvote}>
-          Upvote <UpVote className={classes.question__arrow} />
+      <div className={classes.answer__controls}>
+        <Button className={classes.answer__upvote}>
+          Upvote <UpVote className={classes.answer__arrow} />
         </Button>
-        <Button type="primary" className={classes.question__downvote}>
+        <Button type="primary" className={classes.answer__downvote}>
           Downvote
         </Button>
-        <Dropdown overlay={questionOptions}>
+        <Dropdown overlay={answerOptions}>
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>
       </div>
-      <Comment />
-      <Comment />
-      <Comment />
       <Comment />
       <Comment />
     </div>
   )
 }
 
-export default Question
+export default Answer
