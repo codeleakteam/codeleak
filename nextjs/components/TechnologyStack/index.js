@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { Menu, Dropdown, Icon } from 'antd'
+import { Dropdown } from 'antd'
 
 import classes from './index.scss'
 
