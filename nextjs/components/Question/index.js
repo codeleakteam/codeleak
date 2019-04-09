@@ -11,7 +11,7 @@ const Question = () => {
   const questionOptions = (
     <Menu>
       <Menu.Item>
-        <Link href="/questions/ask">
+        <Link href="/questions/edit">
           <a>Edit question</a>
         </Link>
       </Menu.Item>

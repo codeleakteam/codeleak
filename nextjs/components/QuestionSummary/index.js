@@ -31,7 +31,7 @@ const QuestionSummary = props => {
       </div>
       <div className={classes.question__main}>
         <div className={classes.question__heading}>
-          <Link href="/signin">
+          <Link href="/questions/questionid">
             <h4 className={classes.question__name}>How do i use CSS?</h4>
           </Link>
           <div className={classes.question__time}>3m ago</div>
@@ -43,8 +43,10 @@ const QuestionSummary = props => {
           <TagWithLink text="tag" url="/" />
           <TagWithLink text="tag" url="/" />
         </div>
-        <Link href="/">
-          <span className={classes.question__author}>Mica</span>
+        <Link href="/profile">
+          <a>
+            <span className={classes.question__author}>Mica</span>
+          </a>
         </Link>
       </div>
     </div>

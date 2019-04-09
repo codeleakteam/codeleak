@@ -7,7 +7,7 @@ import classes from './index.scss'
 
 const { TextArea } = Input
 
-const AskQuestion = () => {
+const AskQuestion = ({ type }) => {
   return (
     <div>
       <InputLabel text="Title" />
@@ -21,7 +21,7 @@ const AskQuestion = () => {
       <InputLabel text="Tags" />
       <Input placeholder="Enter tags" type="primary" />
       <Button type="primary" className={classes['ask-question__btn']}>
-        Post question
+        {type === 'edit' ? 'Edit question' : 'Send question'}
       </Button>
     </div>
   )
