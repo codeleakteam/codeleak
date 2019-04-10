@@ -30,12 +30,19 @@ class QuestionComment(Comment):
     question = models.ForeignKey(
         'Question',
         on_delete=models.CASCADE,
+        related_name='question_comment'
     )
 
+    def __str__(self):
+        return 'Comment on question: {} by {} - ID:{}'.format(self.question.title, self.author.username, self.id)
 
 class AnswerComment(Comment):
     # FKs
     answer = models.ForeignKey(
         'Answer',
         on_delete=models.CASCADE,
+        related_name='answer_comment'
     )
+
+    def __str__(self):
+        return 'Comment on answerID: {} by {} - ID:{}'.format(self.answer.id, self.author.username, self.id)

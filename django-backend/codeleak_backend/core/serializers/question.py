@@ -4,17 +4,26 @@ from django.template.defaultfilters import slugify
 from core.models import Question, User, Tag
 from .user import UserSerializerMinimal
 from .tag import TagSerializerMinimal, TagCreateUpdateSerializer
-
+from .comment import QuestionCommentSerializer
+from .answer import AnswerSerializer
 
 class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     author = UserSerializerMinimal()
     tags = TagSerializerMinimal(many=True)
+    comments = serializers.SerializerMethodField()
+    answers = serializers.SerializerMethodField()
+
+    def get_answers(self, question_obj):
+        return AnswerSerializer(question_obj.question_answer.all(), many=True).data
+        # return [AnswerSerializer(answer).data for answer in question_obj.question_answer.all()]
+    def get_comments(self, question_obj):
+        return QuestionCommentSerializer(question_obj.question_comment.all(), many=True ).data
+        # return [QuestionCommentSerializer(comment).data for comment in question_obj.question_comment.all()]
 
     class Meta:
         model = Question
         fields = "__all__"
-
 
 class QuestionCreateUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
