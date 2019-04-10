@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Logo from '../Logo'
 
 import classes from './index.scss'
 
@@ -9,7 +10,9 @@ const Footer = props => {
     <div className={classes.footer__container}>
       <footer className={classes.footer}>
         <ul>
-          <li>codeLeak</li>
+          <li>
+            <Logo />
+          </li>
           <li>codeLeak &copy; {copyrightDate}</li>
         </ul>
         <ul>

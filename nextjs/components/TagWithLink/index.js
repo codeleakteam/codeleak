@@ -14,10 +14,6 @@ const TagWithLink = ({ color, customClass, text, url }) => {
   )
 }
 
-TagWithLink.defaultProps = {
-  color: '#1890ff',
-}
-
 TagWithLink.propTypes = {
   customClass: PropTypes.string,
   text: PropTypes.string.isRequired,

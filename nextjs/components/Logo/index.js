@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import classes from './index.scss'
 
-const Logo = ({ type }) => {
+const Logo = ({ type, size }) => {
   return (
     <Link href="/">
       <div className={classes.logo}>
