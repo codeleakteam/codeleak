@@ -4,12 +4,17 @@ import { Button } from 'antd'
 import QuestionSummaryContainer from '../components/QuestionSummaryContainer'
 import Banner from '../components/Banner'
 import PopularTags from '../components/SideWidgets/PopularTags'
-
 import TwoSideLayout from '../components/TwoSideLayout'
+import { apiGet } from '../api'
+import _ from 'lodash'
 
 import classes from '../styles/index/index.scss'
 
 class Index extends Component {
+  state = {
+    tags: null,
+    questions: [],
+  }
   render() {
     return (
       <div
@@ -24,9 +29,26 @@ class Index extends Component {
             <Button type="primary">Ask a question</Button>
           </Link>
         </div>
-        <TwoSideLayout left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} />} right={<PopularTags />} />
+        <TwoSideLayout
+          left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} answers={this.props.answers} />}
+          right={<PopularTags tagList={this.props.tags} />}
+        />
       </div>
     )
+  }
+}
+
+Index.getInitialProps = async function() {
+  try {
+    let res = await apiGet.getIndex()
+    const tags = _.get(res, 'data.popular_tags', [])
+    const answers = _.get(res, 'data.results', [])
+    return {
+      tags,
+      answers,
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 }
 

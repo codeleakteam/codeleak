@@ -112,7 +112,12 @@ const TechnologyStack = () => {
           )
         })}
       </div>
-      <Dropdown overlay={renderOtherTechs} trigger={['click']} placement="bottomLeft">
+      <Dropdown
+        overlay={renderOtherTechs}
+        trigger={['click']}
+        placement="bottomLeft"
+        overlayClassName={classes.tech__dropdown}
+      >
         <div className={[classes.tech__box, classes['tech__box--more']].join(' ')}>
           <span style={{ color: 'white' }}>More</span>
           <Icon type="more" style={{ marginLeft: 'auto' }} />

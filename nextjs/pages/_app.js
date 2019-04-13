@@ -5,7 +5,9 @@ import Navigation from '../components/Navigation'
 // import PopularTags from '../components/PopularTags'
 import Footer from '../components/Footer'
 
-import TwoSideLayout from '../components/TwoSideLayout'
+import axios from 'axios'
+
+// import TwoSideLayout from '../components/TwoSideLayout'
 
 import classes from '../styles/layout.module.scss'
 import '../styles/global.scss'
