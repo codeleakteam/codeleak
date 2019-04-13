@@ -3,7 +3,7 @@ import TwoSideLayout from '../../components/TwoSideLayout'
 import AskQuestion from '../../components/AskQuestion'
 import AskGuide from '../../components/SideWidgets/AskGuide'
 
-import classes from '../../styles/ask/index.scss'
+import classes from '../../styles/askAndEdit/index.scss'
 
 class Ask extends Component {
   render() {

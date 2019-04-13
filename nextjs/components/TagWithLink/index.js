@@ -17,5 +17,6 @@ const TagWithLink = ({ color, customClass, text, url }) => {
 TagWithLink.propTypes = {
   customClass: PropTypes.string,
   text: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
 }
 export default TagWithLink

@@ -2,7 +2,8 @@ import React from 'react'
 import { Button, Icon, Dropdown, Menu } from 'antd'
 import Link from 'next/link'
 import TagWithLink from '../TagWithLink'
-import UpVote from '../CustomIcons/UpVote'
+// import UpVote from '../CustomIcons/UpVote'
+import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
 
 import classes from './index.scss'
@@ -32,8 +33,8 @@ const Question = () => {
       <h3 className={classes.question__name}>How do next.js applications optimize for mobile screens?</h3>
       <div className={classes.question__info}>
         <div className={classes.question__detail}>
-          <Link href="/" className={classes.question__avatar}>
-            <div>
+          <Link href="/">
+            <div className={classes.question__avatar}>
               <img
                 src="https://dummyimage.com/43x43/000/fff"
                 alt="user alt"
@@ -55,11 +56,11 @@ const Question = () => {
       </div>
       <div className={classes['question__tags-wrapper']}>
         <div>
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
-          <TagWithLink text="tech" />
+          <TagWithLink url="/" text="tech" />
+          <TagWithLink url="/" text="tech" />
+          <TagWithLink url="/" text="tech" />
+          <TagWithLink url="/" text="tech" />
+          <TagWithLink url="/" text="tech" />
         </div>
         <div>
           <Link href="/">
@@ -75,12 +76,17 @@ const Question = () => {
         </p>
       </div>
       <div className={classes.question__controls}>
-        <Button className={classes.question__upvote}>
-          Upvote <UpVote className={classes.question__arrow} />
+        <Button className={classes.question__upvote} type="primary">
+          Upvote{' '}
+          <CustomIcon
+            name="upvote"
+            height="20px"
+            className={classes.question__arrow}
+            strokeWidth={1}
+            strokeColor="#d9d9d9"
+          />
         </Button>
-        <Button type="primary" className={classes.question__downvote}>
-          Downvote
-        </Button>
+        <Button className={classes.question__downvote}>Downvote</Button>
         <Dropdown overlay={questionOptions}>
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>

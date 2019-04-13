@@ -7,21 +7,25 @@
     flex-wrap: wrap;
   }
   &__box {
-    border: 1px solid $black;
+    border: 1px solid #141617;
     flex: 1;
+
     padding: 8px;
     margin: 4px;
     color: white;
-    background-color: #1c2021;
+    background-color: #1d2022;
     border-radius: 3px;
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     cursor: pointer;
+    position: relative;
     @include breakpoint($tablet) {
       width: 33%;
       flex: auto;
-      &:last-child {
-        width: 100%;
-      }
+      // &:last-child {
+      //   width: 100%;
+      // }
     }
     @include breakpoint($mobile) {
       width: 100%;
@@ -31,6 +35,18 @@
       margin: 4px 0;
       width: 100%;
       cursor: pointer;
+    }
+    &--more {
+      display: flex;
+      justify-content: space-between;
+      width: calc(25% - 8px);
+      align-items: center;
+      @include breakpoint($tablet) {
+        width: calc(50% - 8px);
+      }
+      @include breakpoint($mobile) {
+        width: calc(100% - 8px);
+      }
     }
   }
   &__dropdown-arrow {

@@ -1,8 +1,7 @@
 import React from 'react'
 import { Button, Icon, Dropdown, Menu } from 'antd'
 import Link from 'next/link'
-import TagWithLink from '../TagWithLink'
-import UpVote from '../CustomIcons/UpVote'
+import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
 
 import classes from './index.scss'
@@ -31,8 +30,8 @@ const Answer = props => {
     <div className={classes.answer__container}>
       <div className={classes.answer__info}>
         <div className={classes.answer__detail}>
-          <Link href="/" className={classes.answer__avatar}>
-            <div>
+          <Link href="/">
+            <div className={classes.answer__avatar}>
               <img
                 src="https://dummyimage.com/43x43/000/fff"
                 alt="user alt"
@@ -67,12 +66,17 @@ const Answer = props => {
         </p>
       </div>
       <div className={classes.answer__controls}>
-        <Button className={classes.answer__upvote}>
-          Upvote <UpVote className={classes.answer__arrow} />
+        <Button className={classes.answer__upvote} type="primary">
+          Upvote{' '}
+          <CustomIcon
+            name="upvote"
+            height="20px"
+            className={classes.answer__arrow}
+            strokeWidth={1}
+            strokeColor="#d9d9d9"
+          />
         </Button>
-        <Button type="primary" className={classes.answer__downvote}>
-          Downvote
-        </Button>
+        <Button className={classes.answer__downvote}>Downvote</Button>
         <Dropdown overlay={answerOptions}>
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>

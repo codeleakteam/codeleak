@@ -1,10 +1,9 @@
 import React from 'react'
-import { Icon } from 'antd'
+
 import TagWithLink from '../TagWithLink'
-// import UpVote from '../CustomIcons/UpVote'
+
 import Link from 'next/link'
-import CustomIcon from '../CustomIcon'
-import quoraUpVote from '../../assets/icons/quoraUpVote.svg'
+import CustomIcon from '../../assets/icons/index'
 
 import classes from './index.scss'
 
@@ -15,20 +14,19 @@ const QuestionSummary = props => {
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>15</div>
           <div className={classes['question__info-icon']}>
-            {/* <UpVote className={classes.icon} /> */}
-            <CustomIcon icon={quoraUpVote} />
+            <CustomIcon name="upvote" strokeColor="black" height="20px" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>15</div>
           <div className={classes['question__info-icon']}>
-            <Icon type="message" className={classes.icon} />
+            <CustomIcon name="comment" height="18px" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>15</div>
           <div className={classes['question__info-icon']}>
-            <Icon type="eye" className={classes.icon} />
+            <CustomIcon name="eye" height="20px" />
           </div>
         </div>
       </div>
