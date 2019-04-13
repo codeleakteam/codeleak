@@ -1,7 +1,20 @@
 from .home import HomeView
 from .search import user_question_tag_search
-from .question import CreateQuestionView, UpdateQuestionView, GetQuestionView
+from .question import (
+    CreateQuestionView, 
+    UpdateQuestionView,
+    GetQuestionView
+)
 from .user import UpdateUserView
-from .tag import TagView
+from .tag import ListCreateTagView
 
-__all__ = ['HomeView', 'UpdateUser', 'UpdateUserView','CreateQuestionView', 'UpdateQuestionView', 'TagView', 'user_question_tag_search','GetQuestionView']
+__all__ = [
+    'HomeView', 
+    'UpdateUser', 
+    'UpdateUserView',
+    'CreateQuestionView', 
+    'UpdateQuestionView', 
+    'ListCreateTagView', 
+    'user_question_tag_search',
+    'GetQuestionView'
+]

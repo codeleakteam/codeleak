@@ -77,12 +77,8 @@ WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'codeleak',
-        'USER': 'leak_admin',
-        'PASSWORD': 'lamerajlame',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 
