@@ -13,6 +13,7 @@ class Question(models.Model):
     author = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
+        related_name='question_author'
     )
     editor = models.ForeignKey(
         'Editor',

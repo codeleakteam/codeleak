@@ -17,18 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from core.views import (
-    HomeView, 
-    CreateQuestionView, 
-    UpdateQuestionView, 
-    user_question_tag_search, 
-    UpdateUserView, 
-    GetQuestionView, 
-    ListCreateTagView, 
-) 
+    HomeView,
+    CreateQuestionView,
+    UpdateQuestionView,
+    user_question_tag_search,
+    GetUpdateUserView,
+    GetQuestionView,
+    ListCreateTagView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^api/users/(?P<user_id>[0-9]+)$', UpdateUserView.as_view()),
+    url(r'^api/users/(?P<user_id>[0-9]+)$', GetUpdateUserView.as_view()),
     path('api/home', HomeView.as_view()),
     path('api/questions', CreateQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)$', GetQuestionView.as_view()),

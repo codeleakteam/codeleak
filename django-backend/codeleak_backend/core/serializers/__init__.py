@@ -5,13 +5,13 @@ from .answer import AnswerSerializer
 from .comment import QuestionCommentSerializer, AnswerCommentSerializer
 
 __all__ = [
-    "QuestionSerializer",
     "UserSerializer",
     "UserSerializerMinimal",
     "TagSerializer",
     "TagSerializerMinimal",
     "TagIDSerializer",
     "TagCreateUpdateSerializer"
+    "QuestionSerializer",
     "QuestionCreateUpdateSerializer",
     "AnswerSerializer",
     "QuestionCommentSerializer",

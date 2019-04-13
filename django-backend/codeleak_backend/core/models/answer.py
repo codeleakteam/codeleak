@@ -14,6 +14,7 @@ class Answer(models.Model):
     author = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
+        related_name='answer_author'
     )
     editor = models.ForeignKey(
         'Editor',
