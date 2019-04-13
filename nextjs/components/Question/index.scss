@@ -12,7 +12,7 @@
   }
   &__info {
     display: flex;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
   &__detail {
     display: block;
@@ -22,6 +22,7 @@
   &__avatar {
     display: inline-block;
     border-radius: 3px;
+    width: 100%;
     &-img {
       width: 100%;
       border-top-left-radius: 3px;
@@ -44,7 +45,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
   }
   &__text {
     padding: 8px;
@@ -67,8 +68,9 @@
   }
   &__arrow {
     vertical-align: middle;
+    margin-left: 8px;
+
     svg {
-      stroke: #000000a6;
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
       &:hover {

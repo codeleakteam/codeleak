@@ -13,7 +13,7 @@ const LoggedInNav = ({ menuActive, handleBurgerMenu, responsive, burger }) => {
         <Input placeholder="Search question" className={classes.navigation__search} />
         <ul className={classes.navigation__list}>
           <li className={classes.navigation__listItem}>
-            <Link href="/">
+            <Link href="/questions/ask">
               <Button type="primary">Ask question</Button>
             </Link>
           </li>

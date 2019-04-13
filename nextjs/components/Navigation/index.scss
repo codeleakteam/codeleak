@@ -37,9 +37,8 @@
       width: 150px;
     }
     @include breakpoint($mobile) {
-      width: 100%;
-      margin-left: 0;
-      margin-bottom: 16px;
+      width: 80%;
+      margin: 0 auto 16px auto;
     }
   }
   &__list {

@@ -1,5 +1,5 @@
 import React from 'react'
-import UpVote from '../CustomIcons/UpVote'
+import CustomIcon from '../../assets/icons/index'
 import { Icon } from 'antd'
 
 import classes from './index.scss'
@@ -13,7 +13,7 @@ const Comment = () => {
       </div>
       <div className={classes.comment__box}>
         <div className={classes.comment__controls}>
-          <UpVote className={classes.comment__icon} />
+          <CustomIcon name="upvote" />
           <Icon type="stop" style={{ fontSize: '13px' }} />
         </div>
         <p className={classes.comment__text}>
