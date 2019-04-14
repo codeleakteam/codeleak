@@ -16,6 +16,7 @@ class MyApp extends App {
   state = {
     menuActive: false,
     loggedIn: false,
+    beta: false,
   }
 
   static async getInitialProps({ Component, ctx }) {
@@ -36,18 +37,21 @@ class MyApp extends App {
     return (
       <Container>
         <div className={classes.container}>
-          <Navigation
-            menuActive={this.state.menuActive}
-            handleBurgerMenu={this.handleBurgerMenu}
-            logo={true}
-            burger={true}
-            responsive={false}
-            loggedIn={this.state.loggedIn}
-          />
+          {!this.state.beta && (
+            <Navigation
+              menuActive={this.state.menuActive}
+              handleBurgerMenu={this.handleBurgerMenu}
+              logo={true}
+              burger={true}
+              responsive={false}
+              loggedIn={this.state.loggedIn}
+            />
+          )}
+
           <Component {...pageProps} loggedIn={this.state.loggedIn} />
         </div>
 
-        <Footer />
+        <Footer beta={this.state.beta} />
 
         <SideMenu menuActive={this.state.menuActive}>
           <Navigation
