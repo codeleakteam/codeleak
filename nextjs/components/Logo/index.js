@@ -11,10 +11,12 @@ const Logo = ({ type, size }) => {
         {type === 'short' ? (
           <span className={classes['logo__blue-side']}>&lt;/&gt;</span>
         ) : (
-          <>
-            <span className={classes['logo__blue-side']}>c&lt;/&gt;de</span>
-            <span>Leak</span>
-          </>
+          <React.Fragment>
+            <span style={{ fontSize: `${size}px` }} className={classes['logo__blue-side']}>
+              c&lt;/&gt;de
+            </span>
+            <span style={{ fontSize: `${size}px` }}>Leak</span>
+          </React.Fragment>
         )}
       </div>
     </Link>

@@ -15,37 +15,41 @@ const Footer = props => {
           </li>
           <li>codeLeak &copy; {copyrightDate}</li>
         </ul>
-        <ul>
-          <li>codeLeak</li>
-          <li>
-            <Link href="/">
-              <a>Blog</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/">
-              <a>Contact</a>
-            </Link>
-          </li>
-        </ul>
-        <ul>
-          <li>developers</li>
-          <li>
-            <Link href="/">
-              <a>Blog</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/">
-              <a>Jobs</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/">
-              <a>Tags</a>
-            </Link>
-          </li>
-        </ul>
+        {!props.beta && (
+          <>
+            <ul>
+              <li>codeLeak</li>
+              <li>
+                <Link href="/">
+                  <a>Blog</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/">
+                  <a>Contact</a>
+                </Link>
+              </li>
+            </ul>
+            <ul>
+              <li>developers</li>
+              <li>
+                <Link href="/">
+                  <a>Blog</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/">
+                  <a>Jobs</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/">
+                  <a>Tags</a>
+                </Link>
+              </li>
+            </ul>
+          </>
+        )}
       </footer>
     </div>
   )
