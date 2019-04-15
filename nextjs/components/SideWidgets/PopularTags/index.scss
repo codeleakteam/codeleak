@@ -5,13 +5,14 @@
   justify-content: space-between;
   flex-wrap: wrap;
   border: 1px solid $antGray;
-  padding: 8px;
+  padding: 4px;
   border-radius: 4px;
 }
 .tag {
-  width: 28%;
+  width: 32%;
   margin: 4px 0;
   text-align: center;
+  padding: 0 4px;
   @include breakpoint($tablet) {
     width: 45%;
   }
