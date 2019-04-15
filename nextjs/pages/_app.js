@@ -16,7 +16,7 @@ class MyApp extends App {
   state = {
     menuActive: false,
     loggedIn: false,
-    beta: false,
+    beta: true,
   }
 
   static async getInitialProps({ Component, ctx }) {

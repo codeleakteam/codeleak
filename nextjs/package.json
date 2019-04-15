@@ -23,5 +23,8 @@
     "build": "next build",
     "start": "next start"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "file-loader": "^3.0.1",
+    "url-loader": "^1.1.2"
+  }
 }
