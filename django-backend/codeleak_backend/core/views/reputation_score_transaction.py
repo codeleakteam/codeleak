@@ -19,15 +19,15 @@ class CreateReputationScoreTransaction(CreateAPIView):
 
         print("CreateReputationScoreTransaction: ", request.data)
 
-        if is_upvote != 'true' and is_upvote !== 'false':
+        if is_upvote is not 'true' and is_upvote is not 'false':
             return Response({ 'message': 'Invalid upvote parameter '}, HTTP_400_BAD_REQUEST)
 
-        if is_upvote == 'true':
+        if is_upvote is 'true':
             is_upvote = True
         else:
             is_upvote = False
 
-        if entity_type == 'question':
+        if entity_type is 'question':
             if is_upvote:
                 amount = 20
             else:
@@ -40,3 +40,7 @@ class CreateReputationScoreTransaction(CreateAPIView):
                 return Response(serialiezr.data, status.HTTP_200_OK)
             except ObjectDoesNotExist:
                 return Response({ 'message': 'Question with ID: ' + entity_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            except as err:
+                print("[CreateReputationScoreTransaction.post] Something went wrong. Error: ", err)
+                return Response({ 'message': 'Internal server error', 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+

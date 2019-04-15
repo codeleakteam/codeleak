@@ -24,6 +24,7 @@ from core.views import (
     GetUpdateUserView,
     GetQuestionView,
     ListCreateTagView,
+    UpdateQuestionScoreView
 )
 
 urlpatterns = [
@@ -33,6 +34,7 @@ urlpatterns = [
     path('api/questions', CreateQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)$', GetQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)$', UpdateQuestionView.as_view()),
+    url(r'^api/questions/(?P<question_id>[0-9]+)/vote$', UpdateQuestionScoreView.as_view()),
     path('api/tags', ListCreateTagView.as_view()),
     path('api/search', user_question_tag_search),
     url(r'^api-auth/', include('rest_framework.urls'))

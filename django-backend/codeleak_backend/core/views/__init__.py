@@ -3,7 +3,8 @@ from .search import user_question_tag_search
 from .question import (
     CreateQuestionView,
     UpdateQuestionView,
-    GetQuestionView
+    GetQuestionView,
+    UpdateQuestionScoreView
 )
 from .user import GetUpdateUserView
 from .tag import ListCreateTagView
@@ -16,5 +17,6 @@ __all__ = [
     'UpdateQuestionView',
     'ListCreateTagView',
     'user_question_tag_search',
-    'GetQuestionView'
+    'GetQuestionView',
+    'UpdateQuestionScoreView'
 ]

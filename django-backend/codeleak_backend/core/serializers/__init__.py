@@ -3,6 +3,7 @@ from .user import UserSerializer, UserSerializerMinimal
 from .tag import TagSerializerMinimal, TagIDSerializer, TagCreateUpdateSerializer, TagSerializer
 from .answer import AnswerSerializer
 from .comment import QuestionCommentSerializer, AnswerCommentSerializer
+from .vote import QuestionVoteSerializer
 
 __all__ = [
     "UserSerializer",
@@ -15,6 +16,7 @@ __all__ = [
     "QuestionCreateUpdateSerializer",
     "AnswerSerializer",
     "QuestionCommentSerializer",
-    "AnswerCommentSerializer"
+    "AnswerCommentSerializer",
+    "QuestionVoteSerializer"
 ]
 
