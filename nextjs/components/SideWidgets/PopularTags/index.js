@@ -6,9 +6,9 @@ import classes from './index.scss'
 const PopularTags = props => {
   return (
     <div className={classes.container}>
-      {/* {props.tagList.map(tag => {
+      {props.tagList.map(tag => {
         return <TagWithLink key={tag.id + tag.slug} customClass={classes.tag} text={tag.title} url="/" />
-      })} */}
+      })}
     </div>
   )
 }

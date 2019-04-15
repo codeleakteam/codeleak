@@ -1,24 +1,25 @@
 import React from 'react'
-
 import TagWithLink from '../TagWithLink'
-
 import Link from 'next/link'
 import CustomIcon from '../../assets/icons/index'
+import moment from 'moment'
 
 import classes from './index.scss'
 
-const QuestionSummary = props => {
+const QuestionSummary = ({ score, comments, title, createdAt, tags, author }) => {
+  let formatDate = moment(createdAt).fromNow()
+
   return (
     <div className={classes.question__container}>
       <div className={classes['question__info-container']}>
         <div className={classes.question__info}>
-          <div className={classes['question__info-num']}>15</div>
+          <div className={classes['question__info-num']}>{score}</div>
           <div className={classes['question__info-icon']}>
             <CustomIcon name="upvote" strokeColor="black" height="20px" />
           </div>
         </div>
         <div className={classes.question__info}>
-          <div className={classes['question__info-num']}>15</div>
+          <div className={classes['question__info-num']}>0</div>
           <div className={classes['question__info-icon']}>
             <CustomIcon name="comment" height="18px" />
           </div>
@@ -33,20 +34,18 @@ const QuestionSummary = props => {
       <div className={classes.question__main}>
         <div className={classes.question__heading}>
           <Link href="/questions/questionid">
-            <h4 className={classes.question__name}>How do i use CSS?</h4>
+            <h4 className={classes.question__name}>{title}</h4>
           </Link>
-          <div className={classes.question__time}>3m ago</div>
+          <div className={classes.question__time}>{formatDate}</div>
         </div>
         <div className={classes.question__tags}>
-          <TagWithLink text="tag" url="/" />
-          <TagWithLink text="tag" url="/" />
-          <TagWithLink text="tag" url="/" />
-          <TagWithLink text="tag" url="/" />
-          <TagWithLink text="tag" url="/" />
+          {tags.map(tag => (
+            <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" />
+          ))}
         </div>
         <Link href="/profile">
           <a>
-            <span className={classes.question__author}>Mica</span>
+            <span className={classes.question__author}>{author}</span>
           </a>
         </Link>
       </div>
