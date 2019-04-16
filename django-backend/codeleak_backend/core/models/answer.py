@@ -14,6 +14,7 @@ class Answer(models.Model):
     author = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
+        related_name='answer_author'
     )
     editor = models.ForeignKey(
         'Editor',
@@ -30,6 +31,9 @@ class Answer(models.Model):
         default=False, blank=True, null=False)
     is_deleted = models.BooleanField(
         default=False, blank=True, null=False)
+    # Counters
+    score = models.IntegerField(default=0, blank=True, null=False)
+    reported_times = models.IntegerField(default=0, blank=True, null=False)
     # Timestmaps
     created_at = models.DateTimeField(
         default=timezone.now, blank=True, null=False)
