@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 
 import classes from './index.scss'
 
-const Logo = ({ type, size }) => {
+const Logo = ({ type, size, className }) => {
   return (
     <Link href="/">
-      <div className={classes.logo}>
+      <div className={[classes.logo, className].join(' ')}>
         {type === 'short' ? (
           <span className={classes['logo__blue-side']}>&lt;/&gt;</span>
         ) : (

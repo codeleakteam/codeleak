@@ -4,12 +4,12 @@
 body {
   margin: 0;
   font-family: 'Karla', sans-serif;
-  // background-image: url('/static/images/landing.jpg');
-  // background-position: center center;
-  // background-repeat: no-repeat;
-  // background-attachment: fixed;
-  // background-size: cover;
-  // background-color: black;
+  background-image: url('/static/images/landing2.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: black;
 }
 a {
   text-decoration: none;
@@ -20,15 +20,18 @@ li {
 
 .banner {
   display: flex;
-  padding: 200px 0 0;
+  padding: 100px 0 0;
   justify-content: space-between;
   color: $black;
   @include breakpoint($tablet) {
     padding: 150px 0 0;
   }
+  &__logo {
+    margin-bottom: 8px;
+  }
 
   &__desc {
-    width: 100%;
+    width: 70%;
     // width: 50%;
     // @include breakpoint($tablet) {
     //   width: 70%;
@@ -61,6 +64,8 @@ li {
     }
   }
   &__text {
+    color: white;
+
     font-size: 28px;
     line-height: 33px;
     font-weight: 300;

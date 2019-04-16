@@ -16,7 +16,7 @@ class MyApp extends App {
   state = {
     menuActive: false,
     loggedIn: false,
-    beta: false,
+    beta: true,
   }
 
   static async getInitialProps({ Component, ctx }) {
@@ -51,7 +51,7 @@ class MyApp extends App {
           <Component {...pageProps} loggedIn={this.state.loggedIn} />
         </div>
 
-        <Footer beta={this.state.beta} />
+        {!this.state.beta && <Footer beta={this.state.beta} />}
 
         <SideMenu menuActive={this.state.menuActive}>
           <Navigation
