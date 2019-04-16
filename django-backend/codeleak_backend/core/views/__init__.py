@@ -8,6 +8,7 @@ from .question import (
 )
 from .user import GetUpdateUserView
 from .tag import ListCreateTagView
+from .subscriber import CreateSubscriberView
 
 __all__ = [
     'HomeView',
@@ -19,4 +20,5 @@ __all__ = [
     'user_question_tag_search',
     'GetQuestionView',
     'UpdateQuestionScoreView'
+    'CreateSubscriberView'
 ]
