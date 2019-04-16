@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import Button from '../Button'
-
 import axios from 'axios'
+import { apiPost } from '../../api'
 
 import classes from './index.scss'
-
-const API_KEY = 'AIzaSyDOj_0S66G-cape1H0Bhw_9q95ls3-zJas'
 
 class InputWithButton extends Component {
   state = {
@@ -17,15 +15,15 @@ class InputWithButton extends Component {
     this.setState({ email: e.target.value })
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.email)) {
       this.setState({ valid: true })
 
-      axios
-        .get(
-          `https://sheets.googleapis.com/v4/spreadsheets/18wvIwNz6g7fuwbKndIcrmaWh94zv-Kgr5mWxw_qCI0Q/values/B2%3AB100?valueRenderOption=FORMATTED_VALUE&key=${API_KEY}`
-        )
-        .then(res => console.log(res))
+      try {
+        const res = await apiPost.subscribeMail(this.state.email)
+      } catch (error) {
+        this.setState({ valid: false })
+      }
     } else {
       this.setState({ valid: false })
     }

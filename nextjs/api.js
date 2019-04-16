@@ -9,3 +9,9 @@ export const apiGet = {
     return axios.get(`${BASE_URL}/api/home`)
   },
 }
+
+export const apiPost = {
+  subscribeMail: value => {
+    return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
+  },
+}

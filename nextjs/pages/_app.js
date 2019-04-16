@@ -4,6 +4,8 @@ import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
 // import PopularTags from '../components/PopularTags'
 import Footer from '../components/Footer'
+import trackPageView from '../helpers/trackPageView'
+import Router from 'next/router'
 
 import axios from 'axios'
 
@@ -25,6 +27,12 @@ class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx)
     }
     return { pageProps }
+  }
+
+  componentDidMount() {
+    Router.onRouteChangeComplete = url => {
+      trackPageView(url)
+    }
   }
 
   handleBurgerMenu = () => {

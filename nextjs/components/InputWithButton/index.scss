@@ -51,10 +51,11 @@
   font-weight: 700;
   display: block;
   padding: 4px 0;
+  font-size: 16px;
   &--error {
-    color: red;
+    color: #ff4d4f;
   }
   &--success {
-    color: green;
+    color: #bae637;
   }
 }
