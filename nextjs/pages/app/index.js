@@ -8,7 +8,7 @@ import TwoSideLayout from '../../components/TwoSideLayout'
 import { apiGet } from '../../api'
 import _ from 'lodash'
 
-import classes from '../styles/index/index.scss'
+// import classes from '../styles/index/index.scss'
 
 class Index extends Component {
   state = {
