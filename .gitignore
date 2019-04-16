@@ -92,4 +92,4 @@ local_settings.py
 db.sqlite3
 migrations
 venv
-mydatabase
+*.sqlite3

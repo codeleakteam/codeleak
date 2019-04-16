@@ -3,8 +3,9 @@ from django.utils import timezone
 
 class Tag(models.Model):
     # Required
-    title = models.CharField(max_length=70, blank=False, null=False)
+    title = models.CharField(max_length=70, blank=False, null=False, default='')
     slug = models.SlugField(blank=False, null=False)
+    description = models.CharField(max_length=255, blank=False, null=False)
     # Flags
     is_deleted = models.BooleanField(default=False, blank=True, null=False)
     # Timestamps
