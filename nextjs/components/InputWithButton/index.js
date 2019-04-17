@@ -18,7 +18,6 @@ class InputWithButton extends Component {
   handleSubmit = async e => {
     if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.email)) {
       this.setState({ valid: true })
-
       try {
         const res = await apiPost.subscribeMail(this.state.email)
       } catch (error) {

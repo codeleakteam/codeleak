@@ -21,7 +21,7 @@
     line-height: 16px;
     @include breakpoint($tablet) {
       width: 20%;
-      font-size: 18px;
+      font-size: 16px;
     }
     @include breakpoint($mobile) {
       min-width: 100px;
