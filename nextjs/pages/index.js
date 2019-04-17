@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import Link from 'next/link'
-import Head from 'next/link'
+import Head from 'next/head'
 import InputWithButton from '../components/InputWithButton'
 import Logo from '../components/Logo'
 
@@ -9,7 +9,7 @@ import classes from '../styles/landing/index.scss'
 class Landing extends Component {
   render() {
     return (
-      <React.Fragment>
+      <div>
         <Head>
           <title>codeLeak</title>
         </Head>
@@ -22,7 +22,7 @@ class Landing extends Component {
             <InputWithButton />
           </div>
         </section>
-      </React.Fragment>
+      </div>
     )
   }
 }

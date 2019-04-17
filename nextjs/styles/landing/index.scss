@@ -58,7 +58,7 @@ li {
     font-size: 28px;
     line-height: 33px;
     font-weight: 300;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     @include breakpoint($mobile) {
       font-size: 22px;
       line-height: 25px;
