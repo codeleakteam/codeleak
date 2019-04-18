@@ -5,10 +5,17 @@ const withPlugins = require('next-compose-plugins')
 // Webpack config for images in css
 // https://whoisryosuke.com/blog/2018/nextjs-tip-using-media-in-css/
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+const developmentConfig = {
+  baseUrl: 'http://localhost:8000',
+}
+const productionConfig = {
+  baseUrl: 'http://codeleak.io',
+}
+
 const nextConfig = {
-  publicRuntimeConfig: {
-    baseUrl: 'http://localhost:8000',
-  },
+  publicRuntimeConfig: isProduction ? productionConfig : developmentConfig,
 }
 
 module.exports = withPlugins(

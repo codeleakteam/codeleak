@@ -1,10 +1,13 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import getConfig from 'next/config'
+
+const { publicRuntimeConfig } = getConfig()
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     // Check if in production
     // const isProduction = process.env.NODE_ENV === 'production'
-    const isProduction = true
+    const isProduction = publicRuntimeConfig.baseUrl === 'http://codeleak.io' ? true : false
     const initialProps = await Document.getInitialProps(ctx)
     // Pass isProduction flag back through props
     return { ...initialProps, isProduction }
@@ -23,6 +26,7 @@ class MyDocument extends Document {
 
   render() {
     const { isProduction } = this.props
+
     return (
       <Html>
         <Head>

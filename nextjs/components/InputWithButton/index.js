@@ -40,7 +40,7 @@ class InputWithButton extends Component {
               placeholder="Enter your email here"
               className={classes.input}
               value={email}
-              onChange={e => this.handleEmail(e)}
+              onChange={this.handleEmail}
             />
             <Button modifier="button--subscribe" onClick={this.handleSubmit} text="Get Early Access" />
           </div>
