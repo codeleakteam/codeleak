@@ -28,6 +28,12 @@ class InputWithButton extends Component {
     }
   }
 
+  handleEmailOnFocus = () => {
+    if (this.state.valid === false) {
+      this.setState({ valid: '' })
+    }
+  }
+
   render() {
     const { valid, email } = this.state
 
@@ -41,6 +47,7 @@ class InputWithButton extends Component {
               className={classes.input}
               value={email}
               onChange={this.handleEmail}
+              onFocus={this.handleEmailOnFocus}
             />
             <Button modifier="button--subscribe" onClick={this.handleSubmit} text="Get Early Access" />
           </div>
