@@ -2,7 +2,7 @@
   "apps": [
     {
       "name": "codeleak-next",
-      "script": "",
+      "script": "./server.js",
       "autorestart": false
     }
   ]
