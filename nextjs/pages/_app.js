@@ -41,36 +41,38 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props
+    const { beta, menuActive, loggedIn } = this.state
 
     return (
       <Container>
         <div className={classes.container}>
-          {!this.state.beta && (
+          {!beta && (
             <Navigation
-              menuActive={this.state.menuActive}
+              menuActive={menuActive}
               handleBurgerMenu={this.handleBurgerMenu}
               logo={true}
               burger={true}
               responsive={false}
-              loggedIn={this.state.loggedIn}
+              loggedIn={loggedIn}
             />
           )}
-
-          <Component {...pageProps} loggedIn={this.state.loggedIn} />
+          <Component {...pageProps} loggedIn={loggedIn} />
         </div>
 
-        {!this.state.beta && <Footer beta={this.state.beta} />}
+        {!beta && <Footer beta={beta} />}
 
-        <SideMenu menuActive={this.state.menuActive}>
-          <Navigation
-            menuActive={this.state.menuActive}
-            handleBurgerMenu={this.handleBurgerMenu}
-            logo={false}
-            burger={false}
-            responsive={true}
-            loggedIn={this.state.loggedIn}
-          />
-        </SideMenu>
+        {!beta && (
+          <SideMenu menuActive={menuActive}>
+            <Navigation
+              menuActive={menuActive}
+              handleBurgerMenu={this.handleBurgerMenu}
+              logo={false}
+              burger={false}
+              responsive={true}
+              loggedIn={loggedIn}
+            />
+          </SideMenu>
+        )}
       </Container>
     )
   }
