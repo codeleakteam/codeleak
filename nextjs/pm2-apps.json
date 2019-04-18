@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "codeleak-next",
+      "script": "",
+      "autorestart": false
+    }
+  ]
+}
