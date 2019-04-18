@@ -15,6 +15,7 @@
     "next": "^8.0.3",
     "next-compose-plugins": "^2.1.1",
     "node-sass": "^4.11.0",
+    "pm2": "^3.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.5",
     "react-dom": "^16.8.5"
@@ -22,7 +23,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "pm2 start pm2-apps.json"
   },
   "devDependencies": {
     "file-loader": "^3.0.1",
