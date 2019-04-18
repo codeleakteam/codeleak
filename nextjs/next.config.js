@@ -11,7 +11,7 @@ const developmentConfig = {
   baseUrl: 'http://localhost:8000',
 }
 const productionConfig = {
-  baseUrl: 'http://codeleak.io',
+  baseUrl: 'http://142.93.14.233',
 }
 
 const nextConfig = {
