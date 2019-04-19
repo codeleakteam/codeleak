@@ -1,0 +1,49 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+.comment {
+  &__container {
+    border: 1px solid $antGray;
+    width: 100%;
+    max-width: 450px;
+    margin: 8px 0 0 auto;
+    padding: 4px;
+  }
+  &__user {
+    font-size: 13px;
+    line-height: 14px;
+    &:after {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: black;
+      color: black;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 8px;
+    }
+  }
+  &__points {
+    font-size: 13px;
+    line-height: 14px;
+  }
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    margin-right: 8px;
+  }
+  &__box {
+    display: flex;
+  }
+  &__text {
+    font-size: 13px;
+    line-height: 14px;
+  }
+  &__icon {
+    margin-bottom: 4px;
+    svg {
+      stroke: #000000a6;
+      font-size: 18px;
+    }
+  }
+}

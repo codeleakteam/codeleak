@@ -1,0 +1,61 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+.tech {
+  &__container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  &__box {
+    border: 1px solid #141617;
+    flex: 1;
+
+    padding: 8px;
+    margin: 4px;
+    color: white;
+    background-color: #1d2022;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+    @include breakpoint($tablet) {
+      width: 33%;
+      flex: auto;
+      // &:last-child {
+      //   width: 100%;
+      // }
+    }
+    @include breakpoint($mobile) {
+      width: 100%;
+    }
+    &--dropdown {
+      display: inline-block;
+      margin: 4px 0;
+      width: 20%;
+      cursor: pointer;
+    }
+    &--more {
+      display: flex;
+      justify-content: space-between;
+      width: calc(25% - 8px);
+      align-items: center;
+      @include breakpoint($tablet) {
+        width: calc(50% - 8px);
+      }
+      @include breakpoint($mobile) {
+        width: calc(100% - 8px);
+      }
+    }
+  }
+  &__dropdown-arrow {
+    margin-left: auto;
+  }
+  &__dropdown {
+    width: 67%;
+    position: relative;
+    // display: flex;
+    // flex-wrap: wrap;
+  }
+}

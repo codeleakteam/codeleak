@@ -1,0 +1,7 @@
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+.container {
+  border: 1px solid $antGray;
+  padding: 8px;
+  border-radius: 4px;
+}

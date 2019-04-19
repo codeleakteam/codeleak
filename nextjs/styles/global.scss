@@ -1,0 +1,30 @@
+* {
+  font-family: 'Karla', sans-serif;
+  box-sizing: border-box;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+  // removed becouse of landing
+  // height: 100%;
+  height: auto;
+}
+// reset
+body {
+  margin: 0;
+  font-family: 'Karla', sans-serif;
+  height: 100%;
+  min-height: 100%;
+
+  margin-bottom: -130px;
+}
+a {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+p {
+  margin-bottom: 0;
+}

@@ -1,26 +1,35 @@
 @import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
 
 .button {
-    -webkit-appearance: button;
-    border: 0;
+  -webkit-appearance: button;
+  border: 0;
+  color: white;
+  height: 100%;
+  box-sizing: border-box;
+  font-size: 25px;
+  padding: 0 8px;
+  cursor: pointer;
+  border: 1px solid;
+  &--subscribe {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    min-width: 153px;
     color: white;
-    height: 100%;
-    box-sizing: border-box;
-    font-size: 25px;
-    padding: 0 15px;
-    cursor: pointer;
-    border: 1px solid;
-    &--green {
-        color: white;
-        border-color: $green;
-        background-color: $green;
+    border-color: $clblue;
+    background-color: $clblue;
+    line-height: 16px;
+    @include breakpoint($tablet) {
+      width: 20%;
+      font-size: 16px;
     }
-    &--subscribe {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
+    @include breakpoint($mobile) {
+      min-width: 100px;
+      width: 30%;
     }
-    &:focus,
-    &:active {
-        outline: none;
-    }
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
 }

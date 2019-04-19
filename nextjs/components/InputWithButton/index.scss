@@ -1,0 +1,61 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.container {
+  height: 70px;
+  box-sizing: border-box;
+  display: flex;
+  @include breakpoint($tablet) {
+    height: 60px;
+  }
+  @include breakpoint($mobile) {
+    height: 50px;
+  }
+}
+.input {
+  border: 1px solid $clblue;
+  font-size: 25px;
+  padding: 0 16px;
+  height: 100%;
+  box-sizing: border-box;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  flex: 1;
+  width: 100%;
+  @include breakpoint($tablet) {
+    width: 80%;
+    font-size: 22px;
+    padding: 0 15px;
+  }
+  @include breakpoint($mobile) {
+    padding: 0 8px;
+    font-size: 16px;
+  }
+  &::placeholder {
+    color: $black;
+    font-size: 25px;
+    @include breakpoint($tablet) {
+      font-size: 22px;
+    }
+    @include breakpoint($mobile) {
+      font-size: 16px;
+    }
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+.msg {
+  font-weight: 700;
+  display: block;
+  padding: 4px 0;
+  font-size: 16px;
+  &--error {
+    color: #ff4d4f;
+  }
+  &--success {
+    color: #bae637;
+  }
+}

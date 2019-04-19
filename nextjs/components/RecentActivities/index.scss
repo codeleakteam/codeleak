@@ -1,0 +1,14 @@
+@import '../../styles/variables.scss';
+.activities {
+  &__container {
+    margin-top: 16px;
+  }
+  &__header {
+    font-size: 18px;
+    line-height: 28px;
+    border-bottom: 1px solid $antGray;
+    display: block;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+}

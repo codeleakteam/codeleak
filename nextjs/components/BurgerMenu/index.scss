@@ -1,0 +1,17 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.burger {
+    display: none;
+    cursor: pointer;
+    div {
+        width: 35px;
+        height: 5px;
+        background-color: black;
+        margin: 6px 0;
+    }
+    @include breakpoint($mobile) {
+        display: block;
+        margin-left: auto;
+    }
+}

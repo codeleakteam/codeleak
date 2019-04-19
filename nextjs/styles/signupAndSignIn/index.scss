@@ -1,0 +1,46 @@
+@import '../variables.scss';
+@import '../mixins.scss';
+.container {
+  max-width: 500px;
+  width: 70%;
+  margin: 0 auto;
+  &__socials {
+    display: flex;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+}
+.heading {
+  font-size: 44px;
+  line-height: 76px;
+  text-align: center;
+  color: $black;
+}
+.description {
+  font-size: 14px;
+  line-height: 22px;
+  color: $black;
+}
+.socials {
+  &__link {
+    margin-right: 16px;
+    max-width: 112px;
+    margin-bottom: 8px;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
+// page specific
+.btn {
+  &--login {
+    width: 112px;
+    margin-right: 16px;
+    @include breakpoint($mobile) {
+      width: 100%;
+    }
+  }
+  &--register {
+    width: 100%;
+  }
+}

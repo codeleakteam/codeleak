@@ -1,0 +1,103 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
+.question {
+  &__container {
+    border: 1px solid $antGray;
+    border-radius: 3px;
+    padding: 8px;
+    display: flex;
+    position: relative;
+    margin-bottom: 16px;
+    @include breakpoint($mobile) {
+      flex-direction: column;
+    }
+  }
+  &__main {
+    width: 100%;
+  }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    @include breakpoint($mobile) {
+      min-width: 22px;
+      // width: 30px;
+    }
+    &-container {
+      display: flex;
+      margin-right: 16px;
+      align-items: center;
+    }
+    &-num {
+      font-size: 14px;
+      margin-bottom: 4px;
+      line-height: 1;
+      @include breakpoint($mobile) {
+        margin-bottom: 0;
+      }
+    }
+    // &-icon {
+    //   height: 20px;
+    //   @include breakpoint($mobile) {
+    //     height: 18px;
+    //   }
+    // }
+  }
+  &__heading {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    min-width: 300px;
+    justify-content: space-between;
+    @include breakpoint($mobile) {
+      justify-content: flex-start;
+    }
+  }
+  &__name {
+    font-size: 22px;
+    line-height: 28px;
+    color: $blue;
+    margin-right: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+    width: 70%;
+    @include breakpoint($mobile) {
+      font-size: 24px;
+      max-width: 70%;
+      width: auto;
+    }
+  }
+  &__time {
+    color: $lightBlack;
+    font-size: 14px;
+    width: 30%;
+    margin-top: 4px;
+
+    @include breakpoint($mobile) {
+      max-width: 30%;
+    }
+  }
+  &__author {
+    position: absolute;
+    right: 4px;
+    bottom: 0;
+    display: block;
+    color: $lightBlack;
+    max-width: 130px;
+    cursor: pointer;
+    @include breakpoint($mobile) {
+      font-size: 16px;
+    }
+  }
+}
+
+// .icon,
+// .icon svg {
+//   // font-size: 20px;
+
+//   @include breakpoint($mobile) {
+//     // font-size: 15px;
+//   }
+// }
