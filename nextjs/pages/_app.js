@@ -7,10 +7,6 @@ import Footer from '../components/Footer'
 import trackPageView from '../helpers/trackPageView'
 import Router from 'next/router'
 
-import axios from 'axios'
-
-// import TwoSideLayout from '../components/TwoSideLayout'
-
 import classes from '../styles/layout.module.scss'
 import '../styles/global.scss'
 
