@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist 
@@ -56,9 +56,15 @@ class GetQuestionView(RetrieveAPIView):
             # 'answers': answer_serializer.data,
             # 'answer_comments': serialized_answer_comments
         }, status.HTTP_200_OK)
-        w
 
-class CreateQuestionView(CreateAPIView):
+class ListCreateQuestionView(ListCreateAPIView):
+    def get(self,request):
+        questions = Question.objects.all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response({
+                'questions': serializer.data,
+            }, status.HTTP_200_OK)
+
     def post(self, request):
         print("Create question data: ", request.data)
         serializer = QuestionCreateUpdateSerializer(data=request.data)
@@ -87,11 +93,10 @@ class UpdateQuestionView(UpdateAPIView):
 
 class UpdateQuestionScoreView(UpdateAPIView):
     def put(self, request, question_id):
-        print("AE", request.data.get("user_id"))
         vote_value = request.data.get('vote_value')
         user_id = request.data.get('user_id')
         user_vote_value_has_changed = True 
-        print("CreateReputationScoreTransaction: ", request.data.get('vote_value'))
+        print("UpdateQuestionScoreView: ", request.data.get('vote_value'))
         print("upvote value: ", vote_value)
 
         if vote_value == None:

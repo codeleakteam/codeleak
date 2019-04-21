@@ -6,7 +6,7 @@ class Vote(models.Model):
         abstract = True
 
     # Flags
-    vote_value = models.SmallIntegerField(default=0, blank=False, null=False)
+    is_upvote = models.BooleanField(default=True, blank=False, null=False)
     is_deleted = models.BooleanField(default=False, blank=True, null=False)
     # Timestamps
     created_at = models.DateTimeField(default=timezone.now, blank=True, null=False)
