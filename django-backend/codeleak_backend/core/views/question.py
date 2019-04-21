@@ -9,52 +9,17 @@ from core.serializers import QuestionSerializer, QuestionCommentSerializer, Ques
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
 
+# Helper that evaluates 'true' to True and does so for false values
+def str2bool(v):
+  return v.lower() in ("yes", "true", "t", "1")
+
 class GetQuestionView(RetrieveAPIView):
     def get(self, request, question_id):
-        print("KVESCN ID: ", question_id)
         # Get question
         question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
         serializer = QuestionSerializer(question)
-        print("DATA: ", serializer.data)
-
-        # Get question comments
-        # question_comments = QuestionComment.objects.filter(question=question_id)[:5]
-        # question_comment_serializer = QuestionCommentSerializer(question_comments, many=True)
-
-        # Get question answers
-        # answers = Answer.objects.filter(question=question_id).prefetch_related('answer_comment')
-        # answer_serializer = AnswerSerializer(answers, many=True)
-
-        # [answer_id]: [answer_queryset]
-        # answer_comments = {}
-
-        # Goingto be dispatched through JSON
-        # serialized_answer_comments = {}
-
-        # Get answer comments
-        # for a in answers:
-        #     print("AJDI", a.id)
-        #     answer_comments[a.id] = AnswerComment.objects.filter(answer=a.id)
-        #     answer_comments[str(a.id) + '_count'] = AnswerComment.objects.filter(answer=a.id).count()
-
-        # print("ANSWER_COMMENTS: ", answer_comments)
-
-        # Serialize answer comments
-        # for k,v in answer_comments.items():
-        #     if "_count" in str(k):
-        #         continue
-
-        #     if answer_comments[str(k) + "_count"] == 0:
-        #         continue
-
-        #     print("There are comments for this answer. Serializing...")
-        #     serialized_answer_comments[k] = AnswerCommentSerializer(v, many=True).data
-
         return Response({
             'question': serializer.data,
-            # 'question_comments': question_comment_serializer.data,
-            # 'answers': answer_serializer.data,
-            # 'answer_comments': serialized_answer_comments
         }, status.HTTP_200_OK)
 
 class ListCreateQuestionView(ListCreateAPIView):
@@ -63,7 +28,7 @@ class ListCreateQuestionView(ListCreateAPIView):
         serializer = QuestionSerializer(questions, many=True)
         return Response({
                 'questions': serializer.data,
-            }, status.HTTP_200_OK)
+        }, status.HTTP_200_OK)
 
     def post(self, request):
         print("Create question data: ", request.data)
@@ -93,77 +58,87 @@ class UpdateQuestionView(UpdateAPIView):
 
 class UpdateQuestionScoreView(UpdateAPIView):
     def put(self, request, question_id):
-        vote_value = request.data.get('vote_value')
+        is_upvote = request.data.get('is_upvote')
         user_id = request.data.get('user_id')
-        user_vote_value_has_changed = True 
-        print("UpdateQuestionScoreView: ", request.data.get('vote_value'))
-        print("upvote value: ", vote_value)
 
-        if vote_value == None:
-            return Response({ 'message': 'Vote value param not provided'}, status.HTTP_400_BAD_REQUEST)
+        # Field checks
+        if is_upvote == None:
+            return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if user_id == None:
             return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
-        try:
-            vote_value = int(vote_value)
-            user_id = int(user_id)
-        except ValueError:
-           return Response({ 'message': 'Invalid parameters'}, status.HTTP_400_BAD_REQUEST) 
-            
-        # Required body data 
-        if vote_value != 0 and vote_value != QUESTION_VOTE_VALUE and vote_value != -QUESTION_VOTE_VALUE:
-            return Response({ 'message': 'Invalid vote parameter '}, status.HTTP_400_BAD_REQUEST)
-        try:
-            # Make sure user exists
-            user = User.objects.get(pk=user_id)
-            question_vote_serializer = None
-            try:
-                # If question_vote object already exists we update value, save and make and fill a serializer
-                question_vote = QuestionVote.objects.get(author=user_id, question=question_id)
-                
-                # User's already existing value has changed so we are going to update question score field
-                if question_vote.vote_value == vote_value:
-                    user_vote_value_has_changed = False
+        if is_upvote != 'true' and is_upvote != 'false':
+            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST) 
 
-                # Updating question_vote vote value no matter what. Performance does not matter here...
-                question_vote.vote_value = vote_value
+        # If user is not found, ObjectDoesNotExist will be caught 
+        try:
+            user = User.objects.get(pk=user_id)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # If question is not found, ObjectDoesNotExist will be caught 
+        try:
+            question = Question.objects.get(pk=question_id) 
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Flags
+        is_upvote = str2bool(is_upvote)
+
+        # Vote value(adds up only on answer score)
+        vote_value = None
+        if is_upvote:
+            vote_value = QUESTION_VOTE_VALUE
+        else:
+            vote_value = -QUESTION_VOTE_VALUE
+
+        try:
+            # If QuestionVote already exists we just update val
+            question_vote = QuestionVote.objects.get(author=user_id, question=question_id)
+            print("Question_vote already exists. ")
+
+            # Case where user might be switching from upvote to downvote
+            if question_vote.is_upvote != is_upvote:
+                question_vote.is_upvote = is_upvote
                 question_vote.save()
                 question_vote_serializer = QuestionVoteSerializer(question_vote)
-            except ObjectDoesNotExist:
-                print("Question vote does not exist...")
-                pass
 
-           # Question vote did not exist and we are creating one 
-            if question_vote_serializer == None:
-                question_vote_serializer = QuestionVoteSerializer(data={
-                    'author': user_id,
-                    'question': question_id,
-                    'vote_value': vote_value
-                })
-                if question_vote_serializer.is_valid():
-                    print("question_vote_serializer is valid. saving...")
-                    question_vote_serializer.save()
-                else:
-                    print("question_vote_serializer is not valid. saving...")
-                    return Response({ 'message': 'Couldnt create vote', 'errors': question_vote_serializer.errors }, status=status.HTTP_404_NOT_FOUND)
-
-            question_vote_serializer = QuestionVoteSerializer(question_vote)
-
-            question = Question.objects.get(pk=question_id)
-            if user_vote_value_has_changed:
-                question.score += question_vote_serializer.data['vote_value']
+                # * 2 because of switch; 
+                question.score += vote_value * 2
                 question.save()
-            serializer = QuestionSerializer(question)
+                serializer = QuestionSerializer(question)
+                return Response({
+                    'question_vote': question_vote_serializer.data,
+                    'question': serializer.data
+                }, status.HTTP_200_OK)
+            # If user tries to upvote an already upvoted answer
+            else:
+                return Response({
+                    'message': 'You can only vote once in the same direction'
+                }, status=status.HTTP_400_BAD_REQUEST) 
 
+        # If it does not exist, we create one 
+        except ObjectDoesNotExist:
+            question_vote_serializer = QuestionVoteSerializer(data={
+                'author': user_id,
+                'question': question_id,
+                'is_upvote': is_upvote
+            })
+            if question_vote_serializer.is_valid():
+                print("question_vote_serializer is valid. saving...")
+                question_vote_serializer.save()
+            else:
+                print("question_vote_serializer isn't valid. aborting...") 
+                return Response(question_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+            question.score += vote_value
+            question.save()
+            serializer = QuestionSerializer(question)
             return Response({
                 'question_vote': question_vote_serializer.data,
                 'question': serializer.data
             }, status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as err:
-            print("[CreateReputationScoreTransaction.post] Something went wrong. Error: ", err)
-            return Response({ 'message': 'Internal server error', 'error': str(err) }, status=status.HTTP_404_NOT_FOUND)
+
 
 

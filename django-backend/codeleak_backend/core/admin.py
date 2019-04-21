@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Tag, Question, Answer, QuestionComment, AnswerComment, User, Editor, Subscriber, AnswerVote
+from core.models import Tag, Question, Answer, QuestionComment, AnswerComment, User, Editor, Subscriber, AnswerVote, QuestionVote
 
 # Register your models here.
 admin.site.register(Tag)
@@ -11,3 +11,4 @@ admin.site.register(QuestionComment)
 admin.site.register(AnswerComment)
 admin.site.register(Subscriber)
 admin.site.register(AnswerVote)
+admin.site.register(QuestionVote)

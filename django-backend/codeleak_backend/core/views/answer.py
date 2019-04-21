@@ -100,7 +100,6 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 print("answer_vote_serializer isn't valid. aborting...") 
                 return Response(answer_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
-            answer = Answer.objects.get(pk=answer_id)
             answer.score += vote_value
             answer.save()
             serializer = AnswerSerializer(answer)
