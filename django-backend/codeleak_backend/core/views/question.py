@@ -38,7 +38,6 @@ class ListCreateQuestionView(ListCreateAPIView):
         serializer = QuestionCreateUpdateSerializer(data=request.data)
         if serializer.is_valid():
             for t in tags:
-                print("DO I?", t)
                 try:
                     tag = Tag.objects.get(pk=t.get('id', None))
                     tag.used_times += 1

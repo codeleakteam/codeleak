@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from core.models import Answer, User
@@ -23,6 +24,28 @@ class GetUpdateAnswerView(RetrieveUpdateAPIView):
     def put(self, request, answer_id):
         pass
 
+class AcceptAnswer(APIView):
+    def post(self, request, answer_id):
+        # TODO: Only question author can accept answer
+        user_id = request.data.get("user_id", None)
+
+        # Field checks
+        if user_id == None:
+            return Response({ 'message': 'user_id param not provided'}, status.HTTP_400_BAD_REQUEST)
+
+        try:
+            answer = Answer.objects.filter(pk=answer_id).select_related('question')[0]
+            if answer.question.has_accepted_answer:
+                return Response({'message': 'Question already has an accepted answer'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                answer.is_accepted = True
+                answer.question.has_accepted_answer = True
+                answer.save()
+                answer.question.save()
+                serializer = AnswerSerializer(answer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Answer with the ID: ' + answer_id+ ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 class UpdateAnswerScoreView(UpdateAPIView):
     def put(self, request, answer_id):
@@ -107,6 +130,3 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 'answer_vote': answer_vote_serializer.data,
                 'answer': serializer.data
             }, status.HTTP_200_OK)
-
-        
-        
