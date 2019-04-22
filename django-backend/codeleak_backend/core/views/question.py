@@ -3,7 +3,7 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAP
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist 
-from core.models import Question, QuestionComment, Answer, AnswerComment, QuestionVote, User
+from core.models import Question, Tag, QuestionComment, Answer, AnswerComment, QuestionVote, User
 from core.serializers import QuestionSerializer, QuestionCommentSerializer, QuestionCreateUpdateSerializer, AnswerSerializer, AnswerCommentSerializer, QuestionVoteSerializer
 
 # Upvoting question means +20 on its score, and downvoting means -20
@@ -32,8 +32,18 @@ class ListCreateQuestionView(ListCreateAPIView):
 
     def post(self, request):
         print("Create question data: ", request.data)
+        tags = request.data.get("tags", None)
         serializer = QuestionCreateUpdateSerializer(data=request.data)
         if serializer.is_valid():
+            for t in tags:
+                print("DO I?", t)
+                try:
+                    tag = Tag.objects.get(pk=t.get('id', None))
+                    tag.used_times += 1
+                    tag.save()
+                    print("tag used times: ", tag.used_times)
+                except ObjectDoesNotExist:
+                    return Response({ 'message': 'Tag with the ID: ' + t.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

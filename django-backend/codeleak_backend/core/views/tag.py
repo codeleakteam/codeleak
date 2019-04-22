@@ -10,7 +10,6 @@ from django.template.defaultfilters import slugify
 class ListCreateTagView(ListCreateAPIView):
     def post(self, request):
         data = request.data
-        print("DATTT", data)
 
         # Generating slug
         if data["title"] is not None:
@@ -22,7 +21,12 @@ class ListCreateTagView(ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get(self, request):
-        tags = Tag.objects.all()
+        only_popular = request.GET.get("only_popular", None)
+        if only_popular == 'true':
+            tags = Tag.objects.order_by('-used_times')[:6]
+        else:
+            tags = Tag.objects.all()
+
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
