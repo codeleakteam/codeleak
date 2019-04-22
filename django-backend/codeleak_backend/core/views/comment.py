@@ -1,3 +1,4 @@
+from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -116,7 +117,6 @@ class UpdateCommentScoreView(UpdateAPIView):
         # Dynamically get comment model and its serializer
         CommentModel = COMMENT_TYPES[comment_type]['model']            
         CommentSerializer = COMMENT_TYPES[comment_type]['serializer'] 
-        print('KUKUS', COMMENT_TYPES[comment_type]['vote_serializer'])
         CommentVoteSerializer = COMMENT_TYPES[comment_type]['vote_serializer']
         comment_key = COMMENT_TYPES[comment_type]['key'] 
 
@@ -125,7 +125,6 @@ class UpdateCommentScoreView(UpdateAPIView):
                 comment_vote = QuestionCommentVote.objects.get(author=user_id, question_comment=comment_id)
             else:
                 comment_vote = AnswerCommentVote.objects.get(author=user_id, answer_comment=comment_id)
-                print("LSSGOOO", comment_id, comment_vote)
             
             # Case where user might be switching from upvote to downvote
             if comment_vote.is_upvote != is_upvote:
@@ -150,7 +149,6 @@ class UpdateCommentScoreView(UpdateAPIView):
 
         # If it does not exist, we create one 
         except ObjectDoesNotExist:
-            print("IT DOES NOT EXIST")
             data = {
                 'author': user_id,
                 'is_upvote': is_upvote
@@ -172,3 +170,36 @@ class UpdateCommentScoreView(UpdateAPIView):
                 'comment': serializer.data
             }, status.HTTP_200_OK)
 
+class ReportCommentView(APIView):
+    COMMENT_TYPES = COMMENT_TYPES
+    def post(self, request, comment_id):
+        # TODO: Only question author can accept answer
+        comment_type = request.data.get('comment_type', None)
+        user_id = request.data.get("user_id", None)
+        COMMENT_TYPES = self.COMMENT_TYPES
+
+        # Field checks
+        if user_id == None:
+            return Response({ 'message': 'user_id param not provided'}, status.HTTP_400_BAD_REQUEST)
+
+        if comment_type == None:
+            return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
+        
+        if comment_type not in COMMENT_TYPES:
+            return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
+
+        CommentModel = COMMENT_TYPES[comment_type]['model']            
+        CommentSerializer = COMMENT_TYPES[comment_type]['serializer'] 
+        comment_key = COMMENT_TYPES[comment_type]['key'] 
+
+        try:
+            comment = CommentModel.objects.get(pk=comment_id)
+            comment.reported_times += 1
+            comment.save()
+            serializer = CommentSerializer(comment)
+            return Response({
+                'comment': serializer.data
+            }, status.HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Comment with the ID: ' + comment_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)

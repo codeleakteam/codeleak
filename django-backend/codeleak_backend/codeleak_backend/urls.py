@@ -20,6 +20,7 @@ from core.views import (
     HomeView,
     ListCreateQuestionView,
     UpdateQuestionView,
+    ReportQuestionView,
     user_question_tag_search,
     ListUserView,
     GetUpdateUserView,
@@ -30,9 +31,11 @@ from core.views import (
     CreateSubscriberView,
     GetUpdateAnswerView,
     UpdateAnswerScoreView,
-    AcceptAnswer,
+    AcceptAnswerView,
+    ReportAnswerView,
     ListCreateCommentView,
-    UpdateCommentScoreView
+    UpdateCommentScoreView,
+    ReportCommentView
 )
 
 urlpatterns = [
@@ -45,11 +48,14 @@ urlpatterns = [
     url(r'^api/questions/(?P<question_id>[0-9]+)$', GetQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)$', UpdateQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)/vote$', UpdateQuestionScoreView.as_view()),
+    url(r'^api/questions/(?P<question_id>[0-9]+)/report$', ReportQuestionView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)$', GetUpdateAnswerView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)/vote$', UpdateAnswerScoreView.as_view()),
-    url(r'^api/answers/(?P<answer_id>[0-9]+)/accept$', AcceptAnswer.as_view()),
+    url(r'^api/answers/(?P<answer_id>[0-9]+)/accept$', AcceptAnswerView.as_view()),
+    url(r'^api/answers/(?P<answer_id>[0-9]+)/report$', ReportAnswerView.as_view()),
     url(r'^api/comments/$', ListCreateCommentView.as_view()),
     url(r'^api/comments/(?P<comment_id>[0-9]+)/vote$', UpdateCommentScoreView.as_view()),
+    url(r'^api/comments/(?P<comment_id>[0-9]+)/report$', ReportCommentView.as_view()),
     path('api/tags', ListCreateTagView.as_view()),
     url(r'^api/tags/(?P<tag_id>[0-9]+)$', GetTagView.as_view()),
     path('api/search', user_question_tag_search),

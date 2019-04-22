@@ -24,7 +24,7 @@ class GetUpdateAnswerView(RetrieveUpdateAPIView):
     def put(self, request, answer_id):
         pass
 
-class AcceptAnswer(APIView):
+class AcceptAnswerView(APIView):
     def post(self, request, answer_id):
         # TODO: Only question author can accept answer
         user_id = request.data.get("user_id", None)
@@ -46,6 +46,20 @@ class AcceptAnswer(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ObjectDoesNotExist:
             return Response({ 'message': 'Answer with the ID: ' + answer_id+ ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+class ReportAnswerView(APIView):
+    def post(self, request, answer_id):
+        try:
+            answer = Answer.objects.get(pk=answer_id)
+            answer.reported_times += 1
+            answer.save()
+            serializer = AnswerSerializer(answer)
+            return Response({
+                'answer': serializer.data,
+            }, status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Answer with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class UpdateAnswerScoreView(UpdateAPIView):
     def put(self, request, answer_id):
