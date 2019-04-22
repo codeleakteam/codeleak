@@ -11,7 +11,8 @@ from .user import GetUpdateUserView,ListUserView
 from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView)
-from .comment import ListCreateCommentView, UpdateCommentScoreView
+from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView 
+
 
 __all__ = [
     'HomeView',
@@ -31,5 +32,6 @@ __all__ = [
     'AcceptAnswerView',
     'ReportAnswerView',
     'ListCreateCommentView',
-    'UpdateCommentScoreView'
+    'UpdateCommentScoreView',
+    'ReportCommentView'
 ]
