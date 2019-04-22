@@ -15,13 +15,15 @@ def str2bool(v):
 
 class GetQuestionView(RetrieveAPIView):
     def get(self, request, question_id):
-        # Get question
-        question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
-        serializer = QuestionSerializer(question)
-        return Response({
-            'question': serializer.data,
-        }, status.HTTP_200_OK)
-
+        try:
+            question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
+            serializer = QuestionSerializer(question)
+            return Response({
+                'question': serializer.data,
+            }, status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
 class ListCreateQuestionView(ListCreateAPIView):
     def get(self,request):
         questions = Question.objects.all()

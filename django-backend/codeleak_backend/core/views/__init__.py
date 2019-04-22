@@ -7,7 +7,7 @@ from .question import (
     ListCreateQuestionView
 )
 from .user import GetUpdateUserView,ListUserView
-from .tag import ListCreateTagView
+from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView)
 from .comment import ListCreateCommentView, UpdateCommentScoreView
@@ -18,6 +18,7 @@ __all__ = [
     'GetUpdateUserView',
     'UpdateQuestionView',
     'ListCreateTagView',
+    'GetTagView',
     'user_question_tag_search',
     'GetQuestionView',
     'UpdateQuestionScoreView',
