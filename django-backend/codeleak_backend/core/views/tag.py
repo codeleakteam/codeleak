@@ -10,7 +10,6 @@ from django.template.defaultfilters import slugify
 class ListCreateTagView(ListCreateAPIView):
     def post(self, request):
         data = request.data
-        print("DATTT", data)
 
         # Generating slug
         if data["title"] is not None:
