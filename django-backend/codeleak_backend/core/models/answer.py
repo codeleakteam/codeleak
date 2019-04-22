@@ -25,6 +25,8 @@ class Answer(models.Model):
     # Optional
     repository_url = models.CharField(max_length=255, blank=True, null=True)
     # Flags
+    is_accepted = models.BooleanField(
+        default=False, blank=True, null=False)
     has_comments = models.BooleanField(
         default=False, blank=True, null=False)
     is_edited = models.BooleanField(
