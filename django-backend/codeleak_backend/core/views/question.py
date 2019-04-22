@@ -58,8 +58,8 @@ class UpdateQuestionView(UpdateAPIView):
 
 class UpdateQuestionScoreView(UpdateAPIView):
     def put(self, request, question_id):
-        is_upvote = request.data.get('is_upvote')
-        user_id = request.data.get('user_id')
+        is_upvote = request.data.get('is_upvote', None)
+        user_id = request.data.get('user_id', None)
 
         # Field checks
         if is_upvote == None:
