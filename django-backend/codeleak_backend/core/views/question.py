@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -150,6 +151,19 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 'question_vote': question_vote_serializer.data,
                 'question': serializer.data
             }, status.HTTP_200_OK)
+
+class QuestionReportView(APIView):
+    def post(self, request, question_id):
+        try:
+            question = Question.objects.get(pk=question_id)
+            question.reported_times += 1
+            question.save()
+            serializer = QuestionSerializer(question)
+            return Response({
+                'question': serializer.data,
+            }, status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
