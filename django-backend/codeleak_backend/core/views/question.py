@@ -152,7 +152,7 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 'question': serializer.data
             }, status.HTTP_200_OK)
 
-class QuestionReportView(APIView):
+class ReportQuestionView(APIView):
     def post(self, request, question_id):
         try:
             question = Question.objects.get(pk=question_id)
