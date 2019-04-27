@@ -1,24 +1,37 @@
 from .home import HomeView
 from .search import user_question_tag_search
 from .question import (
-    CreateQuestionView,
     UpdateQuestionView,
     GetQuestionView,
-    UpdateQuestionScoreView
-)
-from .user import GetUpdateUserView
-from .tag import ListCreateTagView
+    UpdateQuestionScoreView,
+    ListCreateQuestionView,
+    ReportQuestionView
+    )
+from .user import GetUpdateUserView,ListUserView
+from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
+from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView)
+from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView 
+
 
 __all__ = [
     'HomeView',
-    'UpdateUser',
+    'ListUserView',
     'GetUpdateUserView',
-    'CreateQuestionView',
     'UpdateQuestionView',
+    'ReportQuestionView',
     'ListCreateTagView',
+    'GetTagView',
     'user_question_tag_search',
     'GetQuestionView',
-    'UpdateQuestionScoreView'
-    'CreateSubscriberView'
+    'UpdateQuestionScoreView',
+    'CreateSubscriberView',
+    'ListCreateQuestionView',
+    'GetUpdateAnswerView',
+    'UpdateAnswerScoreView',
+    'AcceptAnswerView',
+    'ReportAnswerView',
+    'ListCreateCommentView',
+    'UpdateCommentScoreView',
+    'ReportCommentView'
 ]
