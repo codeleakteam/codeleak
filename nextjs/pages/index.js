@@ -1,27 +1,55 @@
 import React, { Component } from 'react'
-import Head from 'next/head'
-import InputWithButton from '../components/InputWithButton'
-import Logo from '../components/Logo'
+import Link from 'next/link'
+import { Button } from 'antd'
+import QuestionSummaryContainer from '../components/QuestionSummaryContainer'
+import Banner from '../components/Banner'
+import PopularTags from '../components/SideWidgets/PopularTags'
+import TwoSideLayout from '../components/TwoSideLayout'
+import { apiGet } from '../api'
+import _ from 'lodash'
 
-import classes from '../styles/landing/index.scss'
+import classes from '../styles/index/index.scss'
 
-const Landing = () => {
-  return (
-    <div>
-      <Head>
-        <title>codeLeak</title>
-      </Head>
-      <section className={classes.banner}>
-        <div className={classes.banner__desc}>
-          <Logo size={42} className={classes.banner__logo} />
-          <h3 className={classes.banner__text}>
-            An online-editor based question and answer platform for front-end developers
-          </h3>
-          <InputWithButton />
+class Index extends Component {
+  state = {
+    tags: null,
+    questions: [],
+  }
+  render() {
+    return (
+      <div
+        className={
+          !this.props.loggedIn && [classes.section__container, classes['section__container--loggedOut']].join(' ')
+        }
+      >
+        {!this.props.loggedIn && <Banner />}
+        <div className={classes.section__heading}>
+          <h2>Questions</h2>
+          <Link href="/questions/ask">
+            <Button type="primary">Ask a question</Button>
+          </Link>
         </div>
-      </section>
-    </div>
-  )
+        <TwoSideLayout
+          left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
+          right={<PopularTags tagList={this.props.tags} />}
+        />
+      </div>
+    )
+  }
 }
 
-export default Landing
+Index.getInitialProps = async function() {
+  try {
+    let res = await apiGet.getIndex()
+    const tags = _.get(res, 'data.popular_tags', [])
+    const questions = _.get(res, 'data.results', [])
+    return {
+      tags,
+      questions,
+    }
+  } catch (error) {
+    console.log('error', error)
+  }
+}
+
+export default Index

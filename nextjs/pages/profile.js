@@ -1,7 +1,7 @@
 import React from 'react'
-import TwoSideLayout from '../../components/TwoSideLayout'
-import Jobs from '../../components/SideWidgets/Jobs'
-import Profile from '../../components/Profile'
+import TwoSideLayout from '../components/TwoSideLayout'
+import Jobs from '../components/SideWidgets/Jobs'
+import Profile from '../components/Profile'
 
 const ProfilePage = props => {
   return (

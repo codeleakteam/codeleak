@@ -3,19 +3,21 @@ import QuestionSummary from '../QuestionSummary'
 
 import classes from './index.scss'
 
-const QuestionSummaryContainer = ({ loggedIn, answers }) => {
+const QuestionSummaryContainer = ({ loggedIn, questions }) => {
   return (
     <div className={!loggedIn ? classes['summary__container--logged-out'] : null}>
-      {answers.map(answer => {
+      {questions.map(question => {
         return (
           <QuestionSummary
-            key={answer.id}
-            score={answer.score}
-            // comments={answer.comments}
-            title={answer.title}
-            createdAt={answer.created_at}
-            tags={answer.tags}
-            author={answer.author.username}
+            key={question.id}
+            score={question.score}
+            comments={question.comments}
+            title={question.title}
+            createdAt={question.created_at}
+            tags={question.tags}
+            author={question.author.username}
+            authorId={question.author.id}
+            questionId={question.id}
           />
         )
       })}

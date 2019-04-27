@@ -11,19 +11,25 @@ app
   .then(() => {
     const server = express()
 
-    // server.get('/question/:id', (req, res) => {
-    //   const actualPage = '/post'
-    //   const queryParams = { id: req.params.id }
-    //   app.render(req, res, actualPage, queryParams)
-    // })
+    server.get('/profile/:id', (req, res) => {
+      const actualPage = '/profile'
+      const queryParams = { title: req.params.id }
+      app.render(req, res, actualPage, queryParams)
+    })
+
+    server.get('/question/:id', (req, res) => {
+      const actualPage = '/question'
+      const queryParams = { title: req.params.id }
+      app.render(req, res, actualPage, queryParams)
+    })
 
     server.get('*', (req, res) => {
       return handle(req, res)
     })
 
-    server.listen(PORT, err => {
+    server.listen(3000, err => {
       if (err) throw err
-      console.log(`ready on port: ${PORT}`)
+      console.log(`ready on port: 3000`)
     })
   })
   .catch(ex => {
