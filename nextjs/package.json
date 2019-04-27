@@ -22,7 +22,7 @@
     "react-dom": "^16.8.5"
   },
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
     "start": "pm2 start pm2-apps.json"
   },

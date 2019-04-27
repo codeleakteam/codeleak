@@ -5,10 +5,15 @@ import TagWithLink from '../TagWithLink'
 // import UpVote from '../CustomIcons/UpVote'
 import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
+import moment from 'moment'
 
 import classes from './index.scss'
 
-const Question = () => {
+const Question = ({ data }) => {
+  const { question } = data
+
+  let formatDate = moment(question.created_at).fromNow()
+
   const questionOptions = (
     <Menu>
       <Menu.Item>
@@ -28,39 +33,38 @@ const Question = () => {
       </Menu.Item>
     </Menu>
   )
+
   return (
     <div className={classes.question__container}>
-      <h3 className={classes.question__name}>How do next.js applications optimize for mobile screens?</h3>
+      <h3 className={classes.question__name}>{question.title}</h3>
       <div className={classes.question__info}>
         <div className={classes.question__detail}>
-          <Link href="/">
+          <Link href={`/profile/${question.author.id}`}>
             <div className={classes.question__avatar}>
               <img
-                src="https://dummyimage.com/43x43/000/fff"
-                alt="user alt"
+                src={question.author.avatar}
+                alt={question.author.username}
                 className={classes['question__avatar-img']}
               />
             </div>
           </Link>
-          <span className={classes.question__rep}>100</span>
+          <span className={classes.question__rep}>{question.score}</span>
         </div>
         <div className={classes['question__user-info']}>
-          <Link href="/">
+          <Link href={`/profile/${question.author.id}`}>
             <a>
-              <span className={classes.question__user}>Jadranka Barjaktarevic</span>
+              <span className={classes.question__user}>{question.author.username}</span>
             </a>
           </Link>
 
-          <span className={classes.question__time}>18 hours ago</span>
+          <span className={classes.question__time}>{formatDate}</span>
         </div>
       </div>
       <div className={classes['question__tags-wrapper']}>
         <div>
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
+          {question.tags.map(q => {
+            return <TagWithLink url={`/tag/${q.slug}`} id={q.id} text={q.title} key={q.id} />
+          })}
         </div>
         <div>
           <Link href="/">
@@ -69,11 +73,7 @@ const Question = () => {
         </div>
       </div>
       <div className={classes.question__text}>
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book.
-        </p>
+        <p>{question.description}</p>
       </div>
       <div className={classes.question__controls}>
         <Button className={classes.question__upvote} type="primary">
@@ -91,11 +91,9 @@ const Question = () => {
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>
       </div>
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
+      {question.comments.map(c => (
+        <Comment key={c.id + c.score} id={c.id} authorName={c.author.username} content={c.content} score={c.score} />
+      ))}
     </div>
   )
 }

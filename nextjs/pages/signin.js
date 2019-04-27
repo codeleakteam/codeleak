@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd'
 
-// import classes from '../styles/signupAndSignIn/index.scss'
+import classes from '../styles/signupAndSignIn/index.scss'
 
 class SignIn extends Component {
   handleSubmit = e => {

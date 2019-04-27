@@ -3,10 +3,11 @@ import { Button, Icon, Dropdown, Menu } from 'antd'
 import Link from 'next/link'
 import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
+import timeAgo from '../../helpers/timeAgo'
 
 import classes from './index.scss'
 
-const Answer = props => {
+const Answer = ({ answer }) => {
   const answerOptions = (
     <Menu>
       <Menu.Item>
@@ -32,23 +33,19 @@ const Answer = props => {
         <div className={classes.answer__detail}>
           <Link href="/">
             <div className={classes.answer__avatar}>
-              <img
-                src="https://dummyimage.com/43x43/000/fff"
-                alt="user alt"
-                className={classes['answer__avatar-img']}
-              />
+              <img src={answer.author.avatar} alt={answer.author.username} className={classes['answer__avatar-img']} />
             </div>
           </Link>
-          <span className={classes.answer__rep}>100</span>
+          <span className={classes.answer__rep}>{answer.score}</span>
         </div>
         <div className={classes['answer__user-info']}>
           <Link href="/">
             <a>
-              <span className={classes.answer__user}>Jadranka Barjaktarevic</span>
+              <span className={classes.answer__user}>{answer.author.username}</span>
             </a>
           </Link>
 
-          <span className={classes.answer__time}>18 hours ago</span>
+          <span className={classes.answer__time}>{timeAgo(answer.created_at)}</span>
         </div>
       </div>
       <div className={classes['answer__tags-wrapper']}>
@@ -59,11 +56,7 @@ const Answer = props => {
         </div>
       </div>
       <div className={classes.answer__text}>
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book.
-        </p>
+        <p>{answer.description}</p>
       </div>
       <div className={classes.answer__controls}>
         <Button className={classes.answer__upvote} type="primary">
@@ -81,8 +74,9 @@ const Answer = props => {
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>
       </div>
-      <Comment />
-      <Comment />
+      {answer.comments.map(comment => (
+        <Comment />
+      ))}
     </div>
   )
 }

@@ -8,6 +8,9 @@ export const apiGet = {
   getIndex: () => {
     return axios.get(`${BASE_URL}/api/home`)
   },
+  getQuestion: id => {
+    return axios.get(`${BASE_URL}/api/questions/${id}`)
+  },
 }
 
 export const apiPost = {

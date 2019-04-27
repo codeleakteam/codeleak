@@ -53,6 +53,10 @@ class MyDocument extends Document {
             name="description"
             content="An online-editor based question and answer platform for front-end developers"
           />
+
+          {/* {process.env.NODE_ENV == 'production' && (
+            <link rel="stylesheet" type="text/css" href={'/_next/static/css/styles.chunk.css?v=' + Date.now()} />
+          )} */}
         </Head>
         <body>
           <Main />

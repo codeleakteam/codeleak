@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import classes from './index.scss'
 
-const QuestionSummary = ({ score, comments, title, createdAt, tags, author }) => {
+const QuestionSummary = ({ score, comments, title, createdAt, tags, author, questionId, authorId }) => {
   let formatDate = moment(createdAt).fromNow()
 
   return (
@@ -19,7 +19,7 @@ const QuestionSummary = ({ score, comments, title, createdAt, tags, author }) =>
           </div>
         </div>
         <div className={classes.question__info}>
-          <div className={classes['question__info-num']}>0</div>
+          <div className={classes['question__info-num']}>{comments.length}</div>
           <div className={classes['question__info-icon']}>
             <CustomIcon name="comment" height="18px" />
           </div>
@@ -33,7 +33,7 @@ const QuestionSummary = ({ score, comments, title, createdAt, tags, author }) =>
       </div>
       <div className={classes.question__main}>
         <div className={classes.question__heading}>
-          <Link href="/questions/questionid">
+          <Link as={`question/${questionId}`} href={`question/?title=${questionId}`}>
             <h4 className={classes.question__name}>{title}</h4>
           </Link>
           <div className={classes.question__time}>{formatDate}</div>
@@ -43,7 +43,7 @@ const QuestionSummary = ({ score, comments, title, createdAt, tags, author }) =>
             <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" />
           ))}
         </div>
-        <Link href="/profile">
+        <Link as={`/profile/${authorId}`} href={`/profile/?=${authorId}`}>
           <a>
             <span className={classes.question__author}>{author}</span>
           </a>
