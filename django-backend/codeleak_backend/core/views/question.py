@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.core.exceptions import ObjectDoesNotExist 
+from django.core.exceptions import ObjectDoesNotExist
 from core.models import Question, Tag, QuestionComment, Answer, AnswerComment, QuestionVote, User
 from core.serializers import QuestionSerializer, QuestionCommentSerializer, QuestionCreateUpdateSerializer, AnswerSerializer, AnswerCommentSerializer, QuestionVoteSerializer
 
@@ -24,7 +24,7 @@ class GetQuestionView(RetrieveAPIView):
             }, status.HTTP_200_OK)
         except ObjectDoesNotExist:
             return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        
+
 class ListCreateQuestionView(ListCreateAPIView):
     def get(self,request):
         questions = Question.objects.all()
@@ -81,17 +81,17 @@ class UpdateQuestionScoreView(UpdateAPIView):
             return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if is_upvote != 'true' and is_upvote != 'false':
-            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST) 
+            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
 
-        # If user is not found, ObjectDoesNotExist will be caught 
+        # If user is not found, ObjectDoesNotExist will be caught
         try:
             user = User.objects.get(pk=user_id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # If question is not found, ObjectDoesNotExist will be caught 
+        # If question is not found, ObjectDoesNotExist will be caught
         try:
-            question = Question.objects.get(pk=question_id) 
+            question = Question.objects.get(pk=question_id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -116,9 +116,13 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 question_vote.save()
                 question_vote_serializer = QuestionVoteSerializer(question_vote)
 
-                # * 2 because of switch; 
+                # * 2 because of switch;
                 question.score += vote_value * 2
                 question.save()
+
+                user.reputation += vote_value * 2
+                user.save()
+
                 serializer = QuestionSerializer(question)
                 return Response({
                     'question_vote': question_vote_serializer.data,
@@ -128,9 +132,9 @@ class UpdateQuestionScoreView(UpdateAPIView):
             else:
                 return Response({
                     'message': 'You can only vote once in the same direction'
-                }, status=status.HTTP_400_BAD_REQUEST) 
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-        # If it does not exist, we create one 
+        # If it does not exist, we create one
         except ObjectDoesNotExist:
             question_vote_serializer = QuestionVoteSerializer(data={
                 'author': user_id,
@@ -141,11 +145,15 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 print("question_vote_serializer is valid. saving...")
                 question_vote_serializer.save()
             else:
-                print("question_vote_serializer isn't valid. aborting...") 
-                return Response(question_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+                print("question_vote_serializer isn't valid. aborting...")
+                return Response(question_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             question.score += vote_value
             question.save()
+
+            user.reputation += vote_value
+            user.save()
+
             serializer = QuestionSerializer(question)
             return Response({
                 'question_vote': question_vote_serializer.data,

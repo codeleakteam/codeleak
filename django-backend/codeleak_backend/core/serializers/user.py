@@ -24,4 +24,4 @@ class UserSerializerMinimal(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'username', 'avatar']
+        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
