@@ -112,6 +112,10 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 # * 2 because of switch; 
                 answer.score += vote_value * 2
                 answer.save()
+
+                user.reputation += vote_value * 2
+                user.save()
+
                 serializer = AnswerSerializer(answer)
                 return Response({
                     'answer_vote': answer_vote_serializer.data,
@@ -139,6 +143,10 @@ class UpdateAnswerScoreView(UpdateAPIView):
 
             answer.score += vote_value
             answer.save()
+
+            user.reputation += vote_value 
+            user.save()
+
             serializer = AnswerSerializer(answer)
             return Response({
                 'answer_vote': answer_vote_serializer.data,

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.core.exceptions import ObjectDoesNotExist 
+from django.core.exceptions import ObjectDoesNotExist
 from core.models import User, QuestionComment, AnswerComment, QuestionCommentVote, AnswerCommentVote
 from core.serializers import AnswerCommentSerializer, QuestionCommentSerializer, QuestionCommentVoteSerializer, AnswerCommentVoteSerializer
 
@@ -36,12 +36,12 @@ class ListCreateCommentView(ListCreateAPIView):
         comment_type = request.GET.get('comment_type', None)
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
-        
+
         if comment_type not in COMMENT_TYPES:
             return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
-        CommentModel = COMMENT_TYPES[comment_type]['model']            
-        CommentSerializer = COMMENT_TYPES[comment_type]['serializer'] 
-        comment_key = COMMENT_TYPES[comment_type]['key'] 
+        CommentModel = COMMENT_TYPES[comment_type]['model']
+        CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
+        comment_key = COMMENT_TYPES[comment_type]['key']
         try:
             comments = CommentModel.objects.all()
             serializer = CommentSerializer(comments, many=True)
@@ -75,10 +75,10 @@ class UpdateCommentScoreView(UpdateAPIView):
         # Field checks
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
-        
+
         if comment_type not in COMMENT_TYPES:
             return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
-        
+
         if is_upvote == None:
             return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
 
@@ -86,7 +86,7 @@ class UpdateCommentScoreView(UpdateAPIView):
             return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if is_upvote != 'true' and is_upvote != 'false':
-            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST) 
+            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
 
         # Checking if user exists
         try:
@@ -115,26 +115,30 @@ class UpdateCommentScoreView(UpdateAPIView):
             vote_value = COMMENT_DOWNVOTE_VALUE
 
         # Dynamically get comment model and its serializer
-        CommentModel = COMMENT_TYPES[comment_type]['model']            
-        CommentSerializer = COMMENT_TYPES[comment_type]['serializer'] 
+        CommentModel = COMMENT_TYPES[comment_type]['model']
+        CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
         CommentVoteSerializer = COMMENT_TYPES[comment_type]['vote_serializer']
-        comment_key = COMMENT_TYPES[comment_type]['key'] 
+        comment_key = COMMENT_TYPES[comment_type]['key']
 
         try:
             if comment_type == 'QUESTION_COMMENT':
                 comment_vote = QuestionCommentVote.objects.get(author=user_id, question_comment=comment_id)
             else:
                 comment_vote = AnswerCommentVote.objects.get(author=user_id, answer_comment=comment_id)
-            
+
             # Case where user might be switching from upvote to downvote
             if comment_vote.is_upvote != is_upvote:
                 comment_vote.is_upvote = is_upvote
                 comment_vote.save()
                 comment_vote_serializer = CommentVoteSerializer(comment_vote)
 
-                # * 2 because of switch; 
+                # * 2 because of switch;
                 comment.score += vote_value * 2
                 comment.save()
+
+                user.reputation += vote_value * 2
+                user.save()
+
                 serializer = CommentSerializer(comment)
                 return Response({
                     'comment_vote': comment_vote_serializer.data,
@@ -145,9 +149,9 @@ class UpdateCommentScoreView(UpdateAPIView):
             else:
                 return Response({
                     'message': 'You can only vote once in the same direction'
-                }, status=status.HTTP_400_BAD_REQUEST) 
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-        # If it does not exist, we create one 
+        # If it does not exist, we create one
         except ObjectDoesNotExist:
             data = {
                 'author': user_id,
@@ -159,8 +163,8 @@ class UpdateCommentScoreView(UpdateAPIView):
                 print("comment_vote_serializer is valid. saving...")
                 comment_vote_serializer.save()
             else:
-                print("comment_vote_serializer isn't valid. aborting...") 
-                return Response(comment_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+                print("comment_vote_serializer isn't valid. aborting...")
+                return Response(comment_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             comment.score += vote_value
             comment.save()
@@ -184,13 +188,13 @@ class ReportCommentView(APIView):
 
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
-        
+
         if comment_type not in COMMENT_TYPES:
             return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
 
-        CommentModel = COMMENT_TYPES[comment_type]['model']            
-        CommentSerializer = COMMENT_TYPES[comment_type]['serializer'] 
-        comment_key = COMMENT_TYPES[comment_type]['key'] 
+        CommentModel = COMMENT_TYPES[comment_type]['model']
+        CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
+        comment_key = COMMENT_TYPES[comment_type]['key']
 
         try:
             comment = CommentModel.objects.get(pk=comment_id)
