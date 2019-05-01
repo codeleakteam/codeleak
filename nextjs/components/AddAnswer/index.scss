@@ -1,0 +1,16 @@
+.answer {
+  &__container {
+    padding: 4px;
+    // border: 1px solid black;
+  }
+
+  &__buttons {
+    margin-bottom: 8px;
+  }
+  &__button {
+    margin-right: 4px;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}

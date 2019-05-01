@@ -4,6 +4,7 @@ import Link from 'next/link'
 import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
 import timeAgo from '../../helpers/timeAgo'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classes from './index.scss'
 
@@ -60,14 +61,15 @@ const Answer = ({ answer }) => {
       </div>
       <div className={classes.answer__controls}>
         <Button className={classes.answer__upvote} type="primary">
-          Upvote{' '}
-          <CustomIcon
+          Upvote
+          {/* <CustomIcon
             name="upvote"
             height="20px"
             className={classes.answer__arrow}
             strokeWidth={1}
             strokeColor="#d9d9d9"
-          />
+          /> */}
+          <FontAwesomeIcon icon="angle-up" className={classes.answer__arrow} />
         </Button>
         <Button className={classes.answer__downvote}>Downvote</Button>
         <Dropdown overlay={answerOptions}>
