@@ -6,6 +6,7 @@ import TagWithLink from '../TagWithLink'
 import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classes from './index.scss'
 
@@ -78,13 +79,14 @@ const Question = ({ data }) => {
       <div className={classes.question__controls}>
         <Button className={classes.question__upvote} type="primary">
           Upvote{' '}
-          <CustomIcon
+          {/* <CustomIcon
             name="upvote"
             height="20px"
             className={classes.question__arrow}
             strokeWidth={1}
             strokeColor="#d9d9d9"
-          />
+          /> */}
+          <FontAwesomeIcon icon="angle-up" className={classes.question__arrow} />
         </Button>
         <Button className={classes.question__downvote}>Downvote</Button>
         <Dropdown overlay={questionOptions}>

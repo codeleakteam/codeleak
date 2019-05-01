@@ -3,7 +3,7 @@ import Head from 'next/head'
 import InputWithButton from '../../components/InputWithButton'
 import Logo from '../../components/Logo'
 
-import classes from '../styles/landing/index.scss'
+// import classes from '../styles/landing/index.scss'
 
 const Landing = () => {
   return (

@@ -21,8 +21,7 @@ class AskQuestion extends Component {
   }
 
   showInput = () => {
-    this.setState({ inputVisible: true })
-    // this.setState({ inputVisible: true }, () => input.focus())
+    this.setState({ inputVisible: true }, () => this.input.focus())
   }
 
   handleInputChange = e => {
@@ -41,6 +40,9 @@ class AskQuestion extends Component {
       inputValue: '',
     })
   }
+
+  // ref used for focus
+  saveInputRef = input => (this.input = input)
 
   render() {
     return (
@@ -63,6 +65,7 @@ class AskQuestion extends Component {
           tags={this.state.tags}
           inputVisible={this.state.inputVisible}
           inputValue={this.state.inputValue}
+          ref={this.saveInputRef}
         />
 
         <Button type="primary" className={classes['ask-question__btn']}>

@@ -3,6 +3,7 @@ import TagWithLink from '../TagWithLink'
 import Link from 'next/link'
 import CustomIcon from '../../assets/icons/index'
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classes from './index.scss'
 
@@ -15,19 +16,22 @@ const QuestionSummary = ({ score, comments, title, createdAt, tags, author, ques
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>{score}</div>
           <div className={classes['question__info-icon']}>
-            <CustomIcon name="upvote" strokeColor="black" height="20px" />
+            
+            <FontAwesomeIcon icon="angle-up" size="lg" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>{comments.length}</div>
           <div className={classes['question__info-icon']}>
-            <CustomIcon name="comment" height="18px" />
+            
+            <FontAwesomeIcon icon="comment" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>15</div>
           <div className={classes['question__info-icon']}>
-            <CustomIcon name="eye" height="20px" />
+            
+            <FontAwesomeIcon icon="eye" />
           </div>
         </div>
       </div>

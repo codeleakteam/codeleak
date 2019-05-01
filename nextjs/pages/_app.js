@@ -10,6 +10,11 @@ import Router from 'next/router'
 import classes from '../styles/layout.module.scss'
 import '../styles/global.scss'
 
+// fontawesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
+library.add(faAngleUp, faComment, faEye, faBan)
+
 class MyApp extends App {
   state = {
     menuActive: false,
