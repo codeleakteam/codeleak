@@ -32,15 +32,24 @@
     }
     &--dropdown {
       display: inline-block;
-      margin: 4px 0;
-      width: 20%;
+      margin: 4px 7px 4px 0;
+
       cursor: pointer;
+      width: 47%;
+      @include breakpoint($mobile) {
+        // width: 50%;
+        width: 100%;
+
+        margin-right: 8px;
+      }
     }
     &--more {
       display: flex;
       justify-content: space-between;
-      width: calc(25% - 8px);
+      // width: calc(25% - 8px);
+      width: 80px;
       align-items: center;
+      // margin-left: auto;
       @include breakpoint($tablet) {
         width: calc(50% - 8px);
       }
@@ -53,9 +62,13 @@
     margin-left: auto;
   }
   &__dropdown {
-    width: 67%;
     position: relative;
-    // display: flex;
-    // flex-wrap: wrap;
+    width: 360px;
+    @include breakpoint($tablet) {
+      width: calc(100% - 30%);
+    }
+    @include breakpoint($mobile) {
+      width: 50%;
+    }
   }
 }
