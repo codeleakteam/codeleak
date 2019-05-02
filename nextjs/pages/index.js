@@ -11,10 +11,6 @@ import _ from 'lodash'
 import classes from '../styles/index/index.scss'
 
 class Index extends Component {
-  state = {
-    tags: null,
-    questions: [],
-  }
   render() {
     return (
       <div
@@ -31,7 +27,7 @@ class Index extends Component {
         </div>
         <TwoSideLayout
           left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
-          right={<PopularTags tagList={this.props.tags} />}
+          right={<PopularTags />}
         />
       </div>
     )
@@ -41,10 +37,9 @@ class Index extends Component {
 Index.getInitialProps = async function() {
   try {
     let res = await apiGet.getIndex()
-    const tags = _.get(res, 'data.popular_tags', [])
     const questions = _.get(res, 'data.results', [])
+
     return {
-      tags,
       questions,
     }
   } catch (error) {

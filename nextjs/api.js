@@ -11,6 +11,9 @@ export const apiGet = {
   getQuestion: id => {
     return axios.get(`${BASE_URL}/api/questions/${id}`)
   },
+  getPopularTags: () => {
+    return axios.get(`${BASE_URL}/api/tags`)
+  },
 }
 
 export const apiPost = {
