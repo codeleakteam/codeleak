@@ -18,3 +18,14 @@ class AnswerSerializer(serializers.ModelSerializer):
     def get_comments(self, answer_obj):
         return [AnswerCommentSerializer(comment).data for comment in answer_obj.answer_comment.all()]
 
+class CreateAnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    author = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), read_only=False
+    )
+
+    class Meta:
+        model = Answer
+        fields = "__all__"
+
+

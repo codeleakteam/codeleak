@@ -10,9 +10,8 @@ from .question import (
 from .user import GetUpdateUserView,ListUserView
 from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
-from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView)
+from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
 from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView 
-
 
 __all__ = [
     'HomeView',
@@ -27,6 +26,7 @@ __all__ = [
     'UpdateQuestionScoreView',
     'CreateSubscriberView',
     'ListCreateQuestionView',
+    'CreateAnswerView',
     'GetUpdateAnswerView',
     'UpdateAnswerScoreView',
     'AcceptAnswerView',

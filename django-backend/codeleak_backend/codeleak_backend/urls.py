@@ -35,7 +35,8 @@ from core.views import (
     ReportAnswerView,
     ListCreateCommentView,
     UpdateCommentScoreView,
-    ReportCommentView
+    ReportCommentView,
+    CreateAnswerView
 )
 
 urlpatterns = [
@@ -49,6 +50,7 @@ urlpatterns = [
     url(r'^api/questions/(?P<question_id>[0-9]+)$', UpdateQuestionView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)/vote$', UpdateQuestionScoreView.as_view()),
     url(r'^api/questions/(?P<question_id>[0-9]+)/report$', ReportQuestionView.as_view()),
+    path('api/answers', CreateAnswerView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)$', GetUpdateAnswerView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)/vote$', UpdateAnswerScoreView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)/accept$', AcceptAnswerView.as_view()),
