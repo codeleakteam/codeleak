@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
-from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.response import Response
-from core.models import Answer, User
+from core.models import Answer, User, Question
 from rest_framework import status
-from core.serializers import AnswerSerializer, AnswerVoteSerializer
+from core.serializers import AnswerSerializer, CreateAnswerSerializer, AnswerVoteSerializer
 from django.core.exceptions import ObjectDoesNotExist 
 from core.models import AnswerVote
 
@@ -12,7 +12,38 @@ ANSWER_VOTE_VALUE = 20
 # Helper that evaluates 'true' to True and does so for false values
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
-  
+
+class CreateAnswerView(CreateAPIView):
+    def post(self, request):
+        question = request.data.get("question", None)   
+        author = request.data.get("author", None)
+
+        # Field checks
+        if question == None:
+            return Response({ 'message': 'question param not provided'}, status.HTTP_400_BAD_REQUEST)
+
+        if author == None:
+            return Response({ 'message': 'author param not provided'}, status.HTTP_400_BAD_REQUEST)
+
+        try:
+            question = Question.objects.get(pk=question)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Question with the ID: ' + answer_id+ ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            user = User.objects.get(pk=author)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'User with the ID: ' + author + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = CreateAnswerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print("Saving answer...")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
+
 class GetUpdateAnswerView(RetrieveUpdateAPIView):
     def get(self, request, answer_id):
         try:
