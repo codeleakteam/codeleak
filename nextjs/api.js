@@ -21,3 +21,12 @@ export const apiPost = {
     return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
   },
 }
+
+export const apiPut = {
+  updateQuestionScore: (type, questionId, userId) => {
+    return axios.put(`${BASE_URL}/api/questions/${questionId}/vote`, {
+      is_upvote: type,
+      user_id: userId,
+    })
+  },
+}

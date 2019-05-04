@@ -2,15 +2,14 @@ import React from 'react'
 import { Button, Icon, Dropdown, Menu } from 'antd'
 import Link from 'next/link'
 import TagWithLink from '../TagWithLink'
-// import UpVote from '../CustomIcons/UpVote'
-import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import PropTypes from 'prop-types'
 
 import classes from './index.scss'
 
-const Question = ({ data }) => {
+const Question = ({ data, updateQuestionScore, updatedQuestionScore }) => {
   const { question } = data
 
   let formatDate = moment(question.created_at).fromNow()
@@ -49,7 +48,7 @@ const Question = ({ data }) => {
               />
             </div>
           </Link>
-          <span className={classes.question__rep}>{question.score}</span>
+          <span className={classes.question__rep}>{question.author.reputation}</span>
         </div>
         <div className={classes['question__user-info']}>
           <Link href={`/profile/${question.author.id}`}>
@@ -77,18 +76,20 @@ const Question = ({ data }) => {
         <p>{question.description}</p>
       </div>
       <div className={classes.question__controls}>
-        <Button className={classes.question__upvote} type="primary">
-          Upvote{' '}
-          {/* <CustomIcon
-            name="upvote"
-            height="20px"
-            className={classes.question__arrow}
-            strokeWidth={1}
-            strokeColor="#d9d9d9"
-          /> */}
+        <Button
+          className={classes.question__upvote}
+          type="primary"
+          onClick={() => updateQuestionScore('true', question.id, 3)}
+        >
+          Upvote
           <FontAwesomeIcon icon="angle-up" className={classes.question__arrow} />
+          <span className={classes.question__score}>
+            {updatedQuestionScore ? updatedQuestionScore : question.score}
+          </span>
         </Button>
-        <Button className={classes.question__downvote}>Downvote</Button>
+        <Button className={classes.question__downvote} onClick={() => updateQuestionScore('false', question.id, 3)}>
+          Downvote
+        </Button>
         <Dropdown overlay={questionOptions}>
           <Icon type="more" style={{ fontSize: '30px' }} />
         </Dropdown>
@@ -98,6 +99,11 @@ const Question = ({ data }) => {
       ))}
     </div>
   )
+}
+
+Question.propTypes = {
+  data: PropTypes.object.isRequired,
+  updateQuestionScore: PropTypes.func.isRequired,
 }
 
 export default Question
