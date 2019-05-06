@@ -55,7 +55,7 @@ urlpatterns = [
     url(r'^api/answers/(?P<answer_id>[0-9]+)/vote$', UpdateAnswerScoreView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)/accept$', AcceptAnswerView.as_view()),
     url(r'^api/answers/(?P<answer_id>[0-9]+)/report$', ReportAnswerView.as_view()),
-    url(r'^api/comments/$', ListCreateCommentView.as_view()),
+    url(r'^api/comments$', ListCreateCommentView.as_view()),
     url(r'^api/comments/(?P<comment_id>[0-9]+)/vote$', UpdateCommentScoreView.as_view()),
     url(r'^api/comments/(?P<comment_id>[0-9]+)/report$', ReportCommentView.as_view()),
     path('api/tags', ListCreateTagView.as_view()),
