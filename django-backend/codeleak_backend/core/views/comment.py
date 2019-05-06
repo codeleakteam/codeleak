@@ -3,8 +3,23 @@ from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
-from core.models import User, QuestionComment, AnswerComment, QuestionCommentVote, AnswerCommentVote
-from core.serializers import AnswerCommentSerializer, QuestionCommentSerializer, QuestionCommentVoteSerializer, AnswerCommentVoteSerializer
+from core.models import (
+    User,
+    QuestionComment,
+    AnswerComment,
+    QuestionCommentVote,
+    AnswerCommentVote,
+    Answer,
+    Question
+)
+from core.serializers import (
+    AnswerCommentSerializer,
+    QuestionCommentSerializer,
+    CreateAnswerCommentSerializer,
+    CreateQuestionCommentSerializer,
+    QuestionCommentVoteSerializer,
+    AnswerCommentVoteSerializer
+)
 
 COMMENT_UPVOTE_VALUE = 20
 COMMENT_DOWNVOTE_VALUE = -5
@@ -15,13 +30,17 @@ COMMENT_TYPES = {
         'key': 'question_comment',
         'model': QuestionComment,
         'serializer': QuestionCommentSerializer,
-        'vote_serializer': QuestionCommentVoteSerializer
+        'create_serializer': CreateQuestionCommentSerializer,
+        'vote_serializer': QuestionCommentVoteSerializer,
+        'model_commented_on': Question
     },
     'ANSWER_COMMENT': {
         'key': 'answer_comment',
         'model': AnswerComment,
         'serializer': AnswerCommentSerializer,
-        'vote_serializer': AnswerCommentVoteSerializer
+        'create_serializer': CreateAnswerCommentSerializer,
+        'vote_serializer': AnswerCommentVoteSerializer,
+        'model_commented_on': Answer
     }
 }
 
@@ -42,6 +61,7 @@ class ListCreateCommentView(ListCreateAPIView):
         CommentModel = COMMENT_TYPES[comment_type]['model']
         CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
         comment_key = COMMENT_TYPES[comment_type]['key']
+
         try:
             comments = CommentModel.objects.all()
             serializer = CommentSerializer(comments, many=True)
@@ -52,18 +72,41 @@ class ListCreateCommentView(ListCreateAPIView):
             return Response({'message': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     def post(self, request):
         comment_type = request.data.get('comment_type', None)
-        comment_id = request.data.get('comment_id', None)
-        user_id = request.data.get('user_id', None)
+        object_id = request.data.get('object_id', None)
+        author = request.data.get('author', None)
 
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
-        if comment_id == None:
-            return Response({ 'message': 'comment_id param not provided'}, status.HTTP_400_BAD_REQUEST)
-        if user_id == None:
-            return Response({ 'message': 'user_id param not provided'}, status.HTTP_400_BAD_REQUEST)
+        if object_id == None:
+            return Response({ 'message': 'object_id param not provided'}, status.HTTP_400_BAD_REQUEST)
+        if author == None:
+            return Response({ 'message': 'author param not provided'}, status.HTTP_400_BAD_REQUEST)
+        if comment_type not in COMMENT_TYPES:
+            return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
 
+        CommentModel = COMMENT_TYPES[comment_type]['model']
+        ModelCommentedOn = COMMENT_TYPES[comment_type]['model_commented_on']
+        CommentSerializer = COMMENT_TYPES[comment_type]['create_serializer']
+        comment_key = COMMENT_TYPES[comment_type]['key']
 
+        object_commented_on = None
+        try:
+            object_commented_on = ModelCommentedOn.objects.get(pk=object_id)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Object with the ID: ' + str(object_id) + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
+        write_data = request.data
+        write_data['question'] = object_id
+        serializer = CommentSerializer(data=write_data)
+        if serializer.is_valid():
+            object_commented_on.has_comments = True
+            object_commented_on.save()
+            serializer.save()
+            return Response({
+                'has_comments': object_commented_on.has_comments,
+                'comment': serializer.data
+            }, status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateCommentScoreView(UpdateAPIView):
     COMMENT_TYPES = COMMENT_TYPES

@@ -63,13 +63,6 @@ class UpdateQuestionView(UpdateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# upvote answer 20
-# downvote answer -10
-# accept answer 50
-# upvote comment 20
-# downvote comment -5
-# upvote question 20
-
 class UpdateQuestionScoreView(UpdateAPIView):
     def put(self, request, question_id):
         is_upvote = request.data.get('is_upvote', None)

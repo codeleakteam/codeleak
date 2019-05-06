@@ -7,7 +7,7 @@ class Comment(models.Model):
         abstract = True
 
     # Required
-    content = models.CharField(max_length=255, blank=True, null=True)
+    content = models.CharField(max_length=255, blank=False, null=False)
     # FKs
     author = models.ForeignKey(
         'User',
