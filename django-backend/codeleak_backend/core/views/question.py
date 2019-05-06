@@ -18,6 +18,8 @@ class GetQuestionView(RetrieveAPIView):
     def get(self, request, question_id):
         try:
             question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
+            question.viewed_times += 1
+            question.save()
             serializer = QuestionSerializer(question)
             return Response({
                 'question': serializer.data,
