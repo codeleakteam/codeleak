@@ -24,6 +24,7 @@ class Question(models.Model):
     # Counters
     score = models.IntegerField(default=0, blank=True, null=False)
     reported_times = models.IntegerField(default=0, blank=True, null=False)
+    viewed_times = models.IntegerField(default=0, blank=True, null=False)
     # Flags
     has_accepted_answer = models.BooleanField(default=False, blank=True, null=False)
     has_comments = models.BooleanField(default=False, blank=True, null=False)
