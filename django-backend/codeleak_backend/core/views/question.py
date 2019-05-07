@@ -38,19 +38,20 @@ class ListCreateQuestionView(ListCreateAPIView):
     def post(self, request):
         print("Create question data: ", request.data)
         tags = request.data.get("tags", None)
-        serializer = QuestionCreateUpdateSerializer(data=request.data)
-        if serializer.is_valid():
-            for t in tags:
+
+        for t_id in tags:
+            serializer = QuestionCreateUpdateSerializer(data=request.data)
+            if serializer.is_valid():
                 try:
-                    tag = Tag.objects.get(pk=t.get('id', None))
+                    tag = Tag.objects.get(pk=t_id)
                     tag.used_times += 1
                     tag.save()
                     print("tag used times: ", tag.used_times)
                 except ObjectDoesNotExist:
-                    return Response({ 'message': 'Tag with the ID: ' + t.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({ 'message': 'Tag with the ID: ' + str(t_id) + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateQuestionView(UpdateAPIView):
     def put(self, request, question_id):

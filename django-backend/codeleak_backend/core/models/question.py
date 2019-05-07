@@ -6,7 +6,7 @@ class Question(models.Model):
     # Required
     title = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
-    slug = models.SlugField(blank=False, null=False)
+    slug = models.SlugField(blank=True, null=False)
     # Optional
     repository_url = models.CharField(max_length=255, blank=True, null=True)
     # FKs
