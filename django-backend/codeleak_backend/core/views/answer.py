@@ -3,8 +3,12 @@ from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, Create
 from rest_framework.response import Response
 from core.models import Answer, User, Question
 from rest_framework import status
-from core.serializers import AnswerSerializer, CreateAnswerSerializer, AnswerVoteSerializer
-from django.core.exceptions import ObjectDoesNotExist 
+from core.serializers import (
+    AnswerSerializer,
+    CreateAnswerSerializer,
+    AnswerVoteSerializer
+)
+from django.core.exceptions import ObjectDoesNotExist
 from core.models import AnswerVote
 
 ANSWER_VOTE_VALUE = 20
@@ -15,7 +19,7 @@ def str2bool(v):
 
 class CreateAnswerView(CreateAPIView):
     def post(self, request):
-        question = request.data.get("question", None)   
+        question = request.data.get("question", None)
         author = request.data.get("author", None)
 
         # Field checks
@@ -34,15 +38,17 @@ class CreateAnswerView(CreateAPIView):
             user = User.objects.get(pk=author)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + author + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-        
+
         serializer = CreateAnswerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             print("Saving answer...")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            answer = Answer.objects.get(pk=serializer.data['id'])
+            read_serializer = AnswerSerializer(answer)
+            return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        
+
 
 class GetUpdateAnswerView(RetrieveUpdateAPIView):
     def get(self, request, answer_id):
@@ -105,17 +111,17 @@ class UpdateAnswerScoreView(UpdateAPIView):
             return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if is_upvote != 'true' and is_upvote != 'false':
-            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST) 
+            return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
 
-        # If user is not found, ObjectDoesNotExist will be caught 
+        # If user is not found, ObjectDoesNotExist will be caught
         try:
             user = User.objects.get(pk=user_id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # If answer is not found, ObjectDoesNotExist will be caught 
+        # If answer is not found, ObjectDoesNotExist will be caught
         try:
-            answer = Answer.objects.get(pk=answer_id) 
+            answer = Answer.objects.get(pk=answer_id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'Answer with the ID: ' + answer_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -140,7 +146,7 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 answer_vote.save()
                 answer_vote_serializer = AnswerVoteSerializer(answer_vote)
 
-                # * 2 because of switch; 
+                # * 2 because of switch;
                 answer.score += vote_value * 2
                 answer.save()
 
@@ -156,9 +162,9 @@ class UpdateAnswerScoreView(UpdateAPIView):
             else:
                 return Response({
                     'message': 'You can only vote once in the same direction'
-                }, status=status.HTTP_400_BAD_REQUEST) 
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-        # If it does not exist, we create one 
+        # If it does not exist, we create one
         except ObjectDoesNotExist:
             answer_vote_serializer = AnswerVoteSerializer(data={
                 'author': user_id,
@@ -169,13 +175,13 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 print("answer_vote_serializer is valid. saving...")
                 answer_vote_serializer.save()
             else:
-                print("answer_vote_serializer isn't valid. aborting...") 
-                return Response(answer_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+                print("answer_vote_serializer isn't valid. aborting...")
+                return Response(answer_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             answer.score += vote_value
             answer.save()
 
-            user.reputation += vote_value 
+            user.reputation += vote_value
             user.save()
 
             serializer = AnswerSerializer(answer)
