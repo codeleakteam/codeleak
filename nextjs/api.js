@@ -20,6 +20,15 @@ export const apiPost = {
   subscribeMail: value => {
     return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
   },
+  sendAnswer: (authorId, questionId, editor, description, repository) => {
+    return axios.post(`${BASE_URL}/api/answers`, {
+      author: authorId,
+      question: questionId,
+      editor: editor,
+      description: description,
+      repository_url: repository
+    })
+  }
 }
 
 export const apiPut = {

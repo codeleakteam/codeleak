@@ -79,7 +79,7 @@ const Question = ({ data, updateQuestionScore, updatedQuestionScore }) => {
         <Button
           className={classes.question__upvote}
           type="primary"
-          onClick={() => updateQuestionScore('true', question.id, 3)}
+          onClick={() => updateQuestionScore('true', question.id, 1)}
         >
           Upvote
           <FontAwesomeIcon icon="angle-up" className={classes.question__arrow} />
@@ -87,7 +87,7 @@ const Question = ({ data, updateQuestionScore, updatedQuestionScore }) => {
             {updatedQuestionScore ? updatedQuestionScore : question.score}
           </span>
         </Button>
-        <Button className={classes.question__downvote} onClick={() => updateQuestionScore('false', question.id, 3)}>
+        <Button className={classes.question__downvote} onClick={() => updateQuestionScore('false', question.id, 1)}>
           Downvote
         </Button>
         <Dropdown overlay={questionOptions}>
