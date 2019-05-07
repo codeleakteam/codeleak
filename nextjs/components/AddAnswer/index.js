@@ -74,8 +74,21 @@ class AddAnswer extends React.Component {
                 spellCheck={true}
               />
             </div>
-            <Button type="primary">Send</Button>
-            <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()))}</div>
+            <Button
+              type="primary"
+              onClick={() =>
+                this.props.sendAnswer(
+                  1,
+                  this.props.questionId,
+                  1,
+                  JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+                  'repositoryurl'
+                )
+              }
+            >
+              Send
+            </Button>
+            {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()))}</div> */}
           </>
         )}
       </div>
