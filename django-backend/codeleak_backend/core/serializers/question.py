@@ -30,21 +30,19 @@ class QuestionCreateUpdateSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), read_only=False
     )
-    tags = TagCreateUpdateSerializer(many=True)
+    # tags = TagCreateUpdateSerializer(many=True)
 
     def create(self, validated_data):
-        # Not writing tags into db, will use different serializer to pull out from db
-        tags = validated_data.pop("tags", None)
+        title = validated_data.get('title', None)
+        tags = validated_data.pop('tags', None)
 
-        if tags is not None:
-            for tag in tags:
-                fields = {}
-                for k, v in tag.items():
-                    fields[k] = v
-                Tag.objects.get_or_create(
-                    title=fields["title"], slug=slugify(fields["title"])
-                )
-        question = Question.objects.create(**validated_data)
+        validated_data['slug'] = slugify(title)
+
+        question = Question(**validated_data)
+        question.save()
+
+        question.tags.set(tags)
+        question.save()
         return question
 
     class Meta:

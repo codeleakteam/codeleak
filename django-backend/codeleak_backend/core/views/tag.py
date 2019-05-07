@@ -4,7 +4,7 @@ from rest_framework import status
 from core.models import Tag
 from core.serializers import TagSerializer
 from django.template.defaultfilters import slugify
-from django.core.exceptions import ObjectDoesNotExist 
+from django.core.exceptions import ObjectDoesNotExist
 
 class ListCreateTagView(ListCreateAPIView):
     def post(self, request):
@@ -40,6 +40,6 @@ class GetTagView(RetrieveAPIView):
         except ObjectDoesNotExist:
             return Response({ 'message': 'Tag with the ID: ' + tag_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
-    
+
 
 
