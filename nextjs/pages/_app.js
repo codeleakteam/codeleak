@@ -4,7 +4,7 @@ import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
 // import PopularTags from '../components/PopularTags'
 import Footer from '../components/Footer'
-import trackPageView from '../helpers/trackPageView'
+import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 
 import classes from '../styles/layout.module.scss'

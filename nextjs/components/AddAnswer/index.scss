@@ -14,3 +14,12 @@
     }
   }
 }
+.url {
+  &__container {
+    margin: 8px 0;
+  }
+  &__input {
+    width: 120px;
+    margin-right: 8px;
+  }
+}
