@@ -36,18 +36,13 @@ class QuestionFullPage extends Component {
     try {
       const res = await apiPost.sendAnswer(authorId, questionId, editor, description, repository)
       let answer = _.get(res, 'data', {})
-      console.log('da vidimo repsonse', res)
+      console.log('ansverica', answer)
 
-      let testko = [...this.state.answers, answer]
-      console.log('testinjo', testko)
-
-      // if (answer) {
-      //   setTimeout(() => {
-      //     this.setState({
-      //       answers: [...this.state.answers, answer],
-      //     })
-      //   }, 2000)
-      // }
+      if (answer) {
+        this.setState({
+          answers: [...this.state.answers, answer],
+        })
+      }
     } catch (error) {
       console.log('erorko')
     }
