@@ -36,8 +36,6 @@ class QuestionFullPage extends Component {
     try {
       const res = await apiPost.sendAnswer(authorId, questionId, editor, description, repository)
       let answer = _.get(res, 'data', {})
-      console.log('ansverica', answer)
-
       if (answer) {
         this.setState({
           answers: [...this.state.answers, answer],
@@ -74,14 +72,14 @@ QuestionFullPage.getInitialProps = async function({ query }) {
     let id = query.title
     let res = await apiGet.getQuestion(id)
     const question = _.get(res, 'data', {})
-    // this.setState({ questions: question })
-    // console.log(question)
-
     return {
       question,
     }
   } catch (error) {
     console.log('error', error)
+  }
+  return {
+    question: {}
   }
 }
 

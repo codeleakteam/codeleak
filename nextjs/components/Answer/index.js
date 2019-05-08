@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import { Button, Icon, Dropdown, Menu } from 'antd'
 import Link from 'next/link'
-import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
-import timeAgo from '../../helpers/timeAgo'
+import timeAgo from '../../helpers/functions/timeAgo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { convertFromRaw, EditorState } from 'draft-js'
+import { stateToHTML } from 'draft-js-export-html'
 
 import classes from './index.scss'
-import renderEmpty from 'antd/lib/config-provider/renderEmpty'
 
-import { stateToHTML } from 'draft-js-export-html'
 class Answer extends Component {
   // console.log(EditorState.createWithContent(convertFromRaw(JSON.parse(answer.description))))
   state = {
@@ -24,6 +21,14 @@ class Answer extends Component {
       this.setState({
         editorState: EditorState.createWithContent(convertFromRaw(testinjo)),
       })
+    }
+  }
+
+  createAnswerFromHtml = () => {
+    let editorState = this.state.editorState
+    let html = stateToHTML(editorState.getCurrentContent())
+    return {
+      __html: html
     }
   }
 
@@ -82,18 +87,10 @@ class Answer extends Component {
             </Link>
           </div>
         </div>
-
-        {editorState && <div className={classes.answer__text}>{stateToHTML(editorState.getCurrentContent())}</div>}
+        {editorState && <div className={classes.answer__text} dangerouslySetInnerHTML={this.createAnswerFromHtml()}/>}
         <div className={classes.answer__controls}>
           <Button className={classes.answer__upvote} type="primary">
             Upvote
-            {/* <CustomIcon
-            name="upvote"
-            height="20px"
-            className={classes.answer__arrow}
-            strokeWidth={1}
-            strokeColor="#d9d9d9"
-          /> */}
             <FontAwesomeIcon icon="angle-up" className={classes.answer__arrow} />
           </Button>
           <Button className={classes.answer__downvote}>Downvote</Button>

@@ -1,6 +1,9 @@
 import React from 'react'
-import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js'
+import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 import { Button } from 'antd'
+import Editor from 'draft-js-plugins-editor'
+
+import addLinkPlugin from '../draftjsPlugin/addLinkPlugin'
 
 import classes from './index.scss'
 
@@ -10,7 +13,7 @@ const INLINE_STYLES = [
   { icon: 'italic', style: 'ITALIC' },
   { icon: 'underline', style: 'UNDERLINE' },
   { icon: 'code', style: 'CODE' },
-  { icon: 'link', style: 'LINK' },
+  // { icon: 'link', style: 'LINK' },
 ]
 
 class AddAnswer extends React.Component {
@@ -22,11 +25,31 @@ class AddAnswer extends React.Component {
   componentDidMount() {
     this.setState({ editor: true })
   }
-  // draftjs handlers
+  // draftjs plugins
+  plugins = [
+    addLinkPlugin
+  ]
+  onAddLink = () => {
+    const editorState = this.state.editorState
+    const selection = editorState.getSelection();
+    const link = window.prompt('Paste the link')
+
+    if(!link){
+      this.onChange(RichUtils.toggleLink(editorState, selection, null));
+      return 'handled'
+    }
+
+    const content = editorState.getCurrentContent();
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link})
+    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
+    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
+  }
+  // draftjs handler
   onChange = editorState => {
     this.setState({ editorState })
   }
-
+  // draftjs handler
   handleKeyCommand = command => {
     const { editorState } = this.state
     const newState = RichUtils.handleKeyCommand(editorState, command)
@@ -36,60 +59,55 @@ class AddAnswer extends React.Component {
     }
     return false
   }
+  // draftjs handler
   toggleInlineStyle = inlineStyle => {
     this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle))
+  }
+  // clear state after submit
+  cleanStateAfterSubmit = () => {
+    this.setState({ editorState: EditorState.createEmpty() })
   }
 
   render() {
     const { editorState } = this.state
-    // If the user changes block type before entering any text, we can
-    // either style the placeholder or hide it. Let's just hide it now.
-    let className = 'RichEditor-editor'
-    var contentState = editorState.getCurrentContent()
-    if (!contentState.hasText()) {
-      if (
-        contentState
-          .getBlockMap()
-          .first()
-          .getType() !== 'unstyled'
-      ) {
-        className += ' RichEditor-hidePlaceholder'
-      }
-    }
 
     return (
       <div className={classes.answer__container}>
         {this.state.editor && (
-          <>
+          <React.Fragment>
             <h2>Add answer</h2>
-            <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
-            <div className={className} onClick={this.focus}>
+            <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} addLink={this.onAddLink} />
+            <button id="link_url" onClick={this.onAddLink}>ADD LINK</button>
+            <div>
               <Editor
                 customStyleMap={styleMap}
                 editorState={editorState}
                 handleKeyCommand={this.handleKeyCommand}
                 onChange={this.onChange}
-                placeholder="Tell a story..."
+                placeholder="Answer"
                 ref="editor"
                 spellCheck={true}
+                plugins={this.plugins}
               />
             </div>
             <Button
               type="primary"
               onClick={() =>
+                {
                 this.props.sendAnswer(
                   1,
                   this.props.questionId,
                   1,
                   JSON.stringify(convertToRaw(editorState.getCurrentContent())),
                   'repositoryurl'
-                )
+                );
+                this.cleanStateAfterSubmit();
+                }
               }
             >
               Send
             </Button>
-            {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()))}</div> */}
-          </>
+          </React.Fragment>
         )}
       </div>
     )
@@ -110,9 +128,11 @@ const InlineStyleControls = props => {
           style={type.style}
         />
       ))}
+      <StyleButton active={currentStyle.has('LINK')} onToggle={props.onToggle} onClick={() => props.addLink} />
     </div>
   )
 }
+
 // toggle button
 const StyleButton = props => {
   const onToggle = e => {
@@ -123,9 +143,9 @@ const StyleButton = props => {
   if (props.active) {
     type += 'primary'
   }
-
   return <Button type={type} onMouseDown={onToggle} icon={props.icon} className={classes.answer__button} />
 }
+
 // Custom styles
 const styleMap = {
   CODE: {

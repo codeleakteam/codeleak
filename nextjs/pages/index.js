@@ -38,12 +38,14 @@ Index.getInitialProps = async function() {
   try {
     let res = await apiGet.getIndex()
     const questions = _.get(res, 'data.results', [])
-
     return {
       questions,
     }
   } catch (error) {
     console.log('error', error)
+  }
+  return {
+    questions: []
   }
 }
 
