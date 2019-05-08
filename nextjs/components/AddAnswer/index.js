@@ -1,48 +1,46 @@
 import React from 'react'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
-import { Button } from 'antd'
+import { Button, Input } from 'antd'
 import Editor from 'draft-js-plugins-editor'
+import { INLINE_STYLES } from '../../helpers/configs/draftjs'
 
-import addLinkPlugin from '../draftjsPlugin/addLinkPlugin'
+import addLinkPlugin from '../draftjs/addLinkPlugin'
+
+import InlineStyleControls from '../draftjs/InlineStyleControls'
 
 import classes from './index.scss'
 
 // Draftjs bullshits
-const INLINE_STYLES = [
-  { icon: 'bold', style: 'BOLD' },
-  { icon: 'italic', style: 'ITALIC' },
-  { icon: 'underline', style: 'UNDERLINE' },
-  { icon: 'code', style: 'CODE' },
-  // { icon: 'link', style: 'LINK' },
-]
 
 class AddAnswer extends React.Component {
   state = {
     editorState: EditorState.createEmpty(),
     editor: false,
+    addUrlOpen: false,
+    urlValue: '',
   }
   // draftjs bug fix
   componentDidMount() {
     this.setState({ editor: true })
   }
   // draftjs plugins
-  plugins = [
-    addLinkPlugin
-  ]
+  plugins = [addLinkPlugin]
+
   onAddLink = () => {
     const editorState = this.state.editorState
-    const selection = editorState.getSelection();
-    const link = window.prompt('Paste the link')
+    const selection = editorState.getSelection()
+    // const link = window.prompt('Paste the link')
+    const link = this.state.urlValue
 
-    if(!link){
-      this.onChange(RichUtils.toggleLink(editorState, selection, null));
+    if (!link) {
+      this.onChange(RichUtils.toggleLink(editorState, selection, null))
       return 'handled'
     }
 
-    const content = editorState.getCurrentContent();
-    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link})
-    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity');
-    const entityKey = contentWithEntity.getLastCreatedEntityKey();
+    const content = editorState.getCurrentContent()
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link })
+    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity')
+    const entityKey = contentWithEntity.getLastCreatedEntityKey()
     this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
   }
   // draftjs handler
@@ -57,6 +55,7 @@ class AddAnswer extends React.Component {
       this.onChange(newState)
       return true
     }
+    // handleKeyCommand
     return false
   }
   // draftjs handler
@@ -65,7 +64,19 @@ class AddAnswer extends React.Component {
   }
   // clear state after submit
   cleanStateAfterSubmit = () => {
-    this.setState({ editorState: EditorState.createEmpty() })
+    this.setState({ editorState: EditorState.createEmpty(), addUrlOpen: false, urlValue: '' })
+  }
+
+  handleUrlTab = () => {
+    this.setState(state => {
+      return {
+        addUrlOpen: !state.addUrlOpen,
+      }
+    })
+  }
+
+  handleUrlChange = e => {
+    this.setState({ urlValue: e.target.value })
   }
 
   render() {
@@ -76,8 +87,21 @@ class AddAnswer extends React.Component {
         {this.state.editor && (
           <React.Fragment>
             <h2>Add answer</h2>
-            <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} addLink={this.onAddLink} />
-            <button id="link_url" onClick={this.onAddLink}>ADD LINK</button>
+            <InlineStyleControls
+              editorState={editorState}
+              onToggle={this.toggleInlineStyle}
+              addLink={this.onAddLink}
+              openUrlTab={this.handleUrlTab}
+              addUrlOpen={this.state.addUrlOpen}
+            />
+            {this.state.addUrlOpen && (
+              <div className={classes.url__container}>
+                <Input className={classes.url__input} value={this.state.urlValue} onChange={this.handleUrlChange} />
+                <Button id="link_url" onClick={this.onAddLink}>
+                  ADD LINK
+                </Button>
+              </div>
+            )}
             <div>
               <Editor
                 customStyleMap={styleMap}
@@ -92,18 +116,16 @@ class AddAnswer extends React.Component {
             </div>
             <Button
               type="primary"
-              onClick={() =>
-                {
+              onClick={() => {
                 this.props.sendAnswer(
                   1,
                   this.props.questionId,
                   1,
                   JSON.stringify(convertToRaw(editorState.getCurrentContent())),
                   'repositoryurl'
-                );
-                this.cleanStateAfterSubmit();
-                }
-              }
+                )
+                this.cleanStateAfterSubmit()
+              }}
             >
               Send
             </Button>
@@ -115,36 +137,36 @@ class AddAnswer extends React.Component {
 }
 
 // inline controls
-const InlineStyleControls = props => {
-  var currentStyle = props.editorState.getCurrentInlineStyle()
-  return (
-    <div className={classes.answer__buttons}>
-      {INLINE_STYLES.map(type => (
-        <StyleButton
-          key={type.icon}
-          active={currentStyle.has(type.style)}
-          icon={type.icon}
-          onToggle={props.onToggle}
-          style={type.style}
-        />
-      ))}
-      <StyleButton active={currentStyle.has('LINK')} onToggle={props.onToggle} onClick={() => props.addLink} />
-    </div>
-  )
-}
+// const InlineStyleControls = props => {
+//   var currentStyle = props.editorState.getCurrentInlineStyle()
+//   return (
+//     <div className={classes.answer__buttons}>
+//       {INLINE_STYLES.map(type => (
+//         <StyleButton
+//           key={type.icon}
+//           active={currentStyle.has(type.style)}
+//           icon={type.icon}
+//           onToggle={props.onToggle}
+//           style={type.style}
+//         />
+//       ))}
+//       <StyleButton onToggle={props.openUrlTab} icon="link" active={props.addUrlOpen ? true : false} />
+//     </div>
+//   )
+// }
 
 // toggle button
-const StyleButton = props => {
-  const onToggle = e => {
-    e.preventDefault()
-    props.onToggle(props.style)
-  }
-  let type = ''
-  if (props.active) {
-    type += 'primary'
-  }
-  return <Button type={type} onMouseDown={onToggle} icon={props.icon} className={classes.answer__button} />
-}
+// const StyleButton = props => {
+//   const onToggle = e => {
+//     e.preventDefault()
+//     props.onToggle(props.style)
+//   }
+//   let type = ''
+//   if (props.active) {
+//     type += 'primary'
+//   }
+//   return <Button type={type} onMouseDown={onToggle} icon={props.icon} className={classes.answer__button} />
+// }
 
 // Custom styles
 const styleMap = {
