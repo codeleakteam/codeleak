@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
-import { Input, Button, Tag, Icon } from 'antd'
+import { Input, Button } from 'antd'
 import InputLabel from '../InputLabel'
 import TechnologyStack from '../TechnologyStack'
 import QuestionTags from '../QuestionTags'
+import { EditorState, RichUtils, convertToRaw } from 'draft-js'
+import addLinkPlugin from '../draftjs/addLinkPlugin'
+import InlineStyleControls from '../draftjs/InlineStyleControls'
+import DraftjsEditor from '../draftjs'
+import UrlTab from '../draftjs/UrlTab'
 
 import classes from './index.scss'
 
@@ -13,6 +18,71 @@ class AskQuestion extends Component {
     tags: [],
     inputVisible: false,
     inputValue: '',
+    // draftjs shiet
+    editorState: EditorState.createEmpty(),
+    editor: false,
+    urlValue: '',
+    addUrlOpen: false,
+  }
+
+  componentDidMount() {
+    this.setState({ editor: true })
+  }
+
+  plugins = [addLinkPlugin]
+
+  onAddLink = () => {
+    const editorState = this.state.editorState
+    const selection = editorState.getSelection()
+    // const link = window.prompt('Paste the link')
+    const link = this.state.urlValue
+
+    if (!link) {
+      this.onChange(RichUtils.toggleLink(editorState, selection, null))
+      return 'handled'
+    }
+
+    const content = editorState.getCurrentContent()
+    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link })
+    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity')
+    const entityKey = contentWithEntity.getLastCreatedEntityKey()
+    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
+  }
+
+  // draftjs handler
+  onChange = editorState => {
+    this.setState({ editorState })
+  }
+  // draftjs handler
+  handleKeyCommand = command => {
+    const { editorState } = this.state
+    const newState = RichUtils.handleKeyCommand(editorState, command)
+    if (newState) {
+      this.onChange(newState)
+      return true
+    }
+    // handleKeyCommand
+    return false
+  }
+  // draftjs handler
+  toggleInlineStyle = inlineStyle => {
+    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle))
+  }
+  // clear state after submit
+  cleanStateAfterSubmit = () => {
+    this.setState({ editorState: EditorState.createEmpty(), addUrlOpen: false, urlValue: '' })
+  }
+
+  handleUrlTab = () => {
+    this.setState(state => {
+      return {
+        addUrlOpen: !state.addUrlOpen,
+      }
+    })
+  }
+
+  handleUrlChange = e => {
+    this.setState({ urlValue: e.target.value })
   }
 
   handleClose = removedTag => {
@@ -45,12 +115,32 @@ class AskQuestion extends Component {
   saveInputRef = input => (this.input = input)
 
   render() {
+    const { editorState, addUrlOpen, editor, urlValue } = this.state
+
     return (
       <div>
         <InputLabel text="Title" />
         <Input placeholder="Title" type="primary" />
         <InputLabel text="Description" />
-        <TextArea rows={6} placeholder="Describe" />
+        {editor && (
+          <React.Fragment>
+            <InlineStyleControls
+              editorState={editorState}
+              onToggle={this.toggleInlineStyle}
+              openUrlTab={this.handleUrlTab}
+              addUrlOpen={addUrlOpen}
+            />
+            {addUrlOpen && <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink} />}
+            <DraftjsEditor
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              plugins={this.plugins}
+              placeholder="Description"
+              onChange={this.onChange}
+            />
+          </React.Fragment>
+        )}
+
         <InputLabel text="Technology stack" />
         <TechnologyStack />
         <InputLabel text="CodeSandbox url" />
