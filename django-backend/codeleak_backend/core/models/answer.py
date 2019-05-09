@@ -21,7 +21,7 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
     )
     # Required
-    description = models.CharField(max_length=255, blank=False, null=False)
+    description = models.TextField()
     # Optional
     repository_url = models.CharField(max_length=255, blank=True, null=True)
     # Flags
