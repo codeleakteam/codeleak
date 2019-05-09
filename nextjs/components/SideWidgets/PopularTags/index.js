@@ -25,9 +25,10 @@ class PopularTags extends Component {
   }
 
   render() {
+    let popularTags = this.state.tags.slice(0, 6);
     return (
       <div className={classes.tag__container}>
-        {this.state.tags.map(tag => {
+        {popularTags.map(tag => {
           return <TagWithLink key={tag.id + tag.slug} customClass={classes.tag} text={tag.title} url="/" />
         })}
       </div>

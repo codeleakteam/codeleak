@@ -11,7 +11,8 @@ const QuestionSummaryContainer = ({ loggedIn, questions }) => {
           <QuestionSummary
             key={question.id}
             score={question.score}
-            comments={question.comments}
+            viewedTimes={question.viewed_times}
+            answers={question.answers}
             title={question.title}
             createdAt={question.created_at}
             tags={question.tags}

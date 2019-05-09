@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classes from './index.scss'
 
-const QuestionSummary = ({ score, comments, title, createdAt, tags, author, questionId, authorId }) => {
+const QuestionSummary = ({ score, answers, title, createdAt, tags, author, questionId, authorId, viewedTimes }) => {
   let formatDate = moment(createdAt).fromNow()
 
   return (
@@ -21,14 +21,14 @@ const QuestionSummary = ({ score, comments, title, createdAt, tags, author, ques
           </div>
         </div>
         <div className={classes.question__info}>
-          <div className={classes['question__info-num']}>{comments.length}</div>
+          <div className={classes['question__info-num']}>{answers.length}</div>
           <div className={classes['question__info-icon']}>
             
             <FontAwesomeIcon icon="comment" />
           </div>
         </div>
         <div className={classes.question__info}>
-          <div className={classes['question__info-num']}>15</div>
+          <div className={classes['question__info-num']}>{viewedTimes}</div>
           <div className={classes['question__info-icon']}>
             
             <FontAwesomeIcon icon="eye" />

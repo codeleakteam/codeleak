@@ -53,10 +53,11 @@
     justify-content: space-between;
     @include breakpoint($mobile) {
       justify-content: flex-start;
+      flex-direction: column;
     }
   }
   &__name {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 28px;
     color: $blue;
     margin-right: 8px;
