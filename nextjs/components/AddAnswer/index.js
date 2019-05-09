@@ -1,16 +1,12 @@
 import React from 'react'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
-import { Button, Input } from 'antd'
-import Editor from 'draft-js-plugins-editor'
-import { INLINE_STYLES } from '../../helpers/configs/draftjs'
-
+import { Button } from 'antd'
+import DraftjsEditor from '../draftjs'
 import addLinkPlugin from '../draftjs/addLinkPlugin'
-
 import InlineStyleControls from '../draftjs/InlineStyleControls'
+import UrlTab from '../draftjs/UrlTab';
 
 import classes from './index.scss'
-
-// Draftjs bullshits
 
 class AddAnswer extends React.Component {
   state = {
@@ -80,40 +76,22 @@ class AddAnswer extends React.Component {
   }
 
   render() {
-    const { editorState } = this.state
-
+    const { editorState, addUrlOpen, editor, urlValue } = this.state
     return (
       <div className={classes.answer__container}>
-        {this.state.editor && (
+        {editor && (
           <React.Fragment>
             <h2>Add answer</h2>
             <InlineStyleControls
               editorState={editorState}
               onToggle={this.toggleInlineStyle}
-              addLink={this.onAddLink}
               openUrlTab={this.handleUrlTab}
-              addUrlOpen={this.state.addUrlOpen}
+              addUrlOpen={addUrlOpen}
             />
-            {this.state.addUrlOpen && (
-              <div className={classes.url__container}>
-                <Input className={classes.url__input} value={this.state.urlValue} onChange={this.handleUrlChange} />
-                <Button id="link_url" onClick={this.onAddLink}>
-                  ADD LINK
-                </Button>
-              </div>
+            {addUrlOpen && (
+              <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink}/>
             )}
-            <div>
-              <Editor
-                customStyleMap={styleMap}
-                editorState={editorState}
-                handleKeyCommand={this.handleKeyCommand}
-                onChange={this.onChange}
-                placeholder="Answer"
-                ref="editor"
-                spellCheck={true}
-                plugins={this.plugins}
-              />
-            </div>
+            <DraftjsEditor editorState={editorState} handleKeyCommand={this.handleKeyCommand} plugins={this.plugins} placeholder='Add answer' onChange={this.onChange} />
             <Button
               type="primary"
               onClick={() => {
@@ -134,51 +112,6 @@ class AddAnswer extends React.Component {
       </div>
     )
   }
-}
-
-// inline controls
-// const InlineStyleControls = props => {
-//   var currentStyle = props.editorState.getCurrentInlineStyle()
-//   return (
-//     <div className={classes.answer__buttons}>
-//       {INLINE_STYLES.map(type => (
-//         <StyleButton
-//           key={type.icon}
-//           active={currentStyle.has(type.style)}
-//           icon={type.icon}
-//           onToggle={props.onToggle}
-//           style={type.style}
-//         />
-//       ))}
-//       <StyleButton onToggle={props.openUrlTab} icon="link" active={props.addUrlOpen ? true : false} />
-//     </div>
-//   )
-// }
-
-// toggle button
-// const StyleButton = props => {
-//   const onToggle = e => {
-//     e.preventDefault()
-//     props.onToggle(props.style)
-//   }
-//   let type = ''
-//   if (props.active) {
-//     type += 'primary'
-//   }
-//   return <Button type={type} onMouseDown={onToggle} icon={props.icon} className={classes.answer__button} />
-// }
-
-// Custom styles
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2,
-  },
-  LINK: {
-    color: '#07C',
-  },
 }
 
 export default AddAnswer
