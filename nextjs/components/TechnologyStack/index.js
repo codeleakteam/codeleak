@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import Link from 'next/link'
 import { Dropdown, Icon } from 'antd'
 import CustomIcon from '../../assets/icons/index'
@@ -83,48 +83,49 @@ const otherTechs = [
   },
 ]
 
-const renderOtherTechs = (
-  <div>
-    {otherTechs.map(t => {
-      return (
-        <Link href={t.url} key={t.url + t.color + t.name}>
-          <a className={[classes.tech__box, classes['tech__box--dropdown']].join(' ')}>
-            <span style={{ color: t.color }}>{t.name}</span>
-          </a>
-        </Link>
-      )
-    })}
-  </div>
-)
+class TechnologyStack extends Component {
+  state = {
+    otherTechVisible: false,
+  }
 
-const TechnologyStack = () => {
-  return (
-    <React.Fragment>
-      <div className={classes.tech__container}>
-        {mainTechs.map(t => {
-          return (
-            <Link href={t.url} key={t.name}>
-              <a className={classes.tech__box}>
-                <span style={{ color: t.color }}>{t.name}</span>
-                {t.icon}
-              </a>
-            </Link>
-          )
-        })}
-      </div>
-      <Dropdown
-        overlay={renderOtherTechs}
-        trigger={['click']}
-        placement="bottomLeft"
-        overlayClassName={classes.tech__dropdown}
-      >
-        <div className={[classes.tech__box, classes['tech__box--more']].join(' ')}>
+  handleOtherTech = () => {
+    this.setState(state => ({ otherTechVisible: !state.otherTechVisible }))
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className={classes.tech__container}>
+          {mainTechs.map(t => {
+            return (
+              <Link href={t.url} key={t.name}>
+                <a className={classes.tech__box}>
+                  <span style={{ color: t.color }}>{t.name}</span>
+                  {t.icon}
+                </a>
+              </Link>
+            )
+          })}
+        </div>
+        <div className={[classes.tech__box, classes['tech__box--more']].join(' ')} onClick={this.handleOtherTech}>
           <span style={{ color: 'white' }}>More</span>
           <Icon type="more" style={{ marginLeft: 'auto' }} />
         </div>
-      </Dropdown>
-    </React.Fragment>
-  )
+        <div className={classes['other-tech__container']}>
+          {this.state.otherTechVisible &&
+            otherTechs.map(t => {
+              return (
+                <Link href={t.url} key={t.url + t.color + t.name}>
+                  <a className={[classes.tech__box, classes['tech__box--dropdown']].join(' ')}>
+                    <span style={{ color: t.color }}>{t.name}</span>
+                  </a>
+                </Link>
+              )
+            })}
+        </div>
+      </React.Fragment>
+    )
+  }
 }
 
 export default TechnologyStack

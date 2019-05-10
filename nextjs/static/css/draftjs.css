@@ -28,7 +28,7 @@
   /* custom */
   border: 1px solid #d9d9d9;
   border-radius: 3px;
-  padding: 4px;
+  
   margin-bottom: 4px;
 }
 .public-DraftEditor-block {
@@ -57,11 +57,12 @@
   text-align: right;
 }
 .public-DraftEditorPlaceholder-root {
-  color: #9197a3;
+  /* color: #9197a3; */
   position: absolute;
   z-index: 1;
   /* custom */
-  margin: 4px;
+  margin: 4px 11px;
+  color: #bfbfbf;
 }
 .public-DraftEditorPlaceholder-hasFocus {
   color: #bdc1c9;
@@ -76,6 +77,9 @@
 .public-DraftStyleDefault-ltr {
   direction: ltr;
   text-align: left;
+  /* custom */
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 0.65);
 }
 .public-DraftStyleDefault-rtl {
   direction: rtl;
