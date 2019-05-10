@@ -25,30 +25,29 @@ class AskQuestion extends Component {
     addUrlOpen: false,
   }
 
+  // draftjs bug
   componentDidMount() {
     this.setState({ editor: true })
   }
 
+  // draftjs plugins
   plugins = [addLinkPlugin]
 
+  // draftjs link handler
   onAddLink = () => {
     const editorState = this.state.editorState
     const selection = editorState.getSelection()
-    // const link = window.prompt('Paste the link')
     const link = this.state.urlValue
-
     if (!link) {
       this.onChange(RichUtils.toggleLink(editorState, selection, null))
       return 'handled'
     }
-
     const content = editorState.getCurrentContent()
     const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link })
     const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity')
     const entityKey = contentWithEntity.getLastCreatedEntityKey()
     this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
   }
-
   // draftjs handler
   onChange = editorState => {
     this.setState({ editorState })
@@ -72,7 +71,7 @@ class AskQuestion extends Component {
   cleanStateAfterSubmit = () => {
     this.setState({ editorState: EditorState.createEmpty(), addUrlOpen: false, urlValue: '' })
   }
-
+  // draftjs url tab
   handleUrlTab = () => {
     this.setState(state => {
       return {
@@ -84,7 +83,7 @@ class AskQuestion extends Component {
   handleUrlChange = e => {
     this.setState({ urlValue: e.target.value })
   }
-
+  // tag handler
   handleClose = removedTag => {
     const tags = this.state.tags.filter(tag => tag !== removedTag)
     this.setState({ tags })
@@ -116,7 +115,6 @@ class AskQuestion extends Component {
 
   render() {
     const { editorState, addUrlOpen, editor, urlValue } = this.state
-
     return (
       <div>
         <InputLabel text="Title" />
@@ -137,6 +135,7 @@ class AskQuestion extends Component {
               plugins={this.plugins}
               placeholder="Description"
               onChange={this.onChange}
+              height={300}
             />
           </React.Fragment>
         )}
