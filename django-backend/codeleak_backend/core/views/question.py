@@ -38,6 +38,10 @@ class ListCreateQuestionView(ListCreateAPIView):
     def post(self, request):
         print("Create question data: ", request.data)
         tags = request.data.get("tags", None)
+        if tags is None:
+            return Response({
+                'message': 'No tags provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         for t_id in tags:
             serializer = QuestionCreateUpdateSerializer(data=request.data)

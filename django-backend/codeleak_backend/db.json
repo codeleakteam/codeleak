@@ -1,0 +1,954 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$120000$4CKj1aaOvoQR$UCNBS/OK5w4EpswYvQFS3LMA3epeCKDmpcNZ/AYCtx8=",
+        "last_login": "2019-05-08T09:37:33.102Z",
+        "is_superuser": true,
+        "username": "milicev",
+        "first_name": "",
+        "last_name": "",
+        "email": "boyan93@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-05-08T09:37:01.445Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "27p7wjm4sxewm45ytsjraao3z571ovgb",
+    "fields": {
+        "session_data": "OTNlY2E0Mzc1NzlkMGI3NWY2NGJmMWY4YjFjMDc3ZDViOTIzYjc2Yjp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJmYjg1Y2M1NjViOWUwNmVhYzk0MjcxOGM5NzM2MTVkZTgwOTc5NGNjIn0=",
+        "expire_date": "2019-05-22T09:37:33.103Z"
+    }
+},
+{
+    "model": "core.editor",
+    "pk": 1,
+    "fields": {
+        "name": "codesandbox",
+        "created_at": "2019-05-08T09:42:17Z",
+        "modified_at": "2019-05-08T09:42:20.932Z"
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 1,
+    "fields": {
+        "title": "python",
+        "slug": "python",
+        "description": "python",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T09:42:22Z",
+        "modified_at": "2019-05-08T09:42:30.727Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 2,
+    "fields": {
+        "title": "jquery",
+        "slug": "jquery",
+        "description": "jquery",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T09:42:32Z",
+        "modified_at": "2019-05-08T09:42:40.294Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 3,
+    "fields": {
+        "title": "react",
+        "slug": "react",
+        "description": "react",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T10:01:04Z",
+        "modified_at": "2019-05-08T10:01:10.040Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 4,
+    "fields": {
+        "title": "angular",
+        "slug": "angular",
+        "description": "angular",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T10:01:11Z",
+        "modified_at": "2019-05-08T10:01:20.042Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 5,
+    "fields": {
+        "title": "vuejs",
+        "slug": "vuejs",
+        "description": "vuejs",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T10:01:21Z",
+        "modified_at": "2019-05-08T10:01:28.048Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 6,
+    "fields": {
+        "title": "nextjs",
+        "slug": "nextjs",
+        "description": "nextjs",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T10:01:30Z",
+        "modified_at": "2019-05-08T10:01:35.912Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.tag",
+    "pk": 7,
+    "fields": {
+        "title": "nuxtj",
+        "slug": "nuxtj",
+        "description": "nuxtj",
+        "used_times": 0,
+        "is_deleted": false,
+        "created_at": "2019-05-08T10:01:38Z",
+        "modified_at": "2019-05-08T10:01:53.712Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.question",
+    "pk": 1,
+    "fields": {
+        "title": "Does Python have a ternary conditional operator?",
+        "description": "If Python does not have a ternary conditional operator, is it possible to simulate one using other language constructs?",
+        "slug": "piton",
+        "repository_url": null,
+        "author": 1,
+        "editor": 1,
+        "score": 20,
+        "reported_times": 0,
+        "viewed_times": 117,
+        "has_accepted_answer": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "created_at": "2019-05-08T09:41:23Z",
+        "modified_at": "2019-05-09T13:17:36.150Z",
+        "deleted_at": null,
+        "tags": [
+            1,
+            2
+        ]
+    }
+},
+{
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+        "email": "user@codeleak.io",
+        "username": "mica1",
+        "password_hash": "123456",
+        "full_name": null,
+        "avatar": "https://m.media-amazon.com/images/M/MV5BMjA0MjMzMTE5OF5BMl5BanBnXkFtZTcwMzQ2ODE3Mw@@._V1_UY317_CR27,0,214,317_AL_.jpg",
+        "biography": null,
+        "website_url": null,
+        "cv_url": null,
+        "twitter_username": null,
+        "github_username": null,
+        "company": null,
+        "company_headquarters": null,
+        "role_in_company": null,
+        "location": null,
+        "gender": "Male",
+        "birth": null,
+        "student": false,
+        "verified": false,
+        "looking_for_job": false,
+        "reputation": 20,
+        "reported_times": 0,
+        "created_at": "2019-05-08T09:39:32Z",
+        "modified_at": "2019-05-08T14:37:35.051Z"
+    }
+},
+{
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+        "email": "mica2@codeleak.io",
+        "username": "mica2",
+        "password_hash": "123456",
+        "full_name": null,
+        "avatar": "https://m.media-amazon.com/images/M/MV5BMTk4MDM0MDUzM15BMl5BanBnXkFtZTcwOTI4MzU1Mw@@._V1_UY317_CR7,0,214,317_AL_.jpg",
+        "biography": null,
+        "website_url": null,
+        "cv_url": null,
+        "twitter_username": null,
+        "github_username": null,
+        "company": null,
+        "company_headquarters": null,
+        "role_in_company": null,
+        "location": null,
+        "gender": "Female",
+        "birth": null,
+        "student": false,
+        "verified": false,
+        "looking_for_job": false,
+        "reputation": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-08T09:40:47Z",
+        "modified_at": "2019-05-08T09:41:15.761Z"
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 19,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"b9ttl\",\"text\":\"da li sljaka\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":6,\"length\":6,\"style\":\"ITALIC\"}],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:34:17.153Z",
+        "modified_at": "2019-05-09T09:34:17.154Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 20,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"ciphe\",\"text\":\"link\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":0,\"length\":4,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"gugl.rs\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:34:26.982Z",
+        "modified_at": "2019-05-09T09:34:26.982Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 21,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"dmr07\",\"text\":\"a sad \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":2,\"length\":3,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:36:27.870Z",
+        "modified_at": "2019-05-09T09:36:27.870Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 22,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"fn9i1\",\"text\":\"da vidmo\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":3,\"length\":5,\"style\":\"BOLD\"}],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:37:27.378Z",
+        "modified_at": "2019-05-09T09:37:27.379Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 23,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"dn2ka\",\"text\":\"da vidimo \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":3,\"length\":6,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"test\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:54:24.218Z",
+        "modified_at": "2019-05-09T09:54:24.218Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 24,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"f54rl\",\"text\":\"test \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":0,\"length\":4,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"test\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:55:18.398Z",
+        "modified_at": "2019-05-09T09:55:18.398Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 25,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"15du4\",\"text\":\"da vidimo sad \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":3,\"length\":6,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"test\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T09:56:07.846Z",
+        "modified_at": "2019-05-09T09:56:07.846Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 26,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"16ngl\",\"text\":\"da testiramo da li radi link do google-a\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":32,\"length\":8,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"www.google.rs\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T10:41:51.277Z",
+        "modified_at": "2019-05-09T10:41:51.277Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 27,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"dosn0\",\"text\":\"ajde opet da probamo da li radi google \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[{\"offset\":32,\"length\":6,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"http://google.rs\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T10:42:33.500Z",
+        "modified_at": "2019-05-09T10:42:33.500Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.answer",
+    "pk": 28,
+    "fields": {
+        "question": 1,
+        "author": 1,
+        "editor": 1,
+        "description": "{\"blocks\":[{\"key\":\"4hql8\",\"text\":\"nesko sranje link \",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[{\"offset\":6,\"length\":12,\"style\":\"BOLD\"}],\"entityRanges\":[{\"offset\":13,\"length\":5,\"key\":0}],\"data\":{}}],\"entityMap\":{\"0\":{\"type\":\"LINK\",\"mutability\":\"MUTABLE\",\"data\":{\"url\":\"http://google.rs\"}}}}",
+        "repository_url": "repositoryurl",
+        "is_accepted": false,
+        "has_comments": false,
+        "is_edited": false,
+        "is_deleted": false,
+        "score": 0,
+        "reported_times": 0,
+        "created_at": "2019-05-09T12:42:04.931Z",
+        "modified_at": "2019-05-09T12:42:04.931Z",
+        "deleted_at": null
+    }
+},
+{
+    "model": "core.questionvote",
+    "pk": 1,
+    "fields": {
+        "is_upvote": true,
+        "is_deleted": false,
+        "created_at": "2019-05-08T09:53:41.141Z",
+        "modified_at": "2019-05-08T14:37:35.047Z",
+        "deleted_at": null,
+        "question": 1,
+        "author": 1
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2019-05-08T09:40:47.026Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "user"
+        ],
+        "object_id": "1",
+        "object_repr": "Mica: mica1",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2019-05-08T09:41:15.762Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "user"
+        ],
+        "object_id": "2",
+        "object_repr": "Mica: mica2",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2019-05-08T09:42:20.933Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "editor"
+        ],
+        "object_id": "1",
+        "object_repr": "codesandbox",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2019-05-08T09:42:30.728Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "1",
+        "object_repr": "python",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2019-05-08T09:42:40.294Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "2",
+        "object_repr": "jquery",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2019-05-08T09:42:51.543Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "question"
+        ],
+        "object_id": "1",
+        "object_repr": "Does Python have a ternary conditional operator? by Mica: mica1",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2019-05-08T10:01:10.040Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "3",
+        "object_repr": "react",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2019-05-08T10:01:20.043Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "4",
+        "object_repr": "angular",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2019-05-08T10:01:28.050Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "5",
+        "object_repr": "vuejs",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2019-05-08T10:01:35.914Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "6",
+        "object_repr": "nextjs",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2019-05-08T10:01:53.712Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "tag"
+        ],
+        "object_id": "7",
+        "object_repr": "nuxtj",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.654Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "18",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:18",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.657Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "17",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:17",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.658Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "16",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:16",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.659Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "15",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:15",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.660Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "14",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:14",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.661Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "13",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:13",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.663Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "12",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:12",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 19,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.664Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "11",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:11",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 20,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.665Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "10",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:10",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 21,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.666Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "9",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:9",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 22,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.667Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "8",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:8",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.668Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "7",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:7",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.669Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "6",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:6",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.670Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "5",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:5",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.671Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "4",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:4",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.672Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "3",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:3",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.673Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "2",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:2",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+        "action_time": "2019-05-09T09:21:29.674Z",
+        "user": [
+            "milicev"
+        ],
+        "content_type": [
+            "core",
+            "answer"
+        ],
+        "object_id": "1",
+        "object_repr": "Answer on Does Python have a ternary conditional operator? by mica1 - ID:1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+}
+]
