@@ -28,7 +28,7 @@ class Answer extends Component {
     let editorState = this.state.editorState
     let html = stateToHTML(editorState.getCurrentContent())
     return {
-      __html: html
+      __html: html,
     }
   }
 
@@ -87,7 +87,7 @@ class Answer extends Component {
             </Link>
           </div>
         </div>
-        {editorState && <div className={classes.answer__text} dangerouslySetInnerHTML={this.createAnswerFromHtml()}/>}
+        {editorState && <div className={classes.answer__text} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
         <div className={classes.answer__controls}>
           <Button className={classes.answer__upvote} type="primary">
             Upvote

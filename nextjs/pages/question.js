@@ -5,6 +5,7 @@ import Question from '../components/Question'
 import AnswerContainer from '../components/AnswerContainer'
 import AddAnswer from '../components/AddAnswer'
 import _ from 'lodash'
+import { Spin } from 'antd'
 
 import { apiGet, apiPut, apiPost } from '../api'
 
@@ -14,10 +15,11 @@ class QuestionFullPage extends Component {
   state = {
     questionScore: null,
     answers: [],
+    answersLoaded: false,
   }
 
   componentDidMount() {
-    this.setState({ answers: this.props.question.question.answers })
+    this.setState({ answers: this.props.question.question.answers, answersLoaded: true })
   }
 
   updateQuestionScore = async (type, questionId, userId) => {
@@ -47,14 +49,20 @@ class QuestionFullPage extends Component {
   }
 
   render() {
-    const { question } = this.props.question
+    const { question } = this.props
     let leftSide = (
       <React.Fragment>
         <Question
-          data={this.props.question}
+          data={question}
           updateQuestionScore={this.updateQuestionScore}
           updatedQuestionScore={this.state.questionScore}
         />
+        {!this.state.answersLoaded ? (
+          <Spin
+            tip="Getting answers for you!"
+            style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+          />
+        ) : null}
         <AnswerContainer answers={this.state.answers} />
         <AddAnswer sendAnswer={this.sendAnswerOnQuestion} questionId={this.props.question.question.id} />
       </React.Fragment>
@@ -79,7 +87,7 @@ QuestionFullPage.getInitialProps = async function({ query }) {
     console.log('error', error)
   }
   return {
-    question: {}
+    question: {},
   }
 }
 
