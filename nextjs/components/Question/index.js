@@ -6,6 +6,7 @@ import Comment from '../Comment'
 import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
+import AddComment from '../AddComment'
 
 import classes from './index.scss'
 
@@ -97,6 +98,7 @@ const Question = ({ data, updateQuestionScore, updatedQuestionScore }) => {
       {question.comments.map(c => (
         <Comment key={c.id + c.score} id={c.id} authorName={c.author.username} content={c.content} score={c.score} />
       ))}
+      <AddComment />
     </div>
   )
 }

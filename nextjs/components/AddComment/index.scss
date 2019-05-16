@@ -1,0 +1,15 @@
+.comment {
+  &__container {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+  }
+  &__button {
+    margin-bottom: 8px;
+    // display: block;
+    // text-align: right;
+  }
+  &__text {
+    margin-bottom: 8px;
+  }
+}
