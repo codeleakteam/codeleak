@@ -26,9 +26,17 @@ export const apiPost = {
       question: questionId,
       editor: editor,
       description: description,
-      repository_url: repository
+      repository_url: repository,
     })
-  }
+  },
+  sendComment: (type, object_id, authorId, content) => {
+    return axios.post(`${BASE_URL}/api/comments`, {
+      comment_type: type,
+      object_id: object_id,
+      author: authorId,
+      content: content,
+    })
+  },
 }
 
 export const apiPut = {
