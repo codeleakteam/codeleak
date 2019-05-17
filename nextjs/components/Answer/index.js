@@ -36,6 +36,8 @@ class Answer extends Component {
     const { answer } = this.props
     const { editorState } = this.state
 
+    // console.log(this.props.answer.description)
+
     const answerOptions = (
       <Menu>
         <Menu.Item>

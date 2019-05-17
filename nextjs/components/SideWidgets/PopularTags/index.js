@@ -16,7 +16,7 @@ class PopularTags extends Component {
 
   getPopularTags = async () => {
     try {
-      let res = await apiGet.getPopularTags()
+      let res = await apiGet.getTags()
       const tags = _.get(res, 'data', [])
       this.setState({ tags })
     } catch (error) {
