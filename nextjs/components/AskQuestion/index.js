@@ -8,6 +8,10 @@ import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
 import DraftjsEditor from '../draftjs'
 import UrlTab from '../draftjs/UrlTab'
+import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
+import { apiGet, apiPost } from '../../api'
+import _ from 'lodash'
+import Router from 'next/router'
 
 import classes from './index.scss'
 
@@ -16,6 +20,7 @@ const { TextArea } = Input
 class AskQuestion extends Component {
   state = {
     tags: [],
+    selectedTags: [],
     inputVisible: false,
     inputValue: '',
     // draftjs shiet
@@ -28,6 +33,7 @@ class AskQuestion extends Component {
   // draftjs bug
   componentDidMount() {
     this.setState({ editor: true })
+    this.getTags()
   }
 
   // draftjs plugins
@@ -110,15 +116,53 @@ class AskQuestion extends Component {
     })
   }
 
+  getTags = async () => {
+    try {
+      const res = await apiGet.getTags()
+      let tags = _.get(res, 'data', [])
+      if (tags) {
+        this.setState({ tags })
+      }
+    } catch (error) {
+      console.log('erorko')
+    }
+  }
+
+  handleTagChange = value => {
+    const tagz = value.map(v => {
+      return _.find(this.state.tags, { title: v })['id']
+    })
+    this.setState({ selectedTags: tagz })
+  }
+
+  sendQuestion = async (title, description, tags, author, editor) => {
+    try {
+      const res = await apiPost.sendQuestion(title, description, tags, author, editor)
+      let question = _.get(res, 'data', {})
+      // console.log(question)
+      if (question) {
+        Router.push(`/question/${question.id}`)
+      }
+    } catch (error) {
+      console.log('erorko')
+    }
+  }
+
+  handleTitle = e => {
+    this.setState({ title: e.target.value })
+  }
+
   // ref used for focus
   saveInputRef = input => (this.input = input)
 
   render() {
     const { editorState, addUrlOpen, editor, urlValue } = this.state
+
+    // const stringi = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
     return (
       <div>
         <InputLabel text="Title" />
-        <Input placeholder="Title" type="primary" />
+        <Input placeholder="Title" type="primary" value={this.state.title} onChange={this.handleTitle} />
         <InputLabel text="Description" />
         {editor && (
           <React.Fragment>
@@ -146,7 +190,7 @@ class AskQuestion extends Component {
         <Input placeholder="Enter codeSandbox url" type="primary" />
         <InputLabel text="Tags" />
 
-        <QuestionTags
+        {/* <QuestionTags
           handleClose={this.handleClose}
           showInput={this.showInput}
           handleInputChange={this.handleInputChange}
@@ -156,8 +200,23 @@ class AskQuestion extends Component {
           inputValue={this.state.inputValue}
           ref={this.saveInputRef}
         />
+        */}
 
-        <Button type="primary" className={classes['ask-question__btn']}>
+        {this.state.tags && <QuestionTagsAutocomplete tags={this.state.tags} handleTagChange={this.handleTagChange} />}
+
+        <Button
+          type="primary"
+          className={classes['ask-question__btn']}
+          onClick={() =>
+            this.sendQuestion(
+              this.state.title,
+              JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+              this.state.selectedTags,
+              1,
+              1
+            )
+          }
+        >
           {this.props.type === 'edit' ? 'Edit question' : 'Send question'}
         </Button>
       </div>
