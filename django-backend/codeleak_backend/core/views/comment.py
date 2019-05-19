@@ -86,7 +86,9 @@ class ListCreateCommentView(ListCreateAPIView):
 
         CommentModel = COMMENT_TYPES[comment_type]['model']
         ModelCommentedOn = COMMENT_TYPES[comment_type]['model_commented_on']
-        CommentSerializer = COMMENT_TYPES[comment_type]['create_serializer']
+        CreateCommentSerializer = COMMENT_TYPES[comment_type]['create_serializer']
+        CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
+        
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         object_commented_on = None
@@ -97,14 +99,15 @@ class ListCreateCommentView(ListCreateAPIView):
 
         write_data = request.data
         write_data['question'] = object_id
-        serializer = CommentSerializer(data=write_data)
-        if serializer.is_valid():
+        create_comment_serializer = CreateCommentSerializer(data=write_data)
+        if create_comment_serializer.is_valid():
             object_commented_on.has_comments = True
             object_commented_on.save()
-            serializer.save()
+            new_comment_obj = create_comment_serializer.save()
+            read_comment_serializer = CommentSerializer(new_comment_obj)
             return Response({
                 'has_comments': object_commented_on.has_comments,
-                'comment': serializer.data
+                'comment': read_comment_serializer.data
             }, status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
