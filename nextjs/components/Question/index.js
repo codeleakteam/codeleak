@@ -7,6 +7,7 @@ import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
 import AddComment from '../AddComment'
+import { apiPost } from '../../api'
 
 import { convertFromRaw, EditorState } from 'draft-js'
 
@@ -17,6 +18,7 @@ import classes from './index.scss'
 class Question extends Component {
   state = {
     editorState: null,
+    comments: [],
   }
 
   componentDidMount() {
@@ -26,6 +28,7 @@ class Question extends Component {
         editorState: EditorState.createWithContent(convertFromRaw(questionUnformated)),
       })
     }
+    this.setState({ comments: this.props.data.question.comments })
   }
 
   createAnswerFromHtml = () => {
@@ -33,6 +36,19 @@ class Question extends Component {
     let html = stateToHTML(editorState.getCurrentContent())
     return {
       __html: html,
+    }
+  }
+
+  submitComment = async (type, question_id, author_id, content) => {
+    try {
+      const res = await apiPost.sendComment(type, question_id, author_id, content)
+      let comment = _.get(res, 'data', {})
+
+      if (comment) {
+        this.setState(state => ({ comments: [...state.comments, comment.comment] }))
+      }
+    } catch (error) {
+      console.log('erorko')
     }
   }
 
@@ -119,10 +135,12 @@ class Question extends Component {
             <Icon type="more" style={{ fontSize: '30px' }} />
           </Dropdown>
         </div>
-        {question.comments.map(c => (
+        <div />
+        {this.state.comments.map(c => (
           <Comment key={c.id + c.score} id={c.id} authorName={c.author.username} content={c.content} score={c.score} />
         ))}
-        <AddComment />
+
+        <AddComment questionId={question.id} submitComment={this.submitComment} />
       </div>
     )
   }

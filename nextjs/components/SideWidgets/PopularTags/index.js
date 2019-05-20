@@ -25,7 +25,8 @@ class PopularTags extends Component {
   }
 
   render() {
-    let popularTags = this.state.tags.slice(0, 6)
+    let popularTags = _.reverse(_.sortBy(this.state.tags, 'used_times')).slice(0, 6)
+
     return (
       <div>
         <h4>Popular tags</h4>
