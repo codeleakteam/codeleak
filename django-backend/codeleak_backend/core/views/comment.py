@@ -318,15 +318,3 @@ class ReportCommentView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-        # Should be ended by this point
-        try:
-            comment = CommentModel.objects.get(pk=comment_id)
-            comment.reported_times += 1
-            comment.save()
-            serializer = CommentSerializer(comment)
-            return Response({
-                'comment': serializer.data
-            }, status.HTTP_200_OK)
-
-        except ObjectDoesNotExist:
-            return Response({ 'message': 'Comment with the ID: ' + comment_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
