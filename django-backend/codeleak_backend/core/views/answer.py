@@ -1,12 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.response import Response
-from core.models import Answer, User, Question
+from core.models import (
+    Answer,
+    User,
+    Question,
+    AnswerReport
+)
 from rest_framework import status
 from core.serializers import (
     AnswerSerializer,
     CreateAnswerSerializer,
-    AnswerVoteSerializer
+    AnswerVoteSerializer,
+    AnswerReportSerializer
 )
 from django.core.exceptions import ObjectDoesNotExist
 from core.models import AnswerVote
@@ -86,16 +92,76 @@ class AcceptAnswerView(APIView):
 
 class ReportAnswerView(APIView):
     def post(self, request, answer_id):
+        print("body:", request.data)
+        user_id = request.data.get("user_id", None)
+        is_report = request.data.get("is_report", None)
+
+        if user_id == None:
+            return Response({
+                'message': 'No user_id param provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if is_report == None:
+            return Response({
+                'message': 'No is_report param provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+        if is_report != 'true' and is_report != 'false':
+            return Response({ 'message': 'Invalid is_report param'}, status.HTTP_400_BAD_REQUEST)
+
+        is_report = str2bool(is_report)
         try:
             answer = Answer.objects.get(pk=answer_id)
             answer.reported_times += 1
             answer.save()
-            serializer = AnswerSerializer(answer)
+            try:
+                report = AnswerReport.objects.get(
+                    answer=answer_id,
+                    author=user_id
+                )
+                if is_report:
+                    return Response({
+                        'message': 'Already reported'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    print("Report object deleted")
+                    report.delete()
+                    return Response({
+                        'message': 'Report deleted',
+                    }, status.HTTP_200_OK)
+            except ObjectDoesNotExist:
+                if is_report:
+                    print("Report object does not exist. Will create one")
+                    report_serializer = AnswerReportSerializer(data={
+                        'answer': answer_id,
+                        'author': user_id
+                    })
+                    if report_serializer.is_valid():
+                        report_serializer.save()
+                        print("Question report successfully saved")
+                        return Response(
+                            report_serializer.data,
+                            status=status.HTTP_201_CREATED
+                        )
+                    return Response(
+                        report_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                return Response({
+                    'message': 'Cant delete report which does not exist'
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+
             return Response({
-                'answer': serializer.data,
+                'report': report_serializer.data
             }, status.HTTP_200_OK)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'Answer with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 
+                'message': 'Answer with the ID: ' + answer_id + ' does not exist.'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class UpdateAnswerScoreView(UpdateAPIView):
