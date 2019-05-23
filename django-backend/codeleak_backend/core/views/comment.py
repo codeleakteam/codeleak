@@ -223,7 +223,6 @@ class UpdateCommentScoreView(UpdateAPIView):
 class ReportCommentView(APIView):
     COMMENT_TYPES = COMMENT_TYPES
     def post(self, request, comment_id):
-        # TODO: Only question author can accept answer
         comment_type = request.data.get('comment_type', None)
         user_id = request.data.get("user_id", None)
         COMMENT_TYPES = self.COMMENT_TYPES
