@@ -9,6 +9,8 @@ from core.models import (
     AnswerComment,
     QuestionCommentVote,
     AnswerCommentVote,
+    QuestionCommentReport,
+    AnswerCommentReport,
     Answer,
     Question
 )
@@ -18,7 +20,9 @@ from core.serializers import (
     CreateAnswerCommentSerializer,
     CreateQuestionCommentSerializer,
     QuestionCommentVoteSerializer,
-    AnswerCommentVoteSerializer
+    AnswerCommentVoteSerializer,
+    QuestionCommentReportSerializer,
+    AnswerCommentReportSerializer
 )
 
 COMMENT_UPVOTE_VALUE = 20
@@ -32,6 +36,7 @@ COMMENT_TYPES = {
         'serializer': QuestionCommentSerializer,
         'create_serializer': CreateQuestionCommentSerializer,
         'vote_serializer': QuestionCommentVoteSerializer,
+        'report_serializer': QuestionCommentReportSerializer,
         'model_commented_on': Question
     },
     'ANSWER_COMMENT': {
@@ -40,6 +45,7 @@ COMMENT_TYPES = {
         'serializer': AnswerCommentSerializer,
         'create_serializer': CreateAnswerCommentSerializer,
         'vote_serializer': AnswerCommentVoteSerializer,
+        'report_serializer': AnswerCommentReportSerializer,
         'model_commented_on': Answer
     }
 }
@@ -53,6 +59,7 @@ class ListCreateCommentView(ListCreateAPIView):
 
     def get(self, request):
         comment_type = request.GET.get('comment_type', None)
+        print("TAP", comment_type)
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
 
@@ -63,7 +70,7 @@ class ListCreateCommentView(ListCreateAPIView):
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         try:
-            comments = CommentModel.objects.all()
+            comments = CommentModel.objects.all()[:10]
             serializer = CommentSerializer(comments, many=True)
             response = {}
             response[comment_key] = serializer.data
@@ -223,9 +230,10 @@ class UpdateCommentScoreView(UpdateAPIView):
 class ReportCommentView(APIView):
     COMMENT_TYPES = COMMENT_TYPES
     def post(self, request, comment_id):
-        # TODO: Only question author can accept answer
         comment_type = request.data.get('comment_type', None)
         user_id = request.data.get("user_id", None)
+        is_report = request.data.get("is_report", None)
+
         COMMENT_TYPES = self.COMMENT_TYPES
 
         # Field checks
@@ -238,18 +246,75 @@ class ReportCommentView(APIView):
         if comment_type not in COMMENT_TYPES:
             return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
 
+        if is_report == None:
+            return Response({
+                'message': 'No is_report param provided'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
         CommentModel = COMMENT_TYPES[comment_type]['model']
         CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
+        CommentReportSerializer = COMMENT_TYPES[comment_type]['report_serializer']
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         try:
+            print("body:", request.data)
+            if is_report != 'true' and is_report != 'false':
+                return Response({ 'message': 'Invalid is_report param'}, status.HTTP_400_BAD_REQUEST)
+
+            is_report = str2bool(is_report)
+
+            # Updating comment - question/answer comment
             comment = CommentModel.objects.get(pk=comment_id)
             comment.reported_times += 1
             comment.save()
-            serializer = CommentSerializer(comment)
-            return Response({
-                'comment': serializer.data
-            }, status.HTTP_200_OK)
 
+            try:
+                if comment_type == 'QUESTION_COMMENT':
+                    report = QuestionCommentReport.objects.get(author=user_id, question_comment=comment_id)
+                else:
+                    report = AnswerCommentReport.objects.get(author=user_id, answer_comment=comment_id)
+                
+                if is_report:
+                    return Response({
+                        'message': 'Already reported'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    print("Report object deleted")
+                    report.delete()
+                    return Response({
+                        'message': 'Report deleted',
+                    }, status.HTTP_200_OK)
+            except ObjectDoesNotExist:
+                if is_report:
+                    print("Report object does not exist. Will create one")
+                    comment_report_serializer_data = {
+                        'author': user_id
+                    }
+                    comment_report_serializer_data[comment_key] = comment_id 
+                    report_serializer = CommentReportSerializer(data=comment_report_serializer_data)
+                    if report_serializer .is_valid():
+                        report_serializer.save()
+                        print("Question report successfully saved")
+                        return Response(
+                            report_serializer.data,
+                            status=status.HTTP_201_CREATED
+                        )
+                    return Response(
+                        report_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                return Response({
+                    'message': 'Cant delete report which does not exist'
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+
+            return Response({
+                'report': report_serializer.data
+            }, status.HTTP_200_OK)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'Comment with the ID: ' + comment_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 
+                'message': 'Comment with the ID: ' + comment_id + ' does not exist.'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )

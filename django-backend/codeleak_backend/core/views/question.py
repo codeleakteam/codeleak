@@ -4,8 +4,25 @@ from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAP
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
-from core.models import Question, Tag, QuestionComment, Answer, AnswerComment, QuestionVote, User
-from core.serializers import QuestionSerializer, QuestionCommentSerializer, QuestionCreateUpdateSerializer, AnswerSerializer, AnswerCommentSerializer, QuestionVoteSerializer
+from core.models import (
+    Question,
+    Tag,
+    QuestionComment,
+    Answer,
+    AnswerComment,
+    QuestionVote,
+    User,
+    QuestionReport
+)
+from core.serializers import (
+    QuestionSerializer,
+    QuestionCommentSerializer,
+    QuestionCreateUpdateSerializer,
+    AnswerSerializer,
+    AnswerCommentSerializer,
+    QuestionVoteSerializer,
+    QuestionReportSerializer 
+)
 
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
@@ -163,15 +180,76 @@ class UpdateQuestionScoreView(UpdateAPIView):
 class ReportQuestionView(APIView):
     def post(self, request, question_id):
         try:
+            print("body:", request.data)
+            user_id = request.data.get("user_id", None)
+            is_report = request.data.get("is_report", None)
+
+            if user_id == None:
+                return Response({
+                    'message': 'No user_id param provided'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if is_report == None:
+                return Response({
+                    'message': 'No is_report param provided'
+                }, status=status.HTTP_400_BAD_REQUEST)
+ 
+
+            if is_report != 'true' and is_report != 'false':
+                return Response({ 'message': 'Invalid is_report param'}, status.HTTP_400_BAD_REQUEST)
+
+            is_report = str2bool(is_report)
+
             question = Question.objects.get(pk=question_id)
             question.reported_times += 1
             question.save()
-            serializer = QuestionSerializer(question)
+            try:
+                report = QuestionReport.objects.get(
+                    question=question_id,
+                    author=user_id
+                )
+                if is_report:
+                    return Response({
+                        'message': 'Already reported'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    print("Report object deleted")
+                    report.delete()
+                    return Response({
+                        'message': 'Report deleted',
+                    }, status.HTTP_200_OK)
+            except ObjectDoesNotExist:
+                if is_report:
+                    print("Report object does not exist. Will create one")
+                    report_serializer = QuestionReportSerializer(data={
+                        'question': question_id,
+                        'author': user_id
+                    })
+                    if report_serializer .is_valid():
+                        report_serializer.save()
+                        print("Question report successfully saved")
+                        return Response(
+                            report_serializer.data,
+                            status=status.HTTP_201_CREATED
+                        )
+                    return Response(
+                        report_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                return Response({
+                    'message': 'Cant delete report which does not exist'
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+
             return Response({
-                'question': serializer.data,
+                'report': report_serializer.data
             }, status.HTTP_200_OK)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 
+                'message': 'Question with the ID: ' + question_id + ' does not exist.'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 
