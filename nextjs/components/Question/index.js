@@ -104,6 +104,9 @@ class Question extends Component {
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     let commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
     let formatDate = moment(question.created_at).fromNow()
+
+    let testLink = question.repository_url.replace('/s/', '/embed/')
+
     const questionOptions = (
       <Menu>
         <Menu.Item>
@@ -165,6 +168,14 @@ class Question extends Component {
         <div className={classes.question__text}>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
         </div>
+        {question.repository_url && (
+          <iframe
+            src={`${testLink}?fontsize=14`}
+            title={question.title}
+            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+          />
+        )}
         <div className={classes.question__controls}>
           <Button
             className={classes.question__upvote}

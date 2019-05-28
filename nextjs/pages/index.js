@@ -15,7 +15,7 @@ class Index extends Component {
     return (
       <div
         className={
-          !this.props.loggedIn && [classes.section__container, classes['section__container--loggedOut']].join(' ')
+          !this.props.loggedIn ? [classes.section__container, classes['section__container--loggedOut']].join(' ') : null
         }
       >
         {!this.props.loggedIn && <Banner />}
@@ -45,7 +45,7 @@ Index.getInitialProps = async function() {
     console.log('error', error)
   }
   return {
-    questions: []
+    questions: [],
   }
 }
 

@@ -9,24 +9,24 @@ const mainTechs = [
   {
     name: 'Basic',
     color: 'white',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/codesandbox-app/static-template',
   },
   {
     name: 'React',
     color: '#61dafb',
-    url: '/',
+    url: 'https://codesandbox.io/s/new',
     icon: <CustomIcon name="react" height="30px" fill="#1d2022" />,
   },
   {
     name: 'Angular',
     color: '#dc0030',
-    url: '/',
+    url: 'https://codesandbox.io/s/angular',
     icon: <CustomIcon name="angular" height="30px" />,
   },
   {
     name: 'Vue',
     color: '#41b883',
-    url: '/',
+    url: 'https://codesandbox.io/s/vue',
     icon: <CustomIcon name="vue" height="30px" />,
   },
 ]
@@ -34,52 +34,52 @@ const otherTechs = [
   {
     name: 'Gatsby',
     color: '#653298',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/gatsbyjs/gatsby-starter-default',
   },
   {
     name: 'Next.js',
     color: '#fefefe',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/zeit/next.js/tree/master/examples/hello-world',
   },
   {
     name: 'Nuxt.js',
     color: '#3a7f6f',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/nuxt/codesandbox-nuxt',
   },
   {
     name: 'Preact',
     color: '#ac77db',
-    url: '/',
+    url: 'https://codesandbox.io/s/preact',
   },
   {
     name: 'Reason',
     color: '#dc4a38',
-    url: '/',
+    url: 'https://codesandbox.io/s/reason',
   },
   {
     name: 'React + TS',
     color: '#61dafb',
-    url: '/',
+    url: 'https://codesandbox.io/s/react-ts',
   },
   {
     name: 'Ember',
     color: '#e04e39',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/mike-north/ember-new-output',
   },
   {
     name: 'CxJS',
     color: '#0184e7',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/codaxy/cxjs-codesandbox-template',
   },
   {
     name: 'Apollo',
     color: '#e535ab',
-    url: '/',
+    url: 'https://codesandbox.io/s/apollo-server',
   },
   {
     name: 'Nest',
     color: '#e0234e',
-    url: '/',
+    url: 'https://codesandbox.io/s/github/nestjs/typescript-starter',
   },
 ]
 
@@ -99,7 +99,7 @@ class TechnologyStack extends Component {
           {mainTechs.map(t => {
             return (
               <Link href={t.url} key={t.name}>
-                <a className={classes.tech__box}>
+                <a className={classes.tech__box} target="_blank">
                   <span style={{ color: t.color }}>{t.name}</span>
                   {t.icon}
                 </a>
