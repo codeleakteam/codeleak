@@ -116,7 +116,7 @@ class ListCreateCommentView(ListCreateAPIView):
                 'has_comments': object_commented_on.has_comments,
                 'comment': read_comment_serializer.data
             }, status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(create_comment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateCommentScoreView(UpdateAPIView):
     COMMENT_TYPES = COMMENT_TYPES
