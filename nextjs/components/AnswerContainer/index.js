@@ -8,7 +8,7 @@ const AnswerContainer = ({ answers }) => {
     <div className={classes.answers__container}>
       <h5 className={classes.answers__header}>Answers</h5>
       {answers.map(answer => {
-        return <Answer key={answer.id} id={answer.id} answer={answer} />
+        return <Answer key={answer.id} id={answer.id} answer={answer} {...answer} />
       })}
     </div>
   )

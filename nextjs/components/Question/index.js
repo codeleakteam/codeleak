@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Icon, Dropdown, Menu } from 'antd'
+import { Button, Icon, Dropdown, Menu, message } from 'antd'
 import Link from 'next/link'
 import TagWithLink from '../TagWithLink'
 import Comment from '../Comment'
@@ -7,11 +7,10 @@ import moment from 'moment'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
 import AddComment from '../AddComment'
-import { apiPost } from '../../api'
-
+import { apiPost, apiPut } from '../../api'
 import { convertFromRaw, EditorState } from 'draft-js'
-
 import { stateToHTML } from 'draft-js-export-html'
+import _ from 'lodash'
 
 import classes from './index.scss'
 
@@ -19,7 +18,13 @@ class Question extends Component {
   state = {
     editorState: null,
     comments: [],
+    commentsReversed: [],
+    commentSummary: true,
   }
+
+  // shouldComponentUpdate(props, state) {
+  //   return state.comments !== this.state.comments
+  // }
 
   componentDidMount() {
     let questionUnformated = JSON.parse(this.props.data.question.description)
@@ -28,7 +33,10 @@ class Question extends Component {
         editorState: EditorState.createWithContent(convertFromRaw(questionUnformated)),
       })
     }
-    this.setState({ comments: this.props.data.question.comments })
+    this.setState({
+      comments: this.props.data.question.comments,
+      commentsReversed: this.props.data.question.comments.reverse(),
+    })
   }
 
   createAnswerFromHtml = () => {
@@ -39,26 +47,67 @@ class Question extends Component {
     }
   }
 
-  submitComment = async (type, question_id, author_id, content) => {
+  submitComment = async (question_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment(type, question_id, author_id, content)
+      const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
       let comment = _.get(res, 'data', {})
 
       if (comment) {
-        this.setState(state => ({ comments: [...state.comments, comment.comment] }))
+        this.setState(state => ({
+          comments: [...state.comments, comment.comment],
+          commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
+        }))
       }
     } catch (error) {
-      console.log('erorko')
+      message.error('Could not submit comment!')
     }
   }
 
+  handleCommentSummary = () => {
+    this.setState(state => ({ commentSummary: !state.commentSummary }))
+  }
+
+  upvoteComment = async (userId, commentId) => {
+    try {
+      const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId)
+      let comment = _.get(res, 'data', {})
+      if (comment) {
+        let index = _.findIndex(this.state.comments, { id: comment.comment.id })
+        let newArr = this.state.comments
+        let newArrReversed = this.state.commentsReversed
+
+        newArr.splice(index, 1, comment.comment)
+        newArrReversed.splice(index, 1, comment.comment)
+
+        this.setState({ comments: newArr, commentsReversed: newArrReversed })
+      }
+    } catch (error) {
+      message.error('Could not upvote comment!')
+    }
+  }
+
+  reportComment = async (userId, commentId) => {
+    try {
+      const res = await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId)
+      let comment = _.get(res, 'data', {})
+      if (comment) {
+        message.success('Comment is successfully reported!')
+      }
+    } catch (error) {
+      message.error('Could not report comment!')
+    }
+  }
   render() {
     const { data, updateQuestionScore, updatedQuestionScore } = this.props
     const { question } = data
+    let reverseeed =
+      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
+    let commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
     let formatDate = moment(question.created_at).fromNow()
     const questionOptions = (
       <Menu>
         <Menu.Item>
+          (1, id)
           <Link href="/questions/edit">
             <a>Edit question</a>
           </Link>
@@ -136,11 +185,25 @@ class Question extends Component {
           </Dropdown>
         </div>
         <div />
-        {this.state.comments.map(c => (
-          <Comment key={c.id + c.score} id={c.id} authorName={c.author.username} content={c.content} score={c.score} />
+        {commentSummary.map(c => (
+          <Comment
+            key={c.id}
+            id={c.id}
+            authorName={c.author.username}
+            content={c.content}
+            score={c.score}
+            upvoteComment={() => this.upvoteComment(1, c.id)}
+            reportComment={() => this.reportComment(1, c.id)}
+          />
         ))}
 
-        <AddComment questionId={question.id} submitComment={this.submitComment} />
+        {this.state.comments.length > 3 && (
+          <span className={classes['question__view-all-comments']} onClick={this.handleCommentSummary}>
+            {this.state.commentSummary ? 'view all' : 'hide'}
+          </span>
+        )}
+
+        <AddComment objectId={question.id} submitComment={this.submitComment} />
       </div>
     )
   }

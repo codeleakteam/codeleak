@@ -82,4 +82,12 @@
   &__score {
     margin-left: 8px;
   }
+  &__view-all-comments {
+    display: block;
+    padding: 4px;
+    text-align: right;
+    line-height: 1;
+    color: $antBlue;
+    cursor: pointer;
+  }
 }

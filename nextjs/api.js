@@ -46,6 +46,12 @@ export const apiPost = {
       editor: editor,
     })
   },
+  reportComment: (userId, type, commentId) => {
+    return axios.post(`${BASE_URL}/api/comments/${commentId}/report`, {
+      comment_type: type,
+      user_id: userId,
+    })
+  },
 }
 
 export const apiPut = {
@@ -53,6 +59,19 @@ export const apiPut = {
     return axios.put(`${BASE_URL}/api/questions/${questionId}/vote`, {
       is_upvote: type,
       user_id: userId,
+    })
+  },
+  updateAnswerScore: (type, answerId, userId) => {
+    return axios.put(`${BASE_URL}/api/answers/${answerId}/vote`, {
+      is_upvote: type,
+      user_id: userId,
+    })
+  },
+  updateCommentScore: (isUpvote, userId, type, commentId) => {
+    return axios.put(`${BASE_URL}/api/comments/${commentId}/vote`, {
+      is_upvote: isUpvote,
+      user_id: userId,
+      comment_type: type,
     })
   },
 }
