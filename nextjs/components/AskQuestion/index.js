@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, Button } from 'antd'
+import { Input, Button, message } from 'antd'
 import InputLabel from '../InputLabel'
 import TechnologyStack from '../TechnologyStack'
 import QuestionTags from '../QuestionTags'
@@ -28,6 +28,7 @@ class AskQuestion extends Component {
     editor: false,
     urlValue: '',
     addUrlOpen: false,
+    editorUrl: 'https://codesandbox.io/',
   }
 
   // draftjs bug
@@ -135,21 +136,27 @@ class AskQuestion extends Component {
     this.setState({ selectedTags: tagz })
   }
 
-  sendQuestion = async (title, description, tags, author, editor) => {
+  sendQuestion = async (title, description, tags, author, editor, repoUrl) => {
     try {
-      const res = await apiPost.sendQuestion(title, description, tags, author, editor)
-      let question = _.get(res, 'data', {})
+      const res = await apiPost.sendQuestion(title, description, tags, author, editor, repoUrl)
+      let question = _.get(res, 'data.id', null)
       // console.log(question)
       if (question) {
-        Router.push(`/question/${question.id}`)
+        message.success('Successfully sent question!')
+        Router.push(`/question/${question}`)
       }
     } catch (error) {
-      console.log('erorko')
+      message.error('Please fill data!')
+      // console.log('erorko')
     }
   }
 
   handleTitle = e => {
     this.setState({ title: e.target.value })
+  }
+
+  handleEditorUrl = e => {
+    this.setState({ editorUrl: e.target.value })
   }
 
   // ref used for focus
@@ -187,7 +194,12 @@ class AskQuestion extends Component {
         <InputLabel text="Technology stack" />
         <TechnologyStack />
         <InputLabel text="CodeSandbox url" />
-        <Input placeholder="Enter codeSandbox url" type="primary" />
+        <Input
+          placeholder="Enter codeSandbox url"
+          type="primary"
+          value={this.state.editorUrl}
+          onChange={this.handleEditorUrl}
+        />
         <InputLabel text="Tags" />
 
         {/* <QuestionTags
@@ -213,7 +225,8 @@ class AskQuestion extends Component {
               JSON.stringify(convertToRaw(editorState.getCurrentContent())),
               this.state.selectedTags,
               1,
-              1
+              1,
+              this.state.editorUrl
             )
           }
         >
