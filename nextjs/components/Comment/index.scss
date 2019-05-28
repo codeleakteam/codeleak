@@ -5,8 +5,14 @@
     border: 1px solid $antGray;
     width: 100%;
     max-width: 450px;
-    margin: 8px 0 8px auto;
+    margin: 8px 0 0 auto;
     padding: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__heading {
+    line-height: 1;
   }
   &__user {
     font-size: 13px;

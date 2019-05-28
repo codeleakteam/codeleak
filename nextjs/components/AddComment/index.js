@@ -24,6 +24,10 @@ class AddComment extends Component {
     this.setState({ commentText: e.target.value })
   }
 
+  cleanAfterSend = e => {
+    this.setState({ commentVisible: false, commentText: '' })
+  }
+
   render() {
     const { commentVisible } = this.state
     return (
@@ -36,9 +40,10 @@ class AddComment extends Component {
             <TextArea className={classes.comment__text} placeholder="Add comment" onChange={this.handleCommentText} />
             <Button
               type="primary"
-              onClick={() =>
-                this.props.submitComment('QUESTION_COMMENT', this.props.questionId, 1, this.state.commentText)
-              }
+              onClick={() => {
+                this.props.submitComment(this.props.objectId, 2, this.state.commentText)
+                this.cleanAfterSend()
+              }}
             >
               Send
             </Button>

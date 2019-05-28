@@ -18,7 +18,7 @@ library.add(faAngleUp, faComment, faEye, faBan)
 class MyApp extends App {
   state = {
     menuActive: false,
-    loggedIn: false,
+    loggedIn: true,
   }
 
   static async getInitialProps({ Component, ctx }) {
