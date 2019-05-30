@@ -105,7 +105,7 @@ class Question extends Component {
     let commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
     let formatDate = moment(question.created_at).fromNow()
 
-    let testLink = question.repository_url.replace('/s/', '/embed/')
+    let testLink = question.repository_url ? question.repository_url.replace('/s/', '/embed/') : null
 
     const questionOptions = (
       <Menu>

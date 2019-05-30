@@ -18,6 +18,11 @@
   }
   &__avatar {
     width: 200px;
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
   }
   &__reputation {
     background-color: red;

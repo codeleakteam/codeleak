@@ -14,6 +14,7 @@ export const apiGet = {
   getTags: () => {
     return axios.get(`${BASE_URL}/api/tags`)
   },
+  getUserProfile: id => axios.get(`${BASE_URL}/api/users/${id}`),
 }
 
 export const apiPost = {

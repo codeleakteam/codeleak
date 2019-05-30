@@ -160,7 +160,7 @@ class Answer extends Component {
             <span className={classes.answer__rep}>{answer.score}</span>
           </div>
           <div className={classes['answer__user-info']}>
-            <Link href="/">
+            <Link href={`/profile/${answer.author.id}`}>
               <a>
                 <span className={classes.answer__user}>{answer.author.username}</span>
               </a>
