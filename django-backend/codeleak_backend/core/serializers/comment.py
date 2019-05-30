@@ -18,9 +18,8 @@ class CreateAnswerCommentSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(), read_only=False
     )
     class Meta:
-        model = QuestionComment
+        model = AnswerComment
         fields = "__all__"
-
 
 class QuestionCommentSerializer(serializers.ModelSerializer):
     author = UserSerializerMinimal()

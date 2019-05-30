@@ -105,7 +105,10 @@ class ListCreateCommentView(ListCreateAPIView):
             return Response({ 'message': 'Object with the ID: ' + str(object_id) + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         write_data = request.data
-        write_data['question'] = object_id
+        if comment_type == 'QUESTION_COMMENT':
+            write_data['question'] = object_id
+        else:
+            write_data['answer'] = object_id
         create_comment_serializer = CreateCommentSerializer(data=write_data)
         if create_comment_serializer.is_valid():
             object_commented_on.has_comments = True
