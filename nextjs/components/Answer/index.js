@@ -148,7 +148,7 @@ class Answer extends Component {
       <div className={classes.answer__container}>
         <div className={classes.answer__info}>
           <div className={classes.answer__detail}>
-            <Link href="/">
+            <Link href={`/profile/${answer.author.id}`} as={`/profile/${answer.author.id}/${answer.author.username}`}>
               <div className={classes.answer__avatar}>
                 <img
                   src={answer.author.avatar}
@@ -160,7 +160,7 @@ class Answer extends Component {
             <span className={classes.answer__rep}>{answer.score}</span>
           </div>
           <div className={classes['answer__user-info']}>
-            <Link href={`/profile/${answer.author.id}`}>
+            <Link href={`/profile/${answer.author.id}`} as={`/profile/${answer.author.id}/${answer.author.username}`}>
               <a>
                 <span className={classes.answer__user}>{answer.author.username}</span>
               </a>

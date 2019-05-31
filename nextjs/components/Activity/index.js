@@ -5,11 +5,11 @@ import singularCheck from '../../helpers/functions/singularCheck'
 
 import classes from './index.scss'
 
-const Activity = ({ name, points, answers, time, url }) => {
+const Activity = ({ name, points, answers, time, slug, id }) => {
   return (
     <div className={classes.activity__container}>
       <div>
-        <Link href={`/questions/${url}`}>
+        <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
           <a>
             <span className={classes.activity__name}>{name}</span>
           </a>
