@@ -11,13 +11,13 @@ app
   .then(() => {
     const server = express()
 
-    server.get('/profile/:id', (req, res) => {
+    server.get('/profile/:id/:username', (req, res) => {
       const actualPage = '/profile'
       const queryParams = { title: req.params.id }
       app.render(req, res, actualPage, queryParams)
     })
 
-    server.get('/question/:id', (req, res) => {
+    server.get('/question/:id/:slug', (req, res) => {
       const actualPage = '/question'
       const queryParams = { title: req.params.id }
       app.render(req, res, actualPage, queryParams)

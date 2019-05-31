@@ -4,6 +4,8 @@ import QuestionSummary from '../QuestionSummary'
 import classes from './index.scss'
 
 const QuestionSummaryContainer = ({ loggedIn, questions }) => {
+  console.log(questions)
+
   return (
     <div className={!loggedIn ? classes['summary__container--logged-out'] : null}>
       {questions.map(question => {
@@ -19,6 +21,7 @@ const QuestionSummaryContainer = ({ loggedIn, questions }) => {
             author={question.author.username}
             authorId={question.author.id}
             questionId={question.id}
+            slug={question.slug}
           />
         )
       })}

@@ -16,7 +16,8 @@ const RecentActivities = ({ type, typeCounts, data }) => {
         return (
           <Activity
             key={d.id}
-            url={d.slug}
+            slug={d.slug}
+            id={d.id}
             name={d.title}
             points={d.score}
             answers={d.answers.length}

@@ -7,7 +7,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import classes from './index.scss'
 
-const QuestionSummary = ({ score, answers, title, createdAt, tags, author, questionId, authorId, viewedTimes }) => {
+const QuestionSummary = ({
+  score,
+  answers,
+  title,
+  createdAt,
+  tags,
+  author,
+  questionId,
+  authorId,
+  viewedTimes,
+  slug,
+}) => {
   let formatDate = moment(createdAt).fromNow()
 
   return (
@@ -16,28 +27,25 @@ const QuestionSummary = ({ score, answers, title, createdAt, tags, author, quest
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>{score}</div>
           <div className={classes['question__info-icon']}>
-            
             <FontAwesomeIcon icon="angle-up" size="lg" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>{answers.length}</div>
           <div className={classes['question__info-icon']}>
-            
             <FontAwesomeIcon icon="comment" />
           </div>
         </div>
         <div className={classes.question__info}>
           <div className={classes['question__info-num']}>{viewedTimes}</div>
           <div className={classes['question__info-icon']}>
-            
             <FontAwesomeIcon icon="eye" />
           </div>
         </div>
       </div>
       <div className={classes.question__main}>
         <div className={classes.question__heading}>
-          <Link as={`question/${questionId}`} href={`question/?title=${questionId}`}>
+          <Link as={`question/${questionId}/${slug}`} href={`question/?title=${questionId}`}>
             <h4 className={classes.question__name}>{title}</h4>
           </Link>
           <div className={classes.question__time}>{formatDate}</div>
@@ -47,7 +55,7 @@ const QuestionSummary = ({ score, answers, title, createdAt, tags, author, quest
             <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" />
           ))}
         </div>
-        <Link as={`/profile/${authorId}`} href={`/profile/?=${authorId}`}>
+        <Link href={`/profile/?=${authorId}`} as={`/profile/${authorId}/${author}`}>
           <a>
             <span className={classes.question__author}>{author}</span>
           </a>

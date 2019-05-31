@@ -132,7 +132,10 @@ class Question extends Component {
         <h3 className={classes.question__name}>{question.title}</h3>
         <div className={classes.question__info}>
           <div className={classes.question__detail}>
-            <Link href={`/profile/${question.author.id}`}>
+            <Link
+              href={`/profile/${question.author.id}`}
+              as={`/profile/${question.author.id}/${question.author.username}`}
+            >
               <div className={classes.question__avatar}>
                 <img
                   src={question.author.avatar}
@@ -144,7 +147,10 @@ class Question extends Component {
             <span className={classes.question__rep}>{question.author.reputation}</span>
           </div>
           <div className={classes['question__user-info']}>
-            <Link href={`/profile/${question.author.id}`}>
+            <Link
+              href={`/profile/${question.author.id}`}
+              as={`/profile/${question.author.id}/${question.author.username}`}
+            >
               <a>
                 <span className={classes.question__user}>{question.author.username}</span>
               </a>
