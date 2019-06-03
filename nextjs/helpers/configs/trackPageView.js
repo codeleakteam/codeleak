@@ -1,8 +1,10 @@
 export default function trackPageView(url) {
   try {
-    window.gtag('config', 'UA-138467146-1', {
-      page_location: url,
-    })
+    if (window.gtag) {
+      window.gtag('config', 'UA-138467146-1', {
+        page_location: url,
+      })
+    }
   } catch (error) {
     // silences the error in dev mode
     // and/or if gtag fails to load

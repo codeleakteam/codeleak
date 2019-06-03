@@ -3,7 +3,7 @@ import React from 'react'
 const SVG = ({ height, className, fill }) => {
   return (
     <svg className={className} height={height} viewBox="0 0 24 24">
-      <g transform="translate(0 2)" fill="none" fill-rule="evenodd">
+      <g transform="translate(0 2)" fill="none" fillRule="evenodd">
         <path
           d="M20.6225325.4084275H3.3256575c-1.442325 0-2.61159 1.16931-2.61159 2.611635V12.57675c0 1.44237 1.169265 2.611635 2.61159 2.611635H4.85958V20.6154l5.5014525-5.427015H20.62254c1.442325 0 2.61168-1.169265 2.61168-2.611635V3.020055C23.2342125 1.5777375 22.06485.4084275 20.6225325.4084275z"
           fill="#FFFFFF"
@@ -23,29 +23,29 @@ const SVG = ({ height, className, fill }) => {
           d="M4.662105.6249s7.2421875.6328125 11.71875 1.0546875 5.709165.3515625 6.28125 2.8125C23.23419 6.953025 23.23419 7.3749 23.23419 7.3749s.3502725-5.8659375-.743715-6.1790625c-1.0939875-.313125.4997625-.951525-4.2814875-.784665C13.42773.5780325 4.662105.6249 4.662105.6249z"
           fill="#FFFFFF"
         />
-        <g stroke="#1B4A9A" stroke-linecap="round" stroke-linejoin="round">
+        <g stroke="#1B4A9A" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4.859715 15.1883775H3.3256725c-1.442325 0-2.6115825-1.16925-2.6115825-2.61165v-9.55665c0-1.442325 1.1692575-2.61165 2.6115825-2.61165h17.296875c1.442325 0 2.6116425 1.169325 2.6116425 2.61165v9.55665c0 1.4424-1.1693175 2.61165-2.6116425 2.61165h-10.2615M4.859565 15.1883775v5.427l5.5014825-5.427" />
         </g>
         <circle
           stroke="#1B4A9A"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           cx="6.5624625"
           cy="7.798425"
           r="1.5577125"
         />
         <circle
           stroke="#1B4A9A"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           cx="11.986035"
           cy="7.798425"
           r="1.55769"
         />
         <circle
           stroke="#1B4A9A"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           cx="17.409585"
           cy="7.798425"
           r="1.55769"

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Link from 'next/link'
-import { Button } from 'antd'
+import { Button, Alert, message } from 'antd'
 import QuestionSummaryContainer from '../components/QuestionSummaryContainer'
 import Banner from '../components/Banner'
 import PopularTags from '../components/SideWidgets/PopularTags'
@@ -11,6 +11,9 @@ import _ from 'lodash'
 import classes from '../styles/index/index.scss'
 
 class Index extends Component {
+  state = {
+    errorMessage: null,
+  }
   render() {
     return (
       <div
@@ -29,6 +32,7 @@ class Index extends Component {
           left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
           right={<PopularTags />}
         />
+        {this.state.errorMessage && <Alert message={this.props.errorMessage} type="error" />}
       </div>
     )
   }
@@ -37,12 +41,17 @@ class Index extends Component {
 Index.getInitialProps = async function() {
   try {
     let res = await apiGet.getIndex()
-    const questions = _.get(res, 'data.results', [])
+    const questions = _.get(res, 'data.results', null)
+    if (!questions) {
+      // message.error('test')
+      throw new Error()
+    }
     return {
       questions,
     }
   } catch (error) {
     console.log('error', error)
+    message.error('test')
   }
   return {
     questions: [],
