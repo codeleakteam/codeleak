@@ -28,7 +28,7 @@ class AskQuestion extends Component {
     editor: false,
     urlValue: '',
     addUrlOpen: false,
-    editorUrl: 'https://codesandbox.io/',
+    editorUrl: '',
   }
 
   // draftjs bug
@@ -139,11 +139,11 @@ class AskQuestion extends Component {
   sendQuestion = async (title, description, tags, author, editor, repoUrl) => {
     try {
       const res = await apiPost.sendQuestion(title, description, tags, author, editor, repoUrl)
-      let question = _.get(res, 'data.id', null)
-      // console.log(question)
-      if (question) {
+      let questionId = _.get(res, 'data.id', null)
+      let questionSlug = _.get(res, 'data.slug', null)
+      if (questionId && questionSlug) {
         message.success('Successfully sent question!')
-        Router.push(`/question/${question}`)
+        Router.push(`/question/${questionId}/${questionSlug}`)
       }
     } catch (error) {
       message.error('Please fill data!')
@@ -222,7 +222,9 @@ class AskQuestion extends Component {
           onClick={() =>
             this.sendQuestion(
               this.state.title,
-              JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+              convertToRaw(editorState.getCurrentContent()).blocks[0].text
+                ? JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+                : '',
               this.state.selectedTags,
               1,
               1,
