@@ -26,14 +26,15 @@ class Banner extends Component {
             </p>
           </div>
           <div className={classes.banner__form}>
-            <div className={classes.banner__socials}>
+            <h3 className={classes.form__heading}>Get started</h3>
+            {/* <div className={classes.banner__socials}>
               <Button type="primary" icon="google" className={classes['banner__socials-item']}>
                 Google
               </Button>
               <Button type="primary" icon="twitter" className={classes['banner__socials-item']}>
                 Twitter
               </Button>
-            </div>
+            </div> */}
 
             <Form onSubmit={this.handleSubmit} className="login-form">
               <Form.Item>

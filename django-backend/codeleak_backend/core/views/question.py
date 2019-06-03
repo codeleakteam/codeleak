@@ -21,7 +21,7 @@ from core.serializers import (
     AnswerSerializer,
     AnswerCommentSerializer,
     QuestionVoteSerializer,
-    QuestionReportSerializer 
+    QuestionReportSerializer
 )
 
 # Upvoting question means +20 on its score, and downvoting means -20
@@ -193,7 +193,7 @@ class ReportQuestionView(APIView):
                 return Response({
                     'message': 'No is_report param provided'
                 }, status=status.HTTP_400_BAD_REQUEST)
- 
+
 
             if is_report != 'true' and is_report != 'false':
                 return Response({ 'message': 'Invalid is_report param'}, status.HTTP_400_BAD_REQUEST)
@@ -239,13 +239,13 @@ class ReportQuestionView(APIView):
                 return Response({
                     'message': 'Cant delete report which does not exist'
                 }, status=status.HTTP_400_BAD_REQUEST)
-                
+
 
             return Response({
                 'report': report_serializer.data
             }, status.HTTP_200_OK)
         except ObjectDoesNotExist:
-            return Response({ 
+            return Response({
                 'message': 'Question with the ID: ' + question_id + ' does not exist.'
                 },
                 status=status.HTTP_404_NOT_FOUND

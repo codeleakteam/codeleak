@@ -20,7 +20,7 @@ class Index extends Component {
       >
         {!this.props.loggedIn && <Banner />}
         <div className={classes.section__heading}>
-          <h2>Questions</h2>
+          <h2 className={classes.section__title}>Questions</h2>
           <Link href="/questions/ask">
             <Button type="primary">Ask a question</Button>
           </Link>

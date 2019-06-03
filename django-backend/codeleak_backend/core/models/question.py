@@ -8,7 +8,7 @@ class Question(models.Model):
     description = models.TextField(blank=False, null=False)
     slug = models.SlugField(blank=True, null=False)
     # Optional
-    repository_url = models.CharField(max_length=255, blank=True, null=True)
+    repository_url = models.CharField(max_length=255, blank=False, null=False)
     # FKs
     author = models.ForeignKey(
         'User',

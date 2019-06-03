@@ -6,6 +6,7 @@ import UpVote from './quoraUpVote'
 import ReactIcon from './reactIcon'
 import AngularIcon from './angularIcon'
 import VueIcon from './vueIcon'
+import CommentsIcon from './commentsIcon'
 
 const Icon = props => {
   switch (props.name) {
@@ -21,6 +22,8 @@ const Icon = props => {
       return <AngularIcon {...props} />
     case 'vue':
       return <VueIcon {...props} />
+    case 'comments':
+      return <CommentsIcon {...props} />
     default:
       return
   }

@@ -2,6 +2,7 @@
 @import '../../styles/mixins.scss';
 .question {
   &__container {
+    background: white;
     border-bottom: 1px solid $antGray;
     padding-bottom: 16px;
     margin-bottom: 16px;
@@ -29,6 +30,7 @@
       border-top-right-radius: 3px;
     }
   }
+
   &__rep {
     background-color: red;
     display: block;
