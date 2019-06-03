@@ -28,8 +28,8 @@ class PopularTags extends Component {
     let popularTags = _.reverse(_.sortBy(this.state.tags, 'used_times')).slice(0, 6)
 
     return (
-      <div>
-        <h4>Popular tags</h4>
+      <div className={classes.tags}>
+        <h4 className={classes.tags__title}>Popular tags</h4>
         <div className={classes.tag__container}>
           {popularTags.map(tag => {
             return <TagWithLink key={tag.id + tag.slug} customClass={classes.tag} text={tag.title} url="/" />

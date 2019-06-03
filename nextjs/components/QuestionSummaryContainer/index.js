@@ -16,6 +16,7 @@ const QuestionSummaryContainer = ({ loggedIn, questions }) => {
             viewedTimes={question.viewed_times}
             answers={question.answers}
             title={question.title}
+            description={question.description}
             createdAt={question.created_at}
             tags={question.tags}
             author={question.author.username}

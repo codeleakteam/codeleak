@@ -5,7 +5,8 @@
   top: 0;
   left: 0;
   right: 0;
-  background-color: $graye;
+  // background-image: url('/static/images/hero.jpg');
+  // background-color: $graye;
   color: $black;
   &__container {
     max-width: 940px;
@@ -23,6 +24,7 @@
     line-height: 76px;
     margin-bottom: 0;
   }
+
   &__description {
     font-size: 18px;
     line-height: 22px;
@@ -44,6 +46,9 @@
     width: 30%;
     @include breakpoint($mobile) {
       width: 100%;
+    }
+    &__heading {
+      font-weight: bold;
     }
   }
   &__socials {

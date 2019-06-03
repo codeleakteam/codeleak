@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 
 import { Tag } from 'antd'
 
-const TagWithLink = ({ color, customClass, text, url }) => {
+const TagWithLink = ({ color, customClass, text, url, style }) => {
   return (
     <Link href={url}>
-      <Tag color={color} className={customClass}>
+      <Tag color={color} className={customClass} style={style}>
         {text}
       </Tag>
     </Link>
@@ -18,5 +18,6 @@ TagWithLink.propTypes = {
   customClass: PropTypes.string,
   text: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
+  style: PropTypes.object,
 }
 export default TagWithLink
