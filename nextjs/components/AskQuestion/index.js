@@ -120,12 +120,14 @@ class AskQuestion extends Component {
   getTags = async () => {
     try {
       const res = await apiGet.getTags()
-      let tags = _.get(res, 'data', [])
+      let tags = _.get(res, 'data', null)
       if (tags) {
         this.setState({ tags })
+      } else {
+        message.error('Could not get tags!')
       }
     } catch (error) {
-      console.log('erorko')
+      message.error('Could not get tags!')
     }
   }
 

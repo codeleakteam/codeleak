@@ -50,17 +50,17 @@ class Answer extends Component {
   submitComment = async (question_id, author_id, content) => {
     try {
       const res = await apiPost.sendComment('ANSWER_COMMENT', question_id, author_id, content)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data', null)
 
       if (comment) {
         this.setState(state => ({
           comments: [...state.comments, comment.comment],
           commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
         }))
+      } else {
+        message.error('Could not submit comment!')
       }
     } catch (error) {
-      console.log(error)
-
       message.error('Could not submit comment!')
     }
   }
@@ -103,15 +103,15 @@ class Answer extends Component {
   updateAnswerScore = async (type, questionId, userId) => {
     try {
       const res = await apiPut.updateAnswerScore(type, questionId, userId)
-      let score = _.get(res, 'data.answer.score', '')
+      let score = _.get(res, 'data.answer.score', null)
 
       if (score) {
         this.setState({ questionScore: score })
+      } else {
+        message.error('Could not update answer score!')
       }
     } catch (error) {
-      console.log(error)
-
-      console.log('erorko')
+      message.error('Could not update answer score!')
     }
   }
 

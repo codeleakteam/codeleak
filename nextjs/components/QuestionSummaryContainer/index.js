@@ -4,7 +4,7 @@ import QuestionSummary from '../QuestionSummary'
 import classes from './index.scss'
 
 const QuestionSummaryContainer = ({ loggedIn, questions }) => {
-  console.log(questions)
+  // console.log(questions)
 
   return (
     <div className={!loggedIn ? classes['summary__container--logged-out'] : null}>

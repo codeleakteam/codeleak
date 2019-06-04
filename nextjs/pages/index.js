@@ -28,11 +28,13 @@ class Index extends Component {
             <Button type="primary">Ask a question</Button>
           </Link>
         </div>
-        <TwoSideLayout
-          left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
-          right={<PopularTags />}
-        />
-        {this.state.errorMessage && <Alert message={this.props.errorMessage} type="error" />}
+        {!this.props.error && (
+          <TwoSideLayout
+            left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
+            right={<PopularTags />}
+          />
+        )}
+        {this.props.error && <Alert message="Could not load questions!" type="error" />}
       </div>
     )
   }
@@ -43,15 +45,18 @@ Index.getInitialProps = async function() {
     let res = await apiGet.getIndex()
     const questions = _.get(res, 'data.results', null)
     if (!questions) {
-      // message.error('test')
-      throw new Error()
+      return {
+        error: true,
+      }
     }
     return {
       questions,
+      error: false,
     }
   } catch (error) {
-    console.log('error', error)
-    message.error('test')
+    return {
+      error: true,
+    }
   }
   return {
     questions: [],
