@@ -5,7 +5,7 @@ import classes from './index.scss'
 
 const Loader = props => {
   return (
-    <div>
+    <div className={classes.loader}>
       <Spin />
     </div>
   )

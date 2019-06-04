@@ -5,7 +5,8 @@ import Question from '../components/Question'
 import AnswerContainer from '../components/AnswerContainer'
 import AddAnswer from '../components/AddAnswer'
 import _ from 'lodash'
-import { Spin } from 'antd'
+import { Alert, message } from 'antd'
+import Loader from '../components/Loader'
 
 import { apiGet, apiPut, apiPost } from '../api'
 
@@ -19,32 +20,38 @@ class QuestionFullPage extends Component {
   }
 
   componentDidMount() {
-    this.setState({ answers: this.props.question.question.answers, answersLoaded: true })
+    if (!this.props.error) {
+      this.setState({ answers: this.props.question.question.answers, answersLoaded: true })
+    }
   }
 
   updateQuestionScore = async (type, questionId, userId) => {
     try {
       const res = await apiPut.updateQuestionScore(type, questionId, userId)
-      let score = _.get(res, 'data.question.score', '')
+      let score = _.get(res, 'data.question.score', null)
       if (score) {
         this.setState({ questionScore: score })
+      } else {
+        message.error('Could not update question score')
       }
     } catch (error) {
-      console.log('erorko')
+      message.error('Could not update question score')
     }
   }
 
   sendAnswerOnQuestion = async (authorId, questionId, editor, description, repository) => {
     try {
       const res = await apiPost.sendAnswer(authorId, questionId, editor, description, repository)
-      let answer = _.get(res, 'data', {})
+      let answer = _.get(res, 'data', null)
       if (answer) {
         this.setState({
           answers: [...this.state.answers, answer],
         })
+      } else {
+        message.error('Could not send answer')
       }
     } catch (error) {
-      console.log('erorko')
+      message.error('Could not send answer')
     }
   }
 
@@ -52,19 +59,22 @@ class QuestionFullPage extends Component {
     const { question } = this.props
     let leftSide = (
       <React.Fragment>
-        <Question
-          data={question}
-          updateQuestionScore={this.updateQuestionScore}
-          updatedQuestionScore={this.state.questionScore}
-        />
+        {this.props.error && <Alert message="Could not load question!" type="error" />}
         {!this.state.answersLoaded ? (
-          <Spin
-            tip="Getting answers for you!"
-            style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
-          />
-        ) : null}
-        <AnswerContainer answers={this.state.answers} />
-        <AddAnswer sendAnswer={this.sendAnswerOnQuestion} questionId={this.props.question.question.id} />
+          <React.Fragment>
+            <Loader />
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Question
+              data={question}
+              updateQuestionScore={this.updateQuestionScore}
+              updatedQuestionScore={this.state.questionScore}
+            />
+            <AnswerContainer answers={this.state.answers} />
+            <AddAnswer sendAnswer={this.sendAnswerOnQuestion} questionId={this.props.question.question.id} />
+          </React.Fragment>
+        )}
       </React.Fragment>
     )
     return (
@@ -79,12 +89,20 @@ QuestionFullPage.getInitialProps = async function({ query }) {
   try {
     let id = query.title
     let res = await apiGet.getQuestion(id)
-    const question = _.get(res, 'data', {})
+    const question = _.get(res, 'data', null)
+    if (!question) {
+      return {
+        error: true,
+      }
+    }
     return {
       question,
+      error: false,
     }
   } catch (error) {
-    console.log('error', error)
+    return {
+      error: true,
+    }
   }
   return {
     question: {},

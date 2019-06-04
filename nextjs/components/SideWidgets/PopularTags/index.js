@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import TagWithLink from '../../TagWithLink'
 import { apiGet } from '../../../api'
 import _ from 'lodash'
+import { message } from 'antd'
 
 import classes from './index.scss'
 
@@ -17,10 +18,14 @@ class PopularTags extends Component {
   getPopularTags = async () => {
     try {
       let res = await apiGet.getTags()
-      const tags = _.get(res, 'data', [])
-      this.setState({ tags })
+      const tags = _.get(res, 'data', null)
+      if (tags) {
+        this.setState({ tags })
+      } else {
+        message.error('Could not load tags')
+      }
     } catch (error) {
-      console.log(error)
+      message.error('Could not load tags')
     }
   }
 
