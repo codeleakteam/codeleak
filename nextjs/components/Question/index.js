@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import PropTypes from 'prop-types'
 import AddComment from '../AddComment'
 import { apiPost, apiPut } from '../../api'
-import { convertFromRaw, EditorState } from 'draft-js'
+import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import _ from 'lodash'
 
@@ -27,13 +27,9 @@ class Question extends Component {
   // }
 
   componentDidMount() {
-    let questionUnformated = JSON.parse(this.props.data.question.description)
-    if (this.props.data.question) {
-      this.setState({
-        editorState: EditorState.createWithContent(convertFromRaw(questionUnformated)),
-      })
-    }
+    const description = this.getDescription(this.props.data.question.description)
     this.setState({
+      editorState: description,
       comments: this.props.data.question.comments,
       commentsReversed: this.props.data.question.comments.reverse(),
     })
@@ -44,6 +40,15 @@ class Question extends Component {
     let html = stateToHTML(editorState.getCurrentContent())
     return {
       __html: html,
+    }
+  }
+
+  getDescription = description => {
+    try {
+      const richTextJson = JSON.parse(description)
+      return EditorState.createWithContent(convertFromRaw(richTextJson))
+    } catch (err) {
+      return EditorState.createWithContent(ContentState.createFromText(description))
     }
   }
 
