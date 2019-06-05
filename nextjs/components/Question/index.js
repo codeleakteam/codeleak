@@ -198,7 +198,7 @@ class Question extends Component {
               />
             </button>
           </div>
-          <Button defualt onClick={this.showCommentField} className={classes.comment__button}>
+          <Button default onClick={this.showCommentField} className={classes.comment__button}>
             Edit question
           </Button>
         </div>

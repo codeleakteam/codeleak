@@ -32,7 +32,7 @@ class AddComment extends Component {
     const { commentVisible } = this.state
     return (
       <div className={classes.comment__container}>
-        <Button defualt onClick={this.showCommentField} className={classes.comment__button}>
+        <Button default onClick={this.showCommentField} className={classes.comment__button}>
           Quick comment
         </Button>
         {commentVisible && (
