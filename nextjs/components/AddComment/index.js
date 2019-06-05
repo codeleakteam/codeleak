@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Input, Button } from 'antd'
-import { apiPost } from '../../api'
+import PropTypes from 'prop-types'
 
 import classes from './index.scss'
 
@@ -29,7 +29,8 @@ class AddComment extends Component {
   }
 
   render() {
-    const { commentVisible } = this.state
+    const { commentVisible, commentText } = this.state
+    const { submitComment, objectId } = this.props
     return (
       <div className={classes.comment__container}>
         <Button default onClick={this.showCommentField} className={classes.comment__button}>
@@ -41,7 +42,7 @@ class AddComment extends Component {
             <Button
               type="primary"
               onClick={() => {
-                this.props.submitComment(this.props.objectId, 2, this.state.commentText)
+                submitComment(objectId, 1, commentText)
                 this.cleanAfterSend()
               }}
             >
@@ -52,6 +53,11 @@ class AddComment extends Component {
       </div>
     )
   }
+}
+
+AddComment.propTypes = {
+  submitComment: PropTypes.func.isRequired,
+  objectId: PropTypes.number.isRequired,
 }
 
 export default AddComment

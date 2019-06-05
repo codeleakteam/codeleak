@@ -52,6 +52,7 @@ export const apiPost = {
     return axios.post(`${BASE_URL}/api/comments/${commentId}/report`, {
       comment_type: type,
       user_id: userId,
+      is_report: 'true',
     })
   },
 }
