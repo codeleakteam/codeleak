@@ -58,9 +58,6 @@ Index.getInitialProps = async function() {
       error: true,
     }
   }
-  return {
-    questions: [],
-  }
 }
 
 export default Index
