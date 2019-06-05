@@ -63,6 +63,8 @@
   /* custom */
   margin: 4px 11px;
   color: #bfbfbf;
+
+  margin-bottom:10px;
 }
 .public-DraftEditorPlaceholder-hasFocus {
   color: #bdc1c9;
