@@ -13,7 +13,7 @@ import { stateToHTML } from 'draft-js-export-html'
 import _ from 'lodash'
 
 import classes from './index.scss'
-
+import popularTagClasses from '../SideWidgets/PopularTags/index.scss'
 class Question extends Component {
   state = {
     editorState: null,
@@ -112,69 +112,67 @@ class Question extends Component {
 
     let testLink = question.repository_url ? question.repository_url.replace('/s/', '/embed/') : null
 
-    const questionOptions = (
-      <Menu>
-        <Menu.Item>
-          (1, id)
-          <Link href="/questions/edit">
-            <a>Edit question</a>
-          </Link>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="/">
-            3rd menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    )
     return (
       <div className={classes.question__container}>
         <h3 className={classes.question__name}>{question.title}</h3>
         <div className={classes.question__info}>
-          <div className={classes.question__detail}>
+          <div className={classes.question__row}>
             <Link
               href={`/profile/${question.author.id}`}
               as={`/profile/${question.author.id}/${question.author.username}`}
             >
-              <div className={classes.question__avatar}>
-                <img
-                  src={question.author.avatar}
-                  alt={question.author.username}
-                  className={classes['question__avatar-img']}
-                />
-              </div>
+              <img
+                src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60"
+                alt={question.author.username}
+                className={classes.question__authorAvatar}
+              />
             </Link>
-            <span className={classes.question__rep}>{question.author.reputation}</span>
           </div>
-          <div className={classes['question__user-info']}>
-            <Link
-              href={`/profile/${question.author.id}`}
-              as={`/profile/${question.author.id}/${question.author.username}`}
-            >
-              <a>
-                <span className={classes.question__user}>{question.author.username}</span>
-              </a>
-            </Link>
+          <div className={classes.question__column}>
+            <div className={classes.question__row}>
+              <Link
+                href={`/profile/${question.author.id}`}
+                as={`/profile/${question.author.id}/${question.author.username}`}
+              >
+                <a>
+                  <span className={classes.question__authorUsername}>{question.author.username}</span>
+                </a>
+              </Link>
 
-            <span className={classes.question__time}>{formatDate}</span>
+              <div className={classes.question__dotSeparator} />
+              <span className={classes.question__time}>{formatDate}</span>
+            </div>
+            <div className={classes.question__row}>
+              <img
+                className={classes.question__reputationIcon}
+                src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png"
+                alt="reputation"
+              />
+
+              <span className={classes.question__reputationCounter}>{question.author.reputation}</span>
+            </div>
           </div>
         </div>
         <div className={classes['question__tags-wrapper']}>
           <div>
             {question.tags.map(q => {
-              return <TagWithLink url={`/tag/${q.slug}`} id={q.id} text={q.title} key={q.id} />
+              return (
+                <TagWithLink
+                  customClass={popularTagClasses.tag}
+                  style={{ marginRight: '6px' }}
+                  url={`/tag/${q.slug}`}
+                  id={q.id}
+                  text={q.title}
+                  key={q.id}
+                />
+              )
             })}
           </div>
-          <div>
+          {/* <div>
             <Link href="/">
               <Button type="primary">Open in editor</Button>
             </Link>
-          </div>
+          </div> */}
         </div>
         <div className={classes.question__text}>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
@@ -183,30 +181,27 @@ class Question extends Component {
           <iframe
             src={`${testLink}?fontsize=14`}
             title={question.title}
-            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden' }}
+            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden', marginBottom: '15px' }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
           />
         )}
         <div className={classes.question__controls}>
-          <Button
-            className={classes.question__upvote}
-            type="primary"
-            onClick={() => updateQuestionScore('true', question.id, 1)}
-          >
-            Upvote
-            <FontAwesomeIcon icon="angle-up" className={classes.question__arrow} />
-            <span className={classes.question__score}>
-              {updatedQuestionScore ? updatedQuestionScore : question.score}
-            </span>
+          <div className={classes.question__row}>
+            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('true', question.id, 1)}>
+              <img src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" className={classes.question__voteIcon} />
+              <span className={classes.question__counterValue}>{question.score}</span>
+            </button>
+            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('false', question.id, 1)}>
+              <img
+                src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png"
+                className={[classes.question__voteIcon, classes.question__downVoteIcon].join(' ')}
+              />
+            </button>
+          </div>
+          <Button defualt onClick={this.showCommentField} className={classes.comment__button}>
+            Edit question
           </Button>
-          <Button className={classes.question__downvote} onClick={() => updateQuestionScore('false', question.id, 1)}>
-            Downvote
-          </Button>
-          <Dropdown overlay={questionOptions}>
-            <Icon type="more" style={{ fontSize: '30px' }} />
-          </Dropdown>
         </div>
-        <div />
         {commentSummary.map(c => (
           <Comment
             key={c.id}
@@ -225,7 +220,7 @@ class Question extends Component {
           </span>
         )}
 
-        <AddComment objectId={question.id} submitComment={this.submitComment} />
+        {/* <AddComment objectId={question.id} submitComment={this.submitComment} /> */}
       </div>
     )
   }
