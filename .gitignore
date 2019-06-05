@@ -92,3 +92,4 @@ local_settings.py
 migrations
 venv
 statics
+*.sqlite3

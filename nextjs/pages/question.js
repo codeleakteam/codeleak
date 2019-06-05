@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import TwoSideLayout from '../components/TwoSideLayout'
-import PopularTags from '../components/SideWidgets/PopularTags'
+// import PopularTags from '../components/SideWidgets/PopularTags'
 import Question from '../components/Question'
 import AnswerContainer from '../components/AnswerContainer'
 import AddAnswer from '../components/AddAnswer'
@@ -103,9 +103,6 @@ QuestionFullPage.getInitialProps = async function({ query }) {
     return {
       error: true,
     }
-  }
-  return {
-    question: {},
   }
 }
 

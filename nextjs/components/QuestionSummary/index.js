@@ -3,7 +3,7 @@ import Icon from '../../assets/icons'
 import TagWithLink from '../TagWithLink'
 import Link from 'next/link'
 import { stateToHTML } from 'draft-js-export-html'
-import { convertFromRaw, EditorState } from 'draft-js'
+import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 
 // import CustomIcon from '../../assets/icons/index'
 import moment from 'moment'
@@ -17,11 +17,16 @@ class QuestionSummary extends Component {
   }
 
   componentDidMount() {
-    let questionUnformated = JSON.parse(this.props.description)
-    if (this.props.description) {
-      this.setState({
-        editorState: EditorState.createWithContent(convertFromRaw(questionUnformated)),
-      })
+    const description = this.getDescription(this.props.description)
+    this.setState({ editorState: description })
+  }
+
+  getDescription = description => {
+    try {
+      const richTextJson = JSON.parse(description)
+      return EditorState.createWithContent(convertFromRaw(richTextJson))
+    } catch (err) {
+      return EditorState.createWithContent(ContentState.createFromText(description))
     }
   }
 
