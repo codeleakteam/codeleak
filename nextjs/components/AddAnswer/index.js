@@ -4,7 +4,8 @@ import { Button } from 'antd'
 import DraftjsEditor from '../draftjs'
 import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
-import UrlTab from '../draftjs/UrlTab';
+import UrlTab from '../draftjs/UrlTab'
+import PropTypes from 'prop-types'
 
 import classes from './index.scss'
 
@@ -77,6 +78,7 @@ class AddAnswer extends React.Component {
 
   render() {
     const { editorState, addUrlOpen, editor, urlValue } = this.state
+    const { sendAnswer, questionId } = this.props
     return (
       <div className={classes.answer__container}>
         {editor && (
@@ -88,16 +90,20 @@ class AddAnswer extends React.Component {
               openUrlTab={this.handleUrlTab}
               addUrlOpen={addUrlOpen}
             />
-            {addUrlOpen && (
-              <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink}/>
-            )}
-            <DraftjsEditor editorState={editorState} handleKeyCommand={this.handleKeyCommand} plugins={this.plugins} placeholder='Add answer' onChange={this.onChange} />
+            {addUrlOpen && <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink} />}
+            <DraftjsEditor
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              plugins={this.plugins}
+              placeholder="Add answer"
+              onChange={this.onChange}
+            />
             <Button
               type="primary"
               onClick={() => {
-                this.props.sendAnswer(
+                sendAnswer(
                   1,
-                  this.props.questionId,
+                  questionId,
                   1,
                   JSON.stringify(convertToRaw(editorState.getCurrentContent())),
                   'repositoryurl'
@@ -112,6 +118,11 @@ class AddAnswer extends React.Component {
       </div>
     )
   }
+}
+
+AddAnswer.propTypes = {
+  sendAnswer: PropTypes.func.isRequired,
+  questionId: PropTypes.number.isRequired,
 }
 
 export default AddAnswer

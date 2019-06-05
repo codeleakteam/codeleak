@@ -7,7 +7,19 @@ const AnswerContainer = ({ answers }) => {
   return (
     <div className={classes.answers__container}>
       {answers.map(answer => {
-        return <Answer key={answer.id} id={answer.id} answer={answer} {...answer} />
+        return (
+          <Answer
+            key={answer.id}
+            answerId={answer.id}
+            answer={answer}
+            answerDescription={answer.description}
+            authorId={answer.author.id}
+            authorUsername={answer.author.username}
+            score={answer.score}
+            createdAt={answer.created_at}
+            {...answer}
+          />
+        )
       })}
     </div>
   )

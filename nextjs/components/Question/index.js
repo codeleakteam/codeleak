@@ -27,11 +27,11 @@ class Question extends Component {
   // }
 
   componentDidMount() {
-    const description = this.getDescription(this.props.data.question.description)
+    const description = this.getDescription(this.props.questionDescription)
     this.setState({
       editorState: description,
-      comments: this.props.data.question.comments,
-      commentsReversed: this.props.data.question.comments.reverse(),
+      comments: this.props.questionComments,
+      commentsReversed: this.props.questionComments.reverse(),
     })
   }
 
@@ -55,16 +55,17 @@ class Question extends Component {
   submitComment = async (question_id, author_id, content) => {
     try {
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data', null)
 
       if (comment) {
         this.setState(state => ({
           comments: [...state.comments, comment.comment],
           commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
         }))
+        message.error('Comment is successfully submited!')
       }
     } catch (error) {
-      message.error('Could not submit comment!')
+      message.error(error.response.data.message)
     }
   }
 
@@ -75,7 +76,7 @@ class Question extends Component {
   upvoteComment = async (userId, commentId) => {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data', null)
       if (comment) {
         let index = _.findIndex(this.state.comments, { id: comment.comment.id })
         let newArr = this.state.comments
@@ -85,8 +86,11 @@ class Question extends Component {
         newArrReversed.splice(index, 1, comment.comment)
 
         this.setState({ comments: newArr, commentsReversed: newArrReversed })
+        message.success('Comment score is successfully updated!')
       }
     } catch (error) {
+      console.log(error.response.message)
+
       message.error('Could not upvote comment!')
     }
   }
@@ -94,48 +98,58 @@ class Question extends Component {
   reportComment = async (userId, commentId) => {
     try {
       const res = await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data', null)
       if (comment) {
         message.success('Comment is successfully reported!')
       }
     } catch (error) {
-      message.error('Could not report comment!')
+      message.error(error.response.data.message)
     }
   }
-  render() {
-    const { data, updateQuestionScore, updatedQuestionScore } = this.props
-    const { question } = data
-    let reverseeed =
-      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
-    let commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    let formatDate = moment(question.created_at).fromNow()
 
-    let testLink = question.repository_url ? question.repository_url.replace('/s/', '/embed/') : null
+  render() {
+    const {
+      updateQuestionScore,
+      updatedQuestionScore,
+      createdAt,
+      repositoryUrl,
+      questionTitle,
+      authorId,
+      authorUsername,
+      authorReputation,
+      questionTags,
+      questionId,
+      questionScore,
+    } = this.props
+
+    const { comments, commentsReversed } = this.state
+
+    let reverseeed = comments.length > 3 ? commentsReversed.slice(0, 3) : commentsReversed
+
+    let commentSummary = this.state.commentSummary ? reverseeed : comments
+
+    let formatDate = moment(createdAt).fromNow()
+
+    let testLink = repositoryUrl ? repositoryUrl.replace('/s/', '/embed/') : null
 
     return (
       <div className={classes.question__container}>
-        <h3 className={classes.question__name}>{question.title}</h3>
+        <h3 className={classes.question__name}>{questionTitle}</h3>
         <div className={classes.question__info}>
           <div className={classes.question__row}>
-            <Link
-              href={`/profile/${question.author.id}`}
-              as={`/profile/${question.author.id}/${question.author.username}`}
-            >
+            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
               <img
                 src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60"
-                alt={question.author.username}
+                alt={authorUsername}
                 className={classes.question__authorAvatar}
               />
             </Link>
           </div>
           <div className={classes.question__column}>
             <div className={classes.question__row}>
-              <Link
-                href={`/profile/${question.author.id}`}
-                as={`/profile/${question.author.id}/${question.author.username}`}
-              >
+              <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
                 <a>
-                  <span className={classes.question__authorUsername}>{question.author.username}</span>
+                  <span className={classes.question__authorUsername}>{authorUsername}</span>
                 </a>
               </Link>
 
@@ -149,13 +163,13 @@ class Question extends Component {
                 alt="reputation"
               />
 
-              <span className={classes.question__reputationCounter}>{question.author.reputation}</span>
+              <span className={classes.question__reputationCounter}>{authorReputation}</span>
             </div>
           </div>
         </div>
         <div className={classes['question__tags-wrapper']}>
           <div>
-            {question.tags.map(q => {
+            {questionTags.map(q => {
               return (
                 <TagWithLink
                   customClass={popularTagClasses.tag}
@@ -177,21 +191,23 @@ class Question extends Component {
         <div className={classes.question__text}>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
         </div>
-        {question.repository_url && (
+        {repositoryUrl && (
           <iframe
             src={`${testLink}?fontsize=14`}
-            title={question.title}
+            title={questionTitle}
             style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden', marginBottom: '15px' }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
           />
         )}
         <div className={classes.question__controls}>
           <div className={classes.question__row}>
-            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('true', question.id, 1)}>
+            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('true', questionId, 1)}>
               <img src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" className={classes.question__voteIcon} />
-              <span className={classes.question__counterValue}>{question.score}</span>
+              <span className={classes.question__counterValue}>
+                {updatedQuestionScore ? updatedQuestionScore : questionScore}
+              </span>
             </button>
-            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('false', question.id, 1)}>
+            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('false', questionId, 1)}>
               <img
                 src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png"
                 className={[classes.question__voteIcon, classes.question__downVoteIcon].join(' ')}
@@ -220,14 +236,13 @@ class Question extends Component {
           </span>
         )}
 
-        {/* <AddComment objectId={question.id} submitComment={this.submitComment} /> */}
+        {/* <AddComment objectId={questionId} submitComment={this.submitComment} /> */}
       </div>
     )
   }
 }
 
 Question.propTypes = {
-  data: PropTypes.object.isRequired,
   updateQuestionScore: PropTypes.func.isRequired,
 }
 

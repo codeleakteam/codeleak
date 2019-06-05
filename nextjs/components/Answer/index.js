@@ -18,11 +18,11 @@ class Answer extends Component {
     comments: [],
     commentsReversed: [],
     commentSummary: true,
-    questionScore: null,
+    answerScore: null,
   }
 
   componentDidMount() {
-    let testinjo = JSON.parse(this.props.answer.description)
+    let testinjo = JSON.parse(this.props.answerDescription)
     if (this.props.answer) {
       this.setState({
         editorState: EditorState.createWithContent(convertFromRaw(testinjo)),
@@ -33,7 +33,7 @@ class Answer extends Component {
     this.setState({
       comments: this.props.comments,
       commentsReversed: this.props.comments.reverse(),
-      questionScore: this.props.answer.score,
+      answerScore: this.props.answer.score,
     })
 
     // console.log(this.props.answer)
@@ -47,9 +47,9 @@ class Answer extends Component {
     }
   }
 
-  submitComment = async (question_id, author_id, content) => {
+  submitComment = async (answer_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment('ANSWER_COMMENT', question_id, author_id, content)
+      const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content)
       let comment = _.get(res, 'data', null)
 
       if (comment) {
@@ -72,58 +72,58 @@ class Answer extends Component {
   upvoteComment = async (userId, commentId) => {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'ANSWER_COMMENT', commentId)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data.comment', null)
+      let comment_id = _.get(res, 'data.comment.id', null)
       if (comment) {
-        let index = _.findIndex(this.state.comments, { id: comment.comment.id })
+        let index = _.findIndex(this.state.comments, { id: comment_id })
         let newArr = this.state.comments
         let newArrReversed = this.state.commentsReversed
 
-        newArr.splice(index, 1, comment.comment)
-        newArrReversed.splice(index, 1, comment.comment)
+        newArr.splice(index, 1, comment)
+        newArrReversed.splice(index, 1, comment)
 
         this.setState({ comments: newArr, commentsReversed: newArrReversed })
+        message.success('Comment score is successfully updated!')
       }
     } catch (error) {
-      message.error('Could not upvote comment!')
+      message.error(error.response.data.message)
     }
   }
 
   reportComment = async (userId, commentId) => {
     try {
       const res = await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId)
-      let comment = _.get(res, 'data', {})
+      let comment = _.get(res, 'data', null)
       if (comment) {
         message.success('Comment is successfully reported!')
       }
     } catch (error) {
-      message.error('Could not report comment!')
+      message.error(error.response.data.message)
     }
   }
 
-  updateAnswerScore = async (type, questionId, userId) => {
+  updateAnswerScore = async (type, answerId, userId) => {
     try {
-      const res = await apiPut.updateAnswerScore(type, questionId, userId)
+      const res = await apiPut.updateAnswerScore(type, answerId, userId)
       let score = _.get(res, 'data.answer.score', null)
 
       if (score) {
-        this.setState({ questionScore: score })
+        this.setState({ answerScore: score })
+        message.success('Answer score is successfully updated!')
       } else {
         message.error('Could not update answer score!')
       }
     } catch (error) {
-      message.error('Could not update answer score!')
+      message.error(error.response.data.message)
     }
   }
 
   render() {
-    const { answer } = this.props
-    const { editorState } = this.state
+    const { editorState, comments, commentsReversed, answerScore } = this.state
+    const { answer, answerId, authorId, authorUsername, score, createdAt } = this.props
 
-    let reverseeed =
-      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
-    let commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-
-    // console.log(this.props.answer.description)
+    let reverseeed = comments.length > 3 ? commentsReversed.slice(0, 3) : commentsReversed
+    let commentSummary = this.state.commentSummary ? reverseeed : comments
 
     const answerOptions = (
       <Menu>
@@ -148,7 +148,7 @@ class Answer extends Component {
       <div className={classes.answer__container}>
         <div className={classes.answer__info}>
           <div className={classes.answer__detail}>
-            <Link href={`/profile/${answer.author.id}`} as={`/profile/${answer.author.id}/${answer.author.username}`}>
+            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
               <div className={classes.answer__avatar}>
                 <img
                   src={answer.author.avatar}
@@ -157,16 +157,16 @@ class Answer extends Component {
                 />
               </div>
             </Link>
-            <span className={classes.answer__rep}>{answer.score}</span>
+            <span className={classes.answer__rep}>{score}</span>
           </div>
           <div className={classes['answer__user-info']}>
-            <Link href={`/profile/${answer.author.id}`} as={`/profile/${answer.author.id}/${answer.author.username}`}>
+            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
               <a>
-                <span className={classes.answer__user}>{answer.author.username}</span>
+                <span className={classes.answer__user}>{authorUsername}</span>
               </a>
             </Link>
 
-            <span className={classes.answer__time}>{timeAgo(answer.created_at)}</span>
+            <span className={classes.answer__time}>{timeAgo(createdAt)}</span>
           </div>
         </div>
         <div className={classes['answer__tags-wrapper']}>
@@ -181,15 +181,15 @@ class Answer extends Component {
           <Button
             className={classes.answer__upvote}
             type="primary"
-            onClick={() => this.updateAnswerScore('true', answer.id, 1)}
+            onClick={() => this.updateAnswerScore('true', answerId, 1)}
           >
             Upvote
             <FontAwesomeIcon icon="angle-up" className={classes.answer__arrow} />
             <span className={classes.question__score} style={{ marginLeft: 8 }}>
-              {this.state.questionScore}
+              {answerScore}
             </span>
           </Button>
-          <Button className={classes.answer__downvote} onClick={() => this.updateAnswerScore('false', answer.id, 1)}>
+          <Button className={classes.answer__downvote} onClick={() => this.updateAnswerScore('false', answerId, 1)}>
             Downvote
           </Button>
           <Dropdown overlay={answerOptions}>
@@ -214,7 +214,7 @@ class Answer extends Component {
           </span>
         )}
 
-        <AddComment objectId={this.props.answer.id} submitComment={this.submitComment} />
+        <AddComment objectId={answerId} submitComment={this.submitComment} />
       </div>
     )
   }

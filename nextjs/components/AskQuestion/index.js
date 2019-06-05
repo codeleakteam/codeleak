@@ -165,13 +165,13 @@ class AskQuestion extends Component {
   saveInputRef = input => (this.input = input)
 
   render() {
-    const { editorState, addUrlOpen, editor, urlValue } = this.state
+    const { editorState, addUrlOpen, editor, urlValue, title, editorUrl, tags, selectedTags } = this.state
 
     // const stringi = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
     return (
       <div>
         <InputLabel text="Title" />
-        <Input placeholder="Title" type="primary" value={this.state.title} onChange={this.handleTitle} />
+        <Input placeholder="Title" type="primary" value={title} onChange={this.handleTitle} />
         <InputLabel text="Description" />
         {editor && (
           <React.Fragment>
@@ -196,12 +196,7 @@ class AskQuestion extends Component {
         <InputLabel text="Technology stack" />
         <TechnologyStack />
         <InputLabel text="CodeSandbox url" />
-        <Input
-          placeholder="Enter codeSandbox url"
-          type="primary"
-          value={this.state.editorUrl}
-          onChange={this.handleEditorUrl}
-        />
+        <Input placeholder="Enter codeSandbox url" type="primary" value={editorUrl} onChange={this.handleEditorUrl} />
         <InputLabel text="Tags" />
 
         {/* <QuestionTags
@@ -216,21 +211,21 @@ class AskQuestion extends Component {
         />
         */}
 
-        {this.state.tags && <QuestionTagsAutocomplete tags={this.state.tags} handleTagChange={this.handleTagChange} />}
+        {tags && <QuestionTagsAutocomplete tags={tags} handleTagChange={this.handleTagChange} />}
 
         <Button
           type="primary"
           className={classes['ask-question__btn']}
           onClick={() =>
             this.sendQuestion(
-              this.state.title,
+              title,
               convertToRaw(editorState.getCurrentContent()).blocks[0].text
                 ? JSON.stringify(convertToRaw(editorState.getCurrentContent()))
                 : '',
-              this.state.selectedTags,
+              selectedTags,
               1,
               1,
-              this.state.editorUrl
+              editorUrl
             )
           }
         >

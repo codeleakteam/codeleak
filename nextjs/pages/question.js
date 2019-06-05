@@ -31,11 +31,12 @@ class QuestionFullPage extends Component {
       let score = _.get(res, 'data.question.score', null)
       if (score) {
         this.setState({ questionScore: score })
+        message.success('Question score is successfully updated!')
       } else {
         message.error('Could not update question score')
       }
     } catch (error) {
-      message.error('Could not update question score')
+      message.error(error.response.data.message)
     }
   }
 
@@ -56,7 +57,8 @@ class QuestionFullPage extends Component {
   }
 
   render() {
-    const { question } = this.props
+    const { question } = this.props.question
+
     let leftSide = (
       <React.Fragment>
         {this.props.error && <Alert message="Could not load question!" type="error" />}
@@ -67,10 +69,21 @@ class QuestionFullPage extends Component {
         ) : (
           <React.Fragment>
             <Question
-              data={question}
+              createdAt={question.created_at}
+              repositoryUrl={question.repository_url}
+              questionTitle={question.title}
+              questionId={question.id}
+              questionComments={question.comments}
+              questionDescription={question.description}
+              authorId={question.author.id}
+              questionScore={question.score}
+              authorUsername={question.author.username}
+              authorReputation={question.author.reputation}
+              questionTags={question.tags}
               updateQuestionScore={this.updateQuestionScore}
               updatedQuestionScore={this.state.questionScore}
             />
+
             <AnswerContainer answers={this.state.answers} />
             <AddAnswer sendAnswer={this.sendAnswerOnQuestion} questionId={this.props.question.question.id} />
           </React.Fragment>

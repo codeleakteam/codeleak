@@ -11,9 +11,6 @@ import _ from 'lodash'
 import classes from '../styles/index/index.scss'
 
 class Index extends Component {
-  state = {
-    errorMessage: null,
-  }
   render() {
     return (
       <div
