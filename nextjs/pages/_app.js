@@ -1,24 +1,26 @@
 import React from 'react'
 import App, { Container } from 'next/app'
+import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
-// import PopularTags from '../components/PopularTags'
+import MainContentWrapper from '../components/MainContentWrapper'
 import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
-
-import classes from '../styles/layout.module.scss'
-import '../styles/global.scss'
-
-// fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
 library.add(faAngleUp, faComment, faEye, faBan)
 
+const theme = {
+  clBlue: '#3e6fb5',
+  darkGrey: '#757575',
+  dirtyWhite: '#f1f1f1',
+}
+
 class MyApp extends App {
   state = {
-    menuActive: false,
-    loggedIn: false,
+    isMenuActive: false,
+    isLoggedIn: true,
   }
 
   static async getInitialProps({ Component, ctx }) {
@@ -35,41 +37,76 @@ class MyApp extends App {
     }
   }
 
-  handleBurgerMenu = () => {
-    this.setState((state, props) => ({ menuActive: !state.menuActive }))
-  }
+  handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
     const { Component, pageProps } = this.props
-    const { menuActive, loggedIn } = this.state
+    const { isMenuActive, isLoggedIn } = this.state
 
     return (
-      <Container>
-        <div className={classes.container}>
-          <Navigation
-            menuActive={menuActive}
-            handleBurgerMenu={this.handleBurgerMenu}
-            logo={true}
-            burger={true}
-            responsive={false}
-            loggedIn={loggedIn}
-          />
-          <Component {...pageProps} loggedIn={loggedIn} />
-        </div>
-        <Footer />
-        <SideMenu menuActive={menuActive}>
-          <Navigation
-            menuActive={menuActive}
-            handleBurgerMenu={this.handleBurgerMenu}
-            logo={false}
-            burger={false}
-            responsive={true}
-            loggedIn={loggedIn}
-          />
-        </SideMenu>
-      </Container>
+      <ThemeProvider theme={theme}>
+        <Container>
+          <GlobalStyle />
+          <MainContentWrapper>
+            <Navigation
+              isMenuActive={isMenuActive}
+              handleBurgerMenuClick={this.handleBurgerMenuClick}
+              showLogo={true}
+              showBurger={true}
+              isResponsive={false}
+              isLoggedIn={isLoggedIn}
+            />
+            <Component {...pageProps} isLoggedIn={isLoggedIn} />
+          </MainContentWrapper>
+          <Footer />
+          <SideMenu isMenuActive={isMenuActive}>
+            <Navigation
+              isMenuActive={isMenuActive}
+              handleBurgerMenuClick={this.handleBurgerMenuClick}
+              showLogo={false}
+              showBurger={false}
+              isResponsive={true}
+              isLoggedIn={isLoggedIn}
+            />
+          </SideMenu>
+        </Container>
+      </ThemeProvider>
     )
   }
 }
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    font-family: 'Karla', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    position: relative;
+    min-height: 100%;
+    height: auto;
+  }
+  // reset
+  body {
+    margin: 0;
+    font-family: 'Karla', sans-serif;
+    height: 100%;
+    min-height: 100%;
+    background: #e6e8ed;
+
+    margin-bottom: -130px;
+  }
+  a {
+    text-decoration: none;
+  }
+  li {
+    list-style: none;
+  }
+  p {
+    margin-bottom: 0;
+  }
+`
 
 export default MyApp

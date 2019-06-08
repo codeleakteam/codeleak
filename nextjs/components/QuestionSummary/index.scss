@@ -27,12 +27,10 @@
     margin-bottom: 7px;
   }
   &__tags {
-    margin-bottom: 20px;
   }
   &__description {
-    color: #757575;
-    font-size: 0.9rem;
-  }
+
+      }
   &__counters {
     display: flex;
     align-items: center;
@@ -40,17 +38,10 @@
     margin-bottom: 5px;
   }
   &__counterValue {
-    display: inline-block;
-    color: #4d4d4d;
-    font-weight: bold;
-    margin-right: 18px;
-  }
+      }
 
   &__counterIcon {
-    width: 18px;
-    height: 18px;
-    margin-right: 7px;
-  }
+      }
   &__commentsIco &__info {
     display: flex;
     flex-direction: column;
@@ -136,12 +127,7 @@
     }
   }
   &__time {
-    color: $lightBlack;
-    font-size: 14px;
-    width: 30%;
-    @include breakpoint($mobile) {
-      max-width: 30%;
-    }
+    
   }
   &__author {
     position: absolute;

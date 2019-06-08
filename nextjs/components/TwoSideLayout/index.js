@@ -1,14 +1,33 @@
 import React from 'react'
+import styled from 'styled-components'
 
-import classes from './index.scss'
-
-const TwoSideLayout = ({ left, right }) => {
+const TwoSideLayout = ({ mainSectionElement, rightSectionElement }) => {
   return (
-    <section className={classes.section__container}>
-      <main className={classes.section__main}>{left}</main>
-      <section className={classes.section__aside}>{right}</section>
-    </section>
+    <Wrapper>
+      <MainSection>{mainSectionElement}</MainSection>
+      <SideSection>{rightSectionElement}</SideSection>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.section`
+  display: flex;
+  justify-content: space-between;
+  color: black;
+`
+
+const MainSection = styled.div`
+  width: 75%;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+  }
+`
+
+const SideSection = styled.section`
+  width: 20%;
+  @media screen and (max-width: 740px) {
+    display: none;
+  }
+`
 
 export default TwoSideLayout

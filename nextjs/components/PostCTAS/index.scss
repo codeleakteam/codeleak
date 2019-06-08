@@ -1,0 +1,33 @@
+.ctas{
+    display: flex;
+    margin-bottom: 16px;
+    align-items:center;
+    justify-content: space-between;
+    &__row {
+        display:flex;
+        align-items: center;
+    }
+    &__voteBtn{
+        padding: .25rem .75rem;
+        border: 1px solid #e0e0e0;
+        background: 0 0;
+        border-radius: 1000px;
+        cursor: pointer;
+        line-height: 1;
+        margin-right: .5rem;
+        outline: 0;
+    }
+    &__counterValue {
+        color: #4d4d4d;
+        font-weight: bold;
+    }
+    &__voteIcon{
+        width: 18px;
+        height: 18px;
+        margin-right: 7px;
+    }
+    &__downVoteIcon{
+        transform: rotate(180deg);
+        margin:0;
+    }
+}

@@ -27,7 +27,9 @@ class ListCreateTagView(ListCreateAPIView):
             tags = Tag.objects.all()
 
         serializer = TagSerializer(tags, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            'tags': serializer.data
+        }, status=status.HTTP_200_OK)
 
 class GetTagView(RetrieveAPIView):
     def get(self, request, tag_id):

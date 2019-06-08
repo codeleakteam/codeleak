@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import { Form, Icon, Input, Button } from 'antd'
 import Logo from '../Logo'
-
-import classes from './index.scss'
 
 class Banner extends Component {
   handleSubmit = e => {
@@ -17,26 +16,24 @@ class Banner extends Component {
   render() {
     const { getFieldDecorator } = this.props.form
     return (
-      <div className={classes.banner}>
-        <div className={classes.banner__container}>
-          <div className={classes.banner__text}>
+      <Wrapper>
+        <Container>
+          <Heading>
             <Logo />
-            <p className={classes.banner__description}>
-              An online-editor based question and answer platform for front-end developers
-            </p>
-          </div>
-          <div className={classes.banner__form}>
-            <h3 className={classes.form__heading}>Get started</h3>
-            {/* <div className={classes.banner__socials}>
+            <Description>An online-editor based question and answer platform for front-end developers</Description>
+          </Heading>
+          <FormWrapper>
+            <FormHeading>Get started</FormHeading>
+            {/* <Socials>
               <Button type="primary" icon="google" className={classes['banner__socials-item']}>
                 Google
               </Button>
               <Button type="primary" icon="twitter" className={classes['banner__socials-item']}>
                 Twitter
               </Button>
-            </div> */}
+            </Socials> */}
 
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form onSubmit={this.handleSubmit}>
               <Form.Item>
                 {getFieldDecorator('email', {
                   rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
@@ -88,22 +85,66 @@ class Banner extends Component {
                 )}
               </Form.Item>
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={['login-form-button', classes['btn--register']].join(' ')}
-                >
+                <Button type="primary" htmlType="submit">
                   Register
                 </Button>
               </Form.Item>
             </Form>
-          </div>
-        </div>
-      </div>
+          </FormWrapper>
+        </Container>
+      </Wrapper>
     )
   }
 }
 
+const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: white;
+`
+
+const Container = styled.div`
+  max-width: 940px;
+  width: 90%;
+  margin: 90px auto 16px;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (max-width: 740px) {
+    flex-direction: column;
+    margin-top: 80px;
+  }
+`
+
+const Heading = styled.div`
+  width: 70%;
+  margin-top: 30px;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+    margin-top: 0;
+  }
+`
+
+const Description = styled.p`
+  font-size: 18px;
+  line-height: 22px;
+  width: 290px;
+  display: inline-block;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+  }
+`
+const FormWrapper = styled.div`
+  width: 30%;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+  }
+`
+
+const FormHeading = styled.h3`
+  font-weight: bold;
+`
 const WrapperBannerForm = Form.create({ name: 'BannerForm' })(Banner)
 
 export default WrapperBannerForm

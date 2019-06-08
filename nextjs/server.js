@@ -13,13 +13,13 @@ app
 
     server.get('/profile/:id/:username', (req, res) => {
       const actualPage = '/profile'
-      const queryParams = { title: req.params.id }
+      const queryParams = { id: req.params.id, username: req.params.username }
       app.render(req, res, actualPage, queryParams)
     })
 
     server.get('/question/:id/:slug', (req, res) => {
       const actualPage = '/question'
-      const queryParams = { title: req.params.id }
+      const queryParams = { id: req.params.id, slug: req.params.slug }
       app.render(req, res, actualPage, queryParams)
     })
 

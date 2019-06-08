@@ -22,7 +22,7 @@ module.exports = withPlugins(
   [
     withCSS(
       withSass({
-        webpack(config, options) {
+        webpack(config, { dev }) {
           config.module.rules.push({
             test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
             use: {
@@ -32,7 +32,9 @@ module.exports = withPlugins(
               },
             },
           })
-
+          if (dev) {
+            config.devtool = 'cheap-module-source-map'
+          }
           return config
         },
         cssModules: true,
