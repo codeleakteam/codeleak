@@ -10,13 +10,8 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBu
   return (
     <React.Fragment>
       <Wrapper isResponsive={isResponsive}>
-        <Input placeholder="Search question" />
+        <StyledInput placeholder="Search questions" />
         <List>
-          <ListItem>
-            <Link href="/questions/ask">
-              <Button type="primary">Ask question</Button>
-            </Link>
-          </ListItem>
           <ListItem>
             <Link href="/">
               <Anchor>Jobs</Anchor>
@@ -42,11 +37,19 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBu
 const List = styled.ul`
   display: flex;
   align-items: center;
+  margin: 0;
   @media screen and (max-width: 745px) {
     display: flex;
     flex-direction: column;
     margin-left: 0;
     padding-left: 0;
+  }
+`
+
+const StyledInput = styled(Input)`
+  width: 364px;
+  @media screen and (max-width: 364px) {
+    width: 100%;
   }
 `
 

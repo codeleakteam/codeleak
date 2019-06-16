@@ -1,7 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const TwoSideLayout = ({ mainSectionElement, rightSectionElement }) => {
+  console.log('WTF')
   return (
     <Wrapper>
       <MainSection>{mainSectionElement}</MainSection>
@@ -29,5 +31,10 @@ const SideSection = styled.section`
     display: none;
   }
 `
+
+TwoSideLayout.propTypes = {
+  mainSectionElement: PropTypes.element.isRequired,
+  rightSectionElement: PropTypes.element,
+}
 
 export default TwoSideLayout

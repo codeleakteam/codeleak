@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { message } from 'antd'
 import Card from '../Card'
 import TagWithLink from '../TagWithLink'
@@ -34,6 +35,7 @@ class Question extends Component {
     }),
   }
   componentDidMount() {
+    console.log('didmount')
     const { comments, description } = this.props
     const editorState = this.getDescription(description)
     this.setState({
@@ -139,14 +141,6 @@ class Question extends Component {
         <Description>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
         </Description>
-        {repository_url && (
-          <iframe
-            src={`${testLink}?fontsize=14`}
-            title={title}
-            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden', marginBottom: '15px' }}
-            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          />
-        )}
         <PostCTAS postType="question" updateScore={updateQuestionScore} id={id} score={score} />
         {commentSummary.map(c => (
           <Comment
@@ -176,7 +170,6 @@ const Title = styled.h3`
 `
 const TagsList = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 `

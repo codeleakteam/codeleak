@@ -1,9 +1,14 @@
 import React from 'react'
-
-import classes from './index.scss'
+import styled from 'styled-components'
 
 const AskGuide = () => {
-  return <div className={classes.container}>HOW TO....</div>
+  return <Wrapper>HOW TO....</Wrapper>
 }
+
+const Wrapper = styled.div`
+  border: 1px solid ${props => props.theme.antGrey};
+  padding: 8px;
+  border-radius: 4px;
+`
 
 export default AskGuide

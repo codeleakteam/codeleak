@@ -67,7 +67,7 @@ const Wrapper = styled.div`
   ${props =>
     props.isLoggedIn &&
     css`
-      margin-top: 450px;
+      margin-top: 350px;
       @media screen and (max-width: 740px) {
         margin-top: 560px;
       }

@@ -1,13 +1,31 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
+import Head from 'next/head'
 import { Alert, message } from 'antd'
 import TwoSideLayout from '../components/TwoSideLayout'
 import Question from '../components/Question'
-import AnswersContainer from '../components/AnswersContainer'
-import Loader from '../components/Loader'
+import AnswerList from '../components/AnswerList'
+import AddAnswer from '../components/AddAnswer'
 import { apiGet, apiPut, apiPost } from '../api'
 
 class QuestionFullPage extends Component {
+  static async getInitialProps({ query }) {
+    try {
+      console.log('KVERISA', query.id)
+      const res = await apiGet.getQuestion(query.id)
+      const question = _.get(res, 'data.question', null)
+      console.log('[getInitialProps]', { question })
+      if (!question) throw new Error('No question object available')
+      return {
+        question,
+        error: false,
+      }
+    } catch (error) {
+      return {
+        error: true,
+      }
+    }
+  }
   state = {
     questionScore: null,
     answers: _.get(this.props, 'question.answers', []),
@@ -43,8 +61,13 @@ class QuestionFullPage extends Component {
 
   render() {
     const { question, error } = this.props
-    let leftSide = (
+    console.log('[render]', { error, question })
+    const leftSideSection = (
       <React.Fragment>
+        <Head>
+          <title>{!error ? question.title : 'Internal server error'}</title>
+        </Head>
+
         {error && <Alert message="Internal server error" type="error" />}
         {!error && (
           <React.Fragment>
@@ -61,33 +84,17 @@ class QuestionFullPage extends Component {
               tags={question.tags}
               author={question.author}
             />
-            <AnswersContainer answers={this.state.answers} />
+            <AnswerList answers={this.state.answers} />
+            <AddAnswer questionId={question.id} sendAnswer={this.sendAnswerOnQuestion} />
           </React.Fragment>
         )}
       </React.Fragment>
     )
     return (
       <div>
-        <TwoSideLayout left={leftSide} />
+        <TwoSideLayout mainSectionElement={leftSideSection} />
       </div>
     )
-  }
-}
-
-QuestionFullPage.getInitialProps = async function({ query }) {
-  try {
-    const res = await apiGet.getQuestion(query.id)
-    const question = _.get(res, 'data.question', null)
-
-    if (!question) throw new Error('No question object available')
-    return {
-      question,
-      error: false,
-    }
-  } catch (error) {
-    return {
-      error: true,
-    }
   }
 }
 

@@ -1,9 +1,53 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import Link from 'next/link'
-import { Dropdown, Icon } from 'antd'
+import { Icon } from 'antd'
 import CustomIcon from '../../assets/icons/index'
 
-import classes from './index.scss'
+class TechnologyStack extends Component {
+  state = {
+    otherTechVisible: false,
+  }
+
+  handleOtherTech = () => {
+    this.setState(state => ({ otherTechVisible: !state.otherTechVisible }))
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <TechList>
+          {mainTechs.map(t => {
+            return (
+              <Link href={t.url} key={t.name}>
+                <TechBox target="_blank">
+                  <span style={{ color: t.color }}>{t.name}</span>
+                  {t.icon}
+                </TechBox>
+              </Link>
+            )
+          })}
+        </TechList>
+        <ShowMoreButton onClick={this.handleOtherTech}>
+          <span style={{ color: 'white' }}>More</span>
+          <Icon type="more" style={{ marginLeft: 'auto' }} />
+        </ShowMoreButton>
+        <OtherTechnologies>
+          {this.state.otherTechVisible &&
+            otherTechs.map(t => {
+              return (
+                <Link href={t.url} key={t.url + t.color + t.name}>
+                  <DropDownTechBox>
+                    <span style={{ color: t.color }}>{t.name}</span>
+                  </DropDownTechBox>
+                </Link>
+              )
+            })}
+        </OtherTechnologies>
+      </React.Fragment>
+    )
+  }
+}
 
 const mainTechs = [
   {
@@ -83,49 +127,57 @@ const otherTechs = [
   },
 ]
 
-class TechnologyStack extends Component {
-  state = {
-    otherTechVisible: false,
-  }
+const TechList = styled.div`
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+`
 
-  handleOtherTech = () => {
-    this.setState(state => ({ otherTechVisible: !state.otherTechVisible }))
+const TechBox = styled.a`
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #141617;
+  padding: 8px;
+  margin: 4px;
+  color: white;
+  background-color: #1d2022;
+  border-radius: 3px;
+  cursor: pointer;
+  @media screen and (max-width: 940px) {
+    width: 33%;
+    flex: auto;
   }
-
-  render() {
-    return (
-      <React.Fragment>
-        <div className={classes.tech__container}>
-          {mainTechs.map(t => {
-            return (
-              <Link href={t.url} key={t.name}>
-                <a className={classes.tech__box} target="_blank">
-                  <span style={{ color: t.color }}>{t.name}</span>
-                  {t.icon}
-                </a>
-              </Link>
-            )
-          })}
-        </div>
-        <div className={[classes.tech__box, classes['tech__box--more']].join(' ')} onClick={this.handleOtherTech}>
-          <span style={{ color: 'white' }}>More</span>
-          <Icon type="more" style={{ marginLeft: 'auto' }} />
-        </div>
-        <div className={classes['other-tech__container']}>
-          {this.state.otherTechVisible &&
-            otherTechs.map(t => {
-              return (
-                <Link href={t.url} key={t.url + t.color + t.name}>
-                  <a className={[classes.tech__box, classes['tech__box--dropdown']].join(' ')}>
-                    <span style={{ color: t.color }}>{t.name}</span>
-                  </a>
-                </Link>
-              )
-            })}
-        </div>
-      </React.Fragment>
-    )
+  @media screen and (max-width: 740px) {
+    width: 100%;
   }
-}
+`
 
+const DropDownTechBox = styled(TechBox)`
+  display: inline-block;
+  margin: 4px 7px 4px 0;
+  margin: 4px;
+  flex: auto;
+`
+
+const ShowMoreButton = styled(TechBox)`
+  display: flex;
+  justify-content: space-between;
+  width: 80px;
+  align-items: center;
+
+  @media screen and (max-width: 940px) {
+    width: calc(50% - 8px);
+  }
+  @media screen and (max-width: 740px) {
+    width: calc(100% - 8px);
+  }
+`
+const OtherTechnologies = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`
 export default TechnologyStack

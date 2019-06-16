@@ -10,7 +10,7 @@ const LoggedOutNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showB
   return (
     <React.Fragment>
       <Wrapper isResponsive={isResponsive}>
-        <Input placeholder="Search question" />
+        <StyledInput placeholder="Search question" />
         <List>
           <ListItem>
             <Link href="/signin">
@@ -39,6 +39,13 @@ const List = styled.ul`
     flex-direction: column;
     margin-left: 0;
     padding-left: 0;
+  }
+`
+
+const StyledInput = styled(Input)`
+  width: 364px;
+  @media screen and (max-width: 364px) {
+    width: 100%;
   }
 `
 

@@ -39,10 +39,10 @@ const Wrapper = styled.div`
   cursor: pointer;
 `
 const BlueText = styled.span`
-  color: ${props => props.theme.clBlue};
+  color: ${props => props.theme.antBlue};
   transition: color 300ms ease;
   &:hover {
-    color: rgba(62, 111, 181, 0.6);
+    color: #1890ff;
   }
 `
 

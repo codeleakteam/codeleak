@@ -19,8 +19,18 @@ class Banner extends Component {
       <Wrapper>
         <Container>
           <Heading>
-            <Logo />
+            <StyledLogo />
             <Description>An online-editor based question and answer platform for front-end developers</Description>
+            <Featuring>
+              Featuring &nbsp;
+              <a target="_blank" href="https://codesandbox.io/">
+                CodeSandbox
+              </a>{' '}
+              and{' '}
+              <a href="https://stackblitz.com/" target="_blank">
+                StackBlitz
+              </a>
+            </Featuring>
           </Heading>
           <FormWrapper>
             <FormHeading>Get started</FormHeading>
@@ -34,6 +44,18 @@ class Banner extends Component {
             </Socials> */}
 
             <Form onSubmit={this.handleSubmit}>
+              <Form.Item>
+                {getFieldDecorator('displayName', {
+                  rules: [{ required: true, message: 'Please input display name!' }],
+                })(
+                  <Input
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="text"
+                    placeholder="Display name "
+                  />
+                )}
+              </Form.Item>
+
               <Form.Item>
                 {getFieldDecorator('email', {
                   rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
@@ -74,17 +96,6 @@ class Banner extends Component {
                 )}
               </Form.Item>
               <Form.Item>
-                {getFieldDecorator('displayName', {
-                  rules: [{ required: true, message: 'Please input display name!' }],
-                })(
-                  <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    type="text"
-                    placeholder="Display name "
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
                 <Button type="primary" htmlType="submit">
                   Register
                 </Button>
@@ -103,6 +114,9 @@ const Wrapper = styled.div`
   left: 0;
   right: 0;
   color: white;
+  .ant-form-item {
+    margin: 0 0 5px 0;
+  }
 `
 
 const Container = styled.div`
@@ -117,9 +131,13 @@ const Container = styled.div`
   }
 `
 
+const StyledLogo = styled(Logo)`
+  margin-bottom: 15px;
+`
+
 const Heading = styled.div`
   width: 70%;
-  margin-top: 30px;
+  margin-top: 45px;
   @media screen and (max-width: 740px) {
     width: 100%;
     margin-top: 0;
@@ -131,9 +149,16 @@ const Description = styled.p`
   line-height: 22px;
   width: 290px;
   display: inline-block;
+  color: black;
+  margin-bottom: 10px;
   @media screen and (max-width: 740px) {
     width: 100%;
   }
+`
+
+const Featuring = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.darkGrey};
 `
 const FormWrapper = styled.div`
   width: 30%;
@@ -143,6 +168,7 @@ const FormWrapper = styled.div`
 `
 
 const FormHeading = styled.h3`
+  font-size: 1.5rem;
   font-weight: bold;
 `
 const WrapperBannerForm = Form.create({ name: 'BannerForm' })(Banner)

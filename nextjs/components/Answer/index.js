@@ -29,6 +29,11 @@ class Answer extends Component {
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
     }),
+    author: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      username: PropTypes.string.isRequired,
+      reputation: PropTypes.number.isRequired,
+    }),
     comments: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -42,11 +47,11 @@ class Answer extends Component {
   }
 
   componentDidMount() {
-    const description = this.getDescription(this.props.answer.description)
+    const description = this.getDescription(this.props.description)
     this.setState({
       comments: this.props.comments,
       commentsReversed: this.props.comments.reverse(),
-      questionScore: this.props.answer.score,
+      questionScore: this.props.score,
       editorState: description,
     })
   }
@@ -125,33 +130,20 @@ class Answer extends Component {
   }
 
   render() {
-    const { answer } = this.props
+    const { created_at, repository_url, author, question, id, score } = this.props
     const { editorState } = this.state
 
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    const postedAt = moment(answer.created_at).fromNow()
-    const testLink = answer.repository_url ? answer.repository_url.replace('/s/', '/embed/') : null
+    const postedAt = moment(created_at).fromNow()
+    const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
 
     return (
       <Card>
-        <UserSignature
-          id={answer.author.id}
-          username={answer.author.username}
-          reputation={answer.author.reputation}
-          postedAt={postedAt}
-        />
+        <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
         {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        {answer.repository_url && (
-          <iframe
-            src={`${testLink}?fontsize=14`}
-            title={answer.question.title}
-            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden', marginBottom: '15px' }}
-            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          />
-        )}
-        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={answer.id} score={answer.score} />
+        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={id} score={score} />
         {commentSummary.map(c => (
           <Comment
             key={c.id}

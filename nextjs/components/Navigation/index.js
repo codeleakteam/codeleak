@@ -23,11 +23,15 @@ const Navigation = ({ isMenuActive, handleBurgerMenuClick, showLogo, showBurger,
   )
   return (
     <Wrapper>
-      {showLogo && <Logo type="short" />}
+      {showLogo && <StyledLogo type="short" />}
       {navJSX}
     </Wrapper>
   )
 }
+
+const StyledLogo = styled(Logo)`
+  margin-right: 5px;
+`
 
 const Wrapper = styled.nav`
   display: flex;

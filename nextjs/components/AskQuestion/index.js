@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Input, Button, message } from 'antd'
 import InputLabel from '../InputLabel'
 import TechnologyStack from '../TechnologyStack'
-import QuestionTags from '../QuestionTags'
+// import QuestionTags from '../QuestionTags'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
@@ -13,9 +13,7 @@ import { apiGet, apiPost } from '../../api'
 import _ from 'lodash'
 import Router from 'next/router'
 
-import classes from './index.scss'
-
-const { TextArea } = Input
+// const { TextArea } = Input
 
 class AskQuestion extends Component {
   state = {
@@ -218,9 +216,8 @@ class AskQuestion extends Component {
 
         {this.state.tags && <QuestionTagsAutocomplete tags={this.state.tags} handleTagChange={this.handleTagChange} />}
 
-        <Button
+        <StyledAskQuestionButton
           type="primary"
-          className={classes['ask-question__btn']}
           onClick={() =>
             this.sendQuestion(
               this.state.title,
@@ -235,10 +232,14 @@ class AskQuestion extends Component {
           }
         >
           {this.props.type === 'edit' ? 'Edit question' : 'Send question'}
-        </Button>
+        </StyledAskQuestionButton>
       </div>
     )
   }
 }
+
+const StyledAskQuestionButton = styled(Button)`
+  margin-top: 16px;
+`
 
 export default AskQuestion

@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 export const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex: 1;
   @media screen and (max-width: 745px) {
     display: none;

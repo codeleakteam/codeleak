@@ -1,12 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 import { Button } from 'antd'
 import DraftjsEditor from '../draftjs'
 import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
-import UrlTab from '../draftjs/UrlTab';
-
-import classes from './index.scss'
+import UrlTab from '../draftjs/UrlTab'
 
 class AddAnswer extends React.Component {
   state = {
@@ -14,6 +14,11 @@ class AddAnswer extends React.Component {
     editor: false,
     addUrlOpen: false,
     urlValue: '',
+  }
+
+  static propTypes = {
+    sendAnswer: PropTypes.func.isRequired,
+    questionId: PropTypes.number.isRequired,
   }
   // draftjs bug fix
   componentDidMount() {
@@ -78,7 +83,7 @@ class AddAnswer extends React.Component {
   render() {
     const { editorState, addUrlOpen, editor, urlValue } = this.state
     return (
-      <div className={classes.answer__container}>
+      <Wrapper>
         {editor && (
           <React.Fragment>
             <h2>Add answer</h2>
@@ -88,10 +93,14 @@ class AddAnswer extends React.Component {
               openUrlTab={this.handleUrlTab}
               addUrlOpen={addUrlOpen}
             />
-            {addUrlOpen && (
-              <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink}/>
-            )}
-            <DraftjsEditor editorState={editorState} handleKeyCommand={this.handleKeyCommand} plugins={this.plugins} placeholder='Add answer' onChange={this.onChange} />
+            {addUrlOpen && <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink} />}
+            <DraftjsEditor
+              editorState={editorState}
+              handleKeyCommand={this.handleKeyCommand}
+              plugins={this.plugins}
+              placeholder="Add answer"
+              onChange={this.onChange}
+            />
             <Button
               type="primary"
               onClick={() => {
@@ -109,9 +118,16 @@ class AddAnswer extends React.Component {
             </Button>
           </React.Fragment>
         )}
-      </div>
+      </Wrapper>
     )
   }
 }
 
+const Wrapper = styled.div`
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0.9rem;
+  margin-bottom: 16px;
+  background: white;
+`
 export default AddAnswer

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { Input, Button } from 'antd'
-import { apiPost } from '../../api'
-
-import classes from './index.scss'
 
 const { TextArea } = Input
 
@@ -10,6 +9,11 @@ class AddComment extends Component {
   state = {
     commentVisible: false,
     commentText: '',
+  }
+
+  static propTypes = {
+    objectId: PropTypes.number.isRequired,
+    submitComment: PropTypes.func.isRequired,
   }
 
   showCommentField = () => {
@@ -31,13 +35,13 @@ class AddComment extends Component {
   render() {
     const { commentVisible } = this.state
     return (
-      <div className={classes.comment__container}>
-        <Button default onClick={this.showCommentField} className={classes.comment__button}>
+      <Wrapper>
+        <StyledButton default onClick={this.showCommentField}>
           Quick comment
-        </Button>
+        </StyledButton>
         {commentVisible && (
           <React.Fragment>
-            <TextArea className={classes.comment__text} placeholder="Add comment" onChange={this.handleCommentText} />
+            <StyledTextArea placeholder="Add comment" onChange={this.handleCommentText} />
             <Button
               type="primary"
               onClick={() => {
@@ -49,9 +53,22 @@ class AddComment extends Component {
             </Button>
           </React.Fragment>
         )}
-      </div>
+      </Wrapper>
     )
   }
 }
 
+const Wrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+`
+
+const StyledTextArea = styled(TextArea)`
+  margin-bottom: 8px;
+`
+
+const StyledButton = styled(Button)`
+  margin: 8px 0;
+`
 export default AddComment

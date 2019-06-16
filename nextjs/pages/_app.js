@@ -13,8 +13,11 @@ library.add(faAngleUp, faComment, faEye, faBan)
 
 const theme = {
   clBlue: '#3e6fb5',
+  antBlue: '#1890ff',
+  antGrey: '#d9d9d9',
   darkGrey: '#757575',
   dirtyWhite: '#f1f1f1',
+  lightBlack: '#757575',
 }
 
 class MyApp extends App {
@@ -42,7 +45,6 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
     const { isMenuActive, isLoggedIn } = this.state
-
     return (
       <ThemeProvider theme={theme}>
         <Container>

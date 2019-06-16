@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 import TagWithLink from '../TagWithLink'
 import Icon from '../../assets/icons'
-import classes from './index.scss'
 
 class QuestionSummary extends Component {
   getDescriptionText = description => {

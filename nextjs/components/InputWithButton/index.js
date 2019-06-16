@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 import Button from '../Button'
 import _ from 'lodash'
 import { apiPost } from '../../api'
@@ -60,24 +61,70 @@ class InputWithButton extends Component {
 
     return (
       <React.Fragment>
-        <div className={classes.container}>
-          <input
+        <Wrapper>
+          <Input
             type="email"
             placeholder="Enter your email here"
-            className={classes.input}
             value={email}
             onChange={this.handleEmailChange}
             onFocus={this.handleEmailOnFocus}
           />
-          <Button modifier="button--subscribe" onClick={this.handleSubmit} text="Get Early Access" />
-        </div>
-        {success && (
-          <span className={[classes.msg, classes['msg--success']].join(' ')}>Email is successfully submited!</span>
-        )}
-        {hasErr && <span className={[classes.msg, classes['msg--error']].join(' ')}>{errMsg}</span>}
+          <Button modifier="subscribe" onClick={this.handleSubmit} text="Get Early Access" />
+        </Wrapper>
+        {success && <SuccessMessage>Email is successfully submited!</SuccessMessage>}
+        {hasErr && <ErrorMessage>{errMsg}</ErrorMessage>}
       </React.Fragment>
     )
   }
 }
+
+const Input = styled.input`
+  border: 1px solid $clblue;
+  font-size: 25px;
+  padding: 0 16px;
+  height: 100%;
+  box-sizing: border-box;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  flex: 1;
+  width: 100%;
+  @media screen and (max-width: 940px) {
+    width: 80%;
+    font-size: 22px;
+    padding: 0 15px;
+  }
+  @media screen and (max-width: 740px) {
+    padding: 0 8px;
+    font-size: 16px;
+  }
+  &::placeholder {
+    color: $black;
+    font-size: 25px;
+    @media screen and (max-width: 940px) {
+      font-size: 22px;
+    }
+    @media screen and (max-width: 740px) {
+      font-size: 16px;
+    }
+  }
+  &:focus,
+  &:active {
+    outline: none;
+  }
+`
+const Message = styled.span`
+  font-weight: 700;
+  display: block;
+  padding: 4px 0;
+  font-size: 16px;
+`
+
+const SuccessMessage = styled(Message)`
+  color: #bae637;
+`
+
+const ErrorMessage = styled(Message)`
+  color: #ff4d4f;
+`
 
 export default InputWithButton

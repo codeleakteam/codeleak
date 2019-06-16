@@ -3,8 +3,6 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import Logo from '../Logo'
 
-import classes from './index.scss'
-
 const Footer = () => {
   let copyrightDate = new Date().getFullYear()
   return (
