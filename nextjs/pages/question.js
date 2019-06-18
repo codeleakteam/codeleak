@@ -11,7 +11,6 @@ import { apiGet, apiPut, apiPost } from '../api'
 class QuestionFullPage extends Component {
   static async getInitialProps({ query }) {
     try {
-      console.log('KVERISA', query.id)
       const res = await apiGet.getQuestion(query.id)
       const question = _.get(res, 'data.question', null)
       console.log('[getInitialProps]', { question })

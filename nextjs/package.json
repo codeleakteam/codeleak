@@ -31,7 +31,7 @@
     "dev": "node server.js",
     "next-dev": "next",
     "build": "next build",
-    "start": "next start -p 3000"
+    "start": "NODE_ENV=production PORT=3000 node server.js"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.0",

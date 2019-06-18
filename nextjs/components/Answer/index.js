@@ -143,7 +143,13 @@ class Answer extends Component {
       <Card>
         <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
         {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={id} score={score} />
+        <PostCTAS
+          postType="answer"
+          submitComment={this.submitComment}
+          updateScore={this.updateAnswerScore}
+          id={id}
+          score={score}
+        />
         {commentSummary.map(c => (
           <Comment
             key={c.id}

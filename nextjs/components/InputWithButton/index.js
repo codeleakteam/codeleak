@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Button from '../Button'
 import _ from 'lodash'
 import { apiPost } from '../../api'
-import classes from './index.scss'
 
 class InputWithButton extends Component {
   state = {

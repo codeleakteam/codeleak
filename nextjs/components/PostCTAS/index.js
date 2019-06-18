@@ -1,42 +1,72 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from 'antd'
-import AddComment from '../AddComment'
+import { Button, Input } from 'antd'
 
-export default function PostCTAS({ postType, id, updateScore, submitComment, score }) {
-  return (
-    <Wrapper>
-      <Row>
-        <VoteButton onClick={() => updateScore('true', id, 1)}>
-          <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-          <CounterValue>{score}</CounterValue>
-        </VoteButton>
-        <VoteButton onClick={() => updateScore('false', id, 1)}>
-          <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-        </VoteButton>
-      </Row>
-      <Row>
-        {postType === 'question' && (
-          <Button type="primary" style={{ marginRight: '6px' }}>
-            Provide an answer
-          </Button>
+const { TextArea } = Input
+
+export default class PostCTAS extends React.Component {
+  state = {
+    isCommentVisible: false,
+    commentValue: '',
+  }
+  toggleCommentVisibility = () =>
+    this.setState(prevState => ({
+      ...prevState,
+      isCommentVisible: !prevState.isCommentVisible,
+    }))
+
+  handleCommentInputChange = e => this.setState({ commentValue: e.target.value })
+
+  render() {
+    const { postType, id, score } = this.props
+    return (
+      <Column>
+        <Row>
+          <div>
+            <VoteButton onClick={() => this.props.updateScore('true', id, 1)}>
+              <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
+              <CounterValue>{score}</CounterValue>
+            </VoteButton>
+            <VoteButton onClick={() => this.props.updateScore('false', id, 1)}>
+              <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
+            </VoteButton>
+          </div>
+          <StyledCloseButton default onClick={this.toggleCommentVisibility}>
+            {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
+          </StyledCloseButton>
+        </Row>
+        {this.state.isCommentVisible && (
+          <Column>
+            <StyledTextArea placeholder="Add comment" onChange={this.handleCommentInputChange} />
+            <StyledSendAnswerButton
+              type="primary"
+              onClick={() => {
+                this.props.submitComment(this.props.id, 2, this.state.commentValue)
+              }}
+            >
+              Send your comment
+            </StyledSendAnswerButton>
+          </Column>
         )}
-        <AddComment objectId={id} submitComment={submitComment} />
-      </Row>
-    </Wrapper>
-  )
+      </Column>
+    )
+  }
 }
 
-const Wrapper = styled.div`
+const Column = styled.div`
+  width: 100%;
   display: flex;
+  flex-flow: column nowrap;
   margin-bottom: 16px;
   align-items: center;
   justify-content: space-between;
 `
 const Row = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `
 const VoteButton = styled.button`
   padding: 0.25rem 0.75rem;
@@ -60,6 +90,18 @@ const VoteIcon = styled.img`
 const DownvoteIcon = styled(VoteIcon)`
   transform: rotate(180deg);
   margin: 0;
+`
+
+const StyledTextArea = styled(TextArea)`
+  margin-bottom: 8px;
+`
+
+const StyledCloseButton = styled(Button)`
+  margin: 8px 0;
+`
+
+const StyledSendAnswerButton = styled(Button)`
+  width: 100%;
 `
 
 PostCTAS.propTypes = {

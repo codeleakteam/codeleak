@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const TwoSideLayout = ({ mainSectionElement, rightSectionElement }) => {
-  console.log('WTF')
   return (
     <Wrapper>
       <MainSection>{mainSectionElement}</MainSection>

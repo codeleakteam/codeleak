@@ -20,10 +20,7 @@ AnswerList.propTypes = {
       description: PropTypes.string.isRequired,
       repository_url: PropTypes.string.isRequired,
       created_at: PropTypes.string.isRequired,
-      question: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
-      }),
+      question: PropTypes.number.isRequired,
       comments: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.number.isRequired,

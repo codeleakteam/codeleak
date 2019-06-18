@@ -35,7 +35,6 @@ class Question extends Component {
     }),
   }
   componentDidMount() {
-    console.log('didmount')
     const { comments, description } = this.props
     const editorState = this.getDescription(description)
     this.setState({
@@ -141,7 +140,13 @@ class Question extends Component {
         <Description>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
         </Description>
-        <PostCTAS postType="question" updateScore={updateQuestionScore} id={id} score={score} />
+        <PostCTAS
+          postType="question"
+          submitComment={this.submitComment}
+          updateScore={updateQuestionScore}
+          id={id}
+          score={score}
+        />
         {commentSummary.map(c => (
           <Comment
             key={c.id}

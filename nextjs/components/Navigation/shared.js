@@ -17,8 +17,8 @@ export const Wrapper = styled.div`
     `}
 `
 
-export const Anchor = styled.div`
-  color: ${props => (props.isActive ? '#000' : 'white')};
+export const Anchor = styled.a`
+  color: ${props => (props.isActive ? 'black' : props.antBlue)};
 `
 
 export const ListItem = styled.li`

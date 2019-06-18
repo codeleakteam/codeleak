@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import moment from 'moment'
 import Link from 'next/link'
-import { convertFromRaw, EditorState, ContentState } from 'draft-js'
+import { convertFromRaw, EditorState } from 'draft-js'
+import Card from '../Card'
 import TagWithLink from '../TagWithLink'
 import Icon from '../../assets/icons'
 
@@ -37,8 +38,8 @@ class QuestionSummary extends Component {
     const descriptionText = this.getDescriptionText(description)
 
     return (
-      <Wrapper>
-        <Link as={`question/${questionId}/${slug}`} href={`question/?title=${questionId}`}>
+      <Card>
+        <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
           <Title>{title}</Title>
         </Link>
 
@@ -67,7 +68,7 @@ class QuestionSummary extends Component {
           <AnswersCommentsCouterIcon name="comments" height="18px" />
           <CounterValue>{answers.length}</CounterValue>
         </CountersRow>
-      </Wrapper>
+      </Card>
     )
   }
 }
@@ -87,15 +88,6 @@ QuestionSummary.propTypes = {
     })
   ),
 }
-
-const Wrapper = styled.div`
-  position: relative;
-  margin-bottom: 16px;
-  padding: 0.9rem;
-  background: white;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-`
 
 const Row = styled.div`
   display: flex;

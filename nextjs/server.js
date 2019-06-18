@@ -2,9 +2,10 @@ const express = require('express')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
+const PORT = process.env.PORT || 3000
+
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const PORT = 80
 
 app
   .prepare()
@@ -29,7 +30,7 @@ app
 
     server.listen(3000, err => {
       if (err) throw err
-      console.log(`ready on port: 3000`)
+      console.log(`ready on port: ${PORT}`)
     })
   })
   .catch(ex => {

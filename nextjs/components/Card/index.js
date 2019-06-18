@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const Card = styled.div`
   background: white;
-  border: 1px solid ${props => props.theme.darkGrey};
+  border: 1px solid ${props => props.theme.lightGrey};
   padding: 1rem;
   margin-bottom: 16px;
   border-radius: 8px;
