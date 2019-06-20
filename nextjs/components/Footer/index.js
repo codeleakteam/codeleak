@@ -1,14 +1,13 @@
 import React from 'react'
+import styled from 'styled-components'
 import Link from 'next/link'
 import Logo from '../Logo'
 
-import classes from './index.scss'
-
-const Footer = props => {
+const Footer = () => {
   let copyrightDate = new Date().getFullYear()
   return (
-    <div className={classes.footer__container}>
-      <footer className={classes.footer}>
+    <Wrapper>
+      <Container>
         <ul>
           <li>
             <Logo />
@@ -46,9 +45,25 @@ const Footer = props => {
             </Link>
           </li>
         </ul>
-      </footer>
-    </div>
+      </Container>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  background-color: ${props => props.theme.dirtyWhite};
+`
+
+const Container = styled.footer`
+  max-width: 940px;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  @media screen and (max-width: 745px) {
+    flex-direction: column;
+  }
+`
 
 export default Footer

@@ -13,7 +13,9 @@ class GetUpdateUserView(RetrieveUpdateAPIView):
     def get(self, request, user_id):
         user = User.objects.filter(pk=user_id).prefetch_related('question_author', 'answer_author')[0]
         serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({
+            'user': serializer.data
+        }, status=status.HTTP_200_OK)
     def put(self, request, user_id):
         print("Update quesiton data: ", request.data)
         print("Update question id: ", user_id)

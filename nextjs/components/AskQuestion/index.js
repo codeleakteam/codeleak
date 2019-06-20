@@ -1,239 +1,195 @@
 import React, { Component } from 'react'
+import Head from 'next/head'
+import styled from 'styled-components'
+import _ from 'lodash'
 import { Input, Button, message } from 'antd'
 import InputLabel from '../InputLabel'
-import TechnologyStack from '../TechnologyStack'
-import QuestionTags from '../QuestionTags'
+import TechnologyList from '../TechnologyList'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
-import addLinkPlugin from '../draftjs/addLinkPlugin'
+// import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
 import DraftjsEditor from '../draftjs'
-import UrlTab from '../draftjs/UrlTab'
 import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
 import { apiGet, apiPost } from '../../api'
-import _ from 'lodash'
 import Router from 'next/router'
-
-import classes from './index.scss'
-
-const { TextArea } = Input
+// const { TextArea } = Input
 
 class AskQuestion extends Component {
   state = {
-    tags: [],
-    selectedTags: [],
-    inputVisible: false,
-    inputValue: '',
-    // draftjs shiet
-    editorState: EditorState.createEmpty(),
-    editor: false,
-    urlValue: '',
-    addUrlOpen: false,
-    editorUrl: '',
+    // Form data
+    titleValue: '',
+    repositoryUrlValue: '',
+    selectedTags: [], // Array of tag ids
+
+    // Autocomplete datasource
+    tagsAutocompleteDatasource: [],
+
+    // Draftjs editor state
+    descriptionEditorState: EditorState.createEmpty(),
+
+    // Set to true when this component mounts
+    _mounted: false,
   }
 
-  // draftjs bug
+  constructor(props) {
+    super(props)
+    this.debouncedGetTags = _.debounce(this.getTags, 200)
+  }
+
   componentDidMount() {
-    this.setState({ editor: true })
-    this.getTags()
+    // DraftJS editor depends on this
+    this.setState({ _mounted: true })
   }
 
-  // draftjs plugins
-  plugins = [addLinkPlugin]
-
-  // draftjs link handler
-  onAddLink = () => {
-    const editorState = this.state.editorState
-    const selection = editorState.getSelection()
-    const link = this.state.urlValue
-    if (!link) {
-      this.onChange(RichUtils.toggleLink(editorState, selection, null))
-      return 'handled'
-    }
-    const content = editorState.getCurrentContent()
-    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link })
-    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity')
-    const entityKey = contentWithEntity.getLastCreatedEntityKey()
-    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
-  }
-  // draftjs handler
-  onChange = editorState => {
-    this.setState({ editorState })
-  }
   // draftjs handler
   handleKeyCommand = command => {
-    const { editorState } = this.state
-    const newState = RichUtils.handleKeyCommand(editorState, command)
-    if (newState) {
-      this.onChange(newState)
-      return true
-    }
-    // handleKeyCommand
-    return false
+    const descriptionEditorState = RichUtils.handleKeyCommand(this.state.descriptionEditorState, command)
+    this.setState({ descriptionEditorState })
+    return true
   }
+
   // draftjs handler
   toggleInlineStyle = inlineStyle => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle))
-  }
-  // clear state after submit
-  cleanStateAfterSubmit = () => {
-    this.setState({ editorState: EditorState.createEmpty(), addUrlOpen: false, urlValue: '' })
-  }
-  // draftjs url tab
-  handleUrlTab = () => {
-    this.setState(state => {
-      return {
-        addUrlOpen: !state.addUrlOpen,
-      }
-    })
+    const descriptionEditorState = RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
+    this.setState({ descriptionEditorState })
   }
 
-  handleUrlChange = e => {
-    this.setState({ urlValue: e.target.value })
-  }
-  // tag handler
-  handleClose = removedTag => {
-    const tags = this.state.tags.filter(tag => tag !== removedTag)
-    this.setState({ tags })
-  }
-
-  showInput = () => {
-    this.setState({ inputVisible: true }, () => this.input.focus())
-  }
-
-  handleInputChange = e => {
-    this.setState({ inputValue: e.target.value })
-  }
-
-  handleInputConfirm = () => {
-    const { inputValue } = this.state
-    let { tags } = this.state
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue]
-    }
-    this.setState({
-      tags,
-      inputVisible: false,
-      inputValue: '',
-    })
-  }
-
-  getTags = async () => {
+  getTags = async q => {
     try {
-      const res = await apiGet.getTags()
-      let tags = _.get(res, 'data', null)
-      if (tags) {
-        this.setState({ tags })
-      } else {
-        message.error('Could not get tags!')
-      }
-    } catch (error) {
-      message.error('Could not get tags!')
+      const res = await apiGet.getTags({ q })
+      const tagsAutocompleteDatasource = _.get(res, 'data.tags', null)
+      if (!tagsAutocompleteDatasource) throw new Error('Internal server error')
+      this.setState({ tagsAutocompleteDatasource })
+    } catch (err) {
+      message.error('Internal server error')
     }
   }
 
-  handleTagChange = value => {
-    const tagz = value.map(v => {
-      return _.find(this.state.tags, { title: v })['id']
-    })
-    this.setState({ selectedTags: tagz })
+  handleTitleInputChange = e => {
+    this.setState({ titleValue: e.target.value })
+  }
+
+  handleDescriptionInputChange = descriptionEditorState => {
+    this.setState({ descriptionEditorState })
+  }
+
+  handleRepositoryUrlInputChange = e => {
+    this.setState({ repositoryUrlValue: e.target.value })
+  }
+
+  handleTagsAutocompleteInputKeyDown = e => {
+    this.debouncedGetTags(e.target.value)
+  }
+
+  handleTagsAutocompleteSelect = tagTitle => {
+    const tag = this.state.tagsAutocompleteDatasource.filter(t => t.title === tagTitle)[0]
+    if (!tag) return
+    this.setState(prevState => ({
+      ...prevState,
+      selectedTags: [...prevState.selectedTags, tag.id],
+    }))
+  }
+
+  handleTagsAutocompleteDeselect = tagTitle => {
+    const tag = this.state.tagsAutocompleteDatasource.filter(t => t.title === tagTitle)[0]
+    if (!tag) return
+    const selectedTags = this.state.selectedTags.filter(tId => tId !== tag.id)
+    this.setState({ selectedTags })
   }
 
   sendQuestion = async (title, description, tags, author, editor, repoUrl) => {
     try {
       const res = await apiPost.sendQuestion(title, description, tags, author, editor, repoUrl)
-      let questionId = _.get(res, 'data.id', null)
-      let questionSlug = _.get(res, 'data.slug', null)
-      if (questionId && questionSlug) {
-        message.success('Successfully sent question!')
-        Router.push(`/question/${questionId}/${questionSlug}`)
-      }
+      const question = _.get(res, 'data.question', null)
+      const questionId = _.get(res, 'data.question.id', null)
+      const questionSlug = _.get(res, 'data.question.slug', null)
+      if (!question) throw new Error('Internal server error')
+      message.success('Successfully sent question!')
+      Router.push(`/question/${questionId}/${questionSlug}`)
     } catch (error) {
-      message.error('Please fill data!')
-      // console.log('erorko')
+      message.error('Internal server error')
     }
   }
 
-  handleTitle = e => {
-    this.setState({ title: e.target.value })
+  getDescription = () => {
+    try {
+      const description = JSON.stringify(convertToRaw(this.state.descriptionEditorState.getCurrentContent()))
+      return description
+    } catch (err) {
+      console.error("[getDescription] Can't stringify editor state", err)
+      return null
+    }
   }
-
-  handleEditorUrl = e => {
-    this.setState({ editorUrl: e.target.value })
+  handleSubmit = () => {
+    this.sendQuestion(
+      this.state.titleValue,
+      this.getDescription(),
+      this.state.selectedTags,
+      1,
+      1,
+      this.state.repositoryUrlValue
+    )
   }
-
-  // ref used for focus
-  saveInputRef = input => (this.input = input)
 
   render() {
-    const { editorState, addUrlOpen, editor, urlValue, title, editorUrl, tags, selectedTags } = this.state
+    const { descriptionEditorState, _mounted } = this.state
 
-    // const stringi = JSON.stringify(convertToRaw(editorState.getCurrentContent()))
     return (
       <div>
+        <Head>
+          <title>Ask Question</title>
+        </Head>
         <InputLabel text="Title" />
-        <Input placeholder="Title" type="primary" value={title} onChange={this.handleTitle} />
+        <Input
+          placeholder="Question title"
+          type="primary"
+          value={this.state.titleValue}
+          onChange={this.handleTitleInputChange}
+        />
         <InputLabel text="Description" />
-        {editor && (
-          <React.Fragment>
-            <InlineStyleControls
-              editorState={editorState}
-              onToggle={this.toggleInlineStyle}
-              openUrlTab={this.handleUrlTab}
-              addUrlOpen={addUrlOpen}
-            />
-            {addUrlOpen && <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink} />}
+        <React.Fragment>
+          <InlineStyleControls editorState={descriptionEditorState} onToggle={this.toggleInlineStyle} />
+          {_mounted && (
             <DraftjsEditor
-              editorState={editorState}
+              editorState={descriptionEditorState}
               handleKeyCommand={this.handleKeyCommand}
               plugins={this.plugins}
-              placeholder="Description"
-              onChange={this.onChange}
+              placeholder="Describe your question here. Don't insert any code."
+              onChange={this.handleDescriptionInputChange}
               height={300}
             />
-          </React.Fragment>
-        )}
+          )}
+        </React.Fragment>
 
         <InputLabel text="Technology stack" />
-        <TechnologyStack />
+        <TechnologyList />
+
         <InputLabel text="CodeSandbox url" />
-        <Input placeholder="Enter codeSandbox url" type="primary" value={editorUrl} onChange={this.handleEditorUrl} />
-        <InputLabel text="Tags" />
-
-        {/* <QuestionTags
-          handleClose={this.handleClose}
-          showInput={this.showInput}
-          handleInputChange={this.handleInputChange}
-          handleInputConfirm={this.handleInputConfirm}
-          tags={this.state.tags}
-          inputVisible={this.state.inputVisible}
-          inputValue={this.state.inputValue}
-          ref={this.saveInputRef}
-        />
-        */}
-
-        {tags && <QuestionTagsAutocomplete tags={tags} handleTagChange={this.handleTagChange} />}
-
-        <Button
+        <Input
+          placeholder="Enter codeSandbox url"
           type="primary"
-          className={classes['ask-question__btn']}
-          onClick={() =>
-            this.sendQuestion(
-              title,
-              convertToRaw(editorState.getCurrentContent()).blocks[0].text
-                ? JSON.stringify(convertToRaw(editorState.getCurrentContent()))
-                : '',
-              selectedTags,
-              1,
-              1,
-              editorUrl
-            )
-          }
-        >
+          value={this.state.repositoryUrlValue}
+          onChange={this.handleRepositoryUrlInputChange}
+        />
+
+        <InputLabel text="Tags" />
+        <QuestionTagsAutocomplete
+          dataSource={this.state.tagsAutocompleteDatasource}
+          onInputKeyDown={this.handleTagsAutocompleteInputKeyDown}
+          onSelect={this.handleTagsAutocompleteSelect}
+          onDeselect={this.handleTagsAutocompleteDeselect}
+        />
+
+        <StyledAskQuestionButton type="primary" onClick={this.handleSubmit}>
           {this.props.type === 'edit' ? 'Edit question' : 'Send question'}
-        </Button>
+        </StyledAskQuestionButton>
       </div>
     )
   }
 }
+
+const StyledAskQuestionButton = styled(Button)`
+  margin-top: 16px;
+`
 
 export default AskQuestion

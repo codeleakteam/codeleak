@@ -1,17 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import Activity from '../Activity'
 import timeAgo from '../../helpers/functions/timeAgo'
 
-import classes from './index.scss'
-
 const RecentActivities = ({ type, typeCounts, data }) => {
   return (
-    <div className={classes.activities__container}>
-      <span className={classes.activities__header}>
+    <Wrapper>
+      <ActivitiesHeader>
         <span>{typeCounts} </span>
         <span>{type}</span>
-      </span>
+      </ActivitiesHeader>
       {data.map(d => {
         return (
           <Activity
@@ -25,13 +24,32 @@ const RecentActivities = ({ type, typeCounts, data }) => {
           />
         )
       })}
-    </div>
+    </Wrapper>
   )
 }
 
 RecentActivities.propTypes = {
   type: PropTypes.string.isRequired,
   typeCounts: PropTypes.number.isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      score: PropTypes.number.isRequired,
+      answers: PropTypes.array.isRequired,
+      slug: PropTypes.string.isRequired,
+    })
+  ),
 }
+const Wrapper = styled.div``
+
+const ActivitiesHeader = styled.div`
+  font-size: 18px;
+  line-height: 28px;
+  border-bottom: 1px solid ${props => props.theme.antGrey};
+  display: block;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+`
 
 export default RecentActivities

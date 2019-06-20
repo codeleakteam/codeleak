@@ -1,13 +1,9 @@
 import React from 'react'
 import QuestionSummary from '../QuestionSummary'
 
-import classes from './index.scss'
-
-const QuestionSummaryContainer = ({ loggedIn, questions }) => {
-  // console.log(questions)
-
+const QuestionList = ({ questions }) => {
   return (
-    <div className={!loggedIn ? classes['summary__container--logged-out'] : null}>
+    <div>
       {questions.map(question => {
         return (
           <QuestionSummary
@@ -19,7 +15,7 @@ const QuestionSummaryContainer = ({ loggedIn, questions }) => {
             description={question.description}
             createdAt={question.created_at}
             tags={question.tags}
-            author={question.author.username}
+            authorUsername={question.author.username}
             authorId={question.author.id}
             questionId={question.id}
             slug={question.slug}
@@ -30,4 +26,4 @@ const QuestionSummaryContainer = ({ loggedIn, questions }) => {
   )
 }
 
-export default QuestionSummaryContainer
+export default QuestionList

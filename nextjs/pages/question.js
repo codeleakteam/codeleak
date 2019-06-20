@@ -1,42 +1,44 @@
 import React, { Component } from 'react'
-import TwoSideLayout from '../components/TwoSideLayout'
-// import PopularTags from '../components/SideWidgets/PopularTags'
-import Question from '../components/Question'
-import AnswerContainer from '../components/AnswerContainer'
-import AddAnswer from '../components/AddAnswer'
 import _ from 'lodash'
+import Head from 'next/head'
 import { Alert, message } from 'antd'
-import Loader from '../components/Loader'
-
+import TwoSideLayout from '../components/TwoSideLayout'
+import Question from '../components/Question'
+import AnswerList from '../components/AnswerList'
+import AddAnswer from '../components/AddAnswer'
 import { apiGet, apiPut, apiPost } from '../api'
 
-// import classes from '../../styles/question/index.scss'
-
 class QuestionFullPage extends Component {
+  static async getInitialProps({ query }) {
+    try {
+      const res = await apiGet.getQuestion(query.id)
+      const question = _.get(res, 'data.question', null)
+      console.log('[getInitialProps]', { question })
+      if (!question) throw new Error('No question object available')
+      return {
+        question,
+        error: false,
+      }
+    } catch (error) {
+      return {
+        error: true,
+      }
+    }
+  }
   state = {
     questionScore: null,
-    answers: [],
-    answersLoaded: false,
-  }
-
-  componentDidMount() {
-    if (!this.props.error) {
-      this.setState({ answers: this.props.question.question.answers, answersLoaded: true })
-    }
+    answers: _.get(this.props, 'question.answers', []),
   }
 
   updateQuestionScore = async (type, questionId, userId) => {
     try {
       const res = await apiPut.updateQuestionScore(type, questionId, userId)
-      let score = _.get(res, 'data.question.score', null)
-      if (score) {
-        this.setState({ questionScore: score })
-        message.success('Question score is successfully updated!')
-      } else {
-        message.error('Could not update question score')
-      }
+      const score = _.get(res, 'data.question.score', null)
+      if (!score) throw new Error('No score on updaeQuestionScore received')
+      this.setState({ questionScore: score })
     } catch (error) {
-      message.error(error.response.data.message)
+      console.error('[updateQuestionScore]', { error })
+      message.error('Internal server error')
     }
   }
 
@@ -57,65 +59,41 @@ class QuestionFullPage extends Component {
   }
 
   render() {
-    const { question } = this.props.question
-
-    let leftSide = (
+    const { question, error } = this.props
+    console.log('[render]', { error, question })
+    const leftSideSection = (
       <React.Fragment>
-        {this.props.error && <Alert message="Could not load question!" type="error" />}
-        {!this.state.answersLoaded ? (
-          <React.Fragment>
-            <Loader />
-          </React.Fragment>
-        ) : (
+        <Head>
+          <title>{!error ? question.title : 'Internal server error'}</title>
+        </Head>
+
+        {error && <Alert message="Internal server error" type="error" />}
+        {!error && (
           <React.Fragment>
             <Question
-              createdAt={question.created_at}
-              repositoryUrl={question.repository_url}
-              questionTitle={question.title}
-              questionId={question.id}
-              questionComments={question.comments}
-              questionDescription={question.description}
-              authorId={question.author.id}
-              questionScore={question.score}
-              authorUsername={question.author.username}
-              authorReputation={question.author.reputation}
-              questionTags={question.tags}
+              id={question.id}
+              title={question.title}
+              description={question.description}
+              score={question.score}
+              created_at={question.created_at}
+              repository_url={question.repository_url}
               updateQuestionScore={this.updateQuestionScore}
               updatedQuestionScore={this.state.questionScore}
+              comments={question.comments}
+              tags={question.tags}
+              author={question.author}
             />
-
-            <AnswerContainer answers={this.state.answers} />
-            <AddAnswer sendAnswer={this.sendAnswerOnQuestion} questionId={this.props.question.question.id} />
+            <AnswerList answers={this.state.answers} />
+            <AddAnswer questionId={question.id} sendAnswer={this.sendAnswerOnQuestion} />
           </React.Fragment>
         )}
       </React.Fragment>
     )
     return (
       <div>
-        <TwoSideLayout left={leftSide} />
+        <TwoSideLayout mainSectionElement={leftSideSection} />
       </div>
     )
-  }
-}
-
-QuestionFullPage.getInitialProps = async function({ query }) {
-  try {
-    let id = query.title
-    let res = await apiGet.getQuestion(id)
-    const question = _.get(res, 'data', null)
-    if (!question) {
-      return {
-        error: true,
-      }
-    }
-    return {
-      question,
-      error: false,
-    }
-  } catch (error) {
-    return {
-      error: true,
-    }
   }
 }
 

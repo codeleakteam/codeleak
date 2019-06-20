@@ -2,9 +2,10 @@ const express = require('express')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
+const PORT = process.env.PORT || 3000
+
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const PORT = 80
 
 app
   .prepare()
@@ -13,13 +14,13 @@ app
 
     server.get('/profile/:id/:username', (req, res) => {
       const actualPage = '/profile'
-      const queryParams = { title: req.params.id }
+      const queryParams = { id: req.params.id, username: req.params.username }
       app.render(req, res, actualPage, queryParams)
     })
 
     server.get('/question/:id/:slug', (req, res) => {
       const actualPage = '/question'
-      const queryParams = { title: req.params.id }
+      const queryParams = { id: req.params.id, slug: req.params.slug }
       app.render(req, res, actualPage, queryParams)
     })
 
@@ -29,7 +30,7 @@ app
 
     server.listen(3000, err => {
       if (err) throw err
-      console.log(`ready on port: 3000`)
+      console.log(`ready on port: ${PORT}`)
     })
   })
   .catch(ex => {
