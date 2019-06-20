@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
-import { Button, Icon, Dropdown, Menu, message } from 'antd'
-import Link from 'next/link'
+import PropTypes from 'prop-types'
+import { Menu, message } from 'antd'
+import moment from 'moment'
 import Comment from '../Comment'
-import timeAgo from '../../helpers/functions/timeAgo'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { convertFromRaw, EditorState } from 'draft-js'
+import UserSignature from '../UserSignature'
+import PostCTAS from '../PostCTAS'
+import Card from '../Card'
+import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
-import AddComment from '../AddComment'
 import { apiPost, apiPut } from '../../api'
 
-import classes from './index.scss'
-
 class Answer extends Component {
-  // console.log(EditorState.createWithContent(convertFromRaw(JSON.parse(answer.description))))
   state = {
     editorState: null,
     comments: [],
@@ -21,22 +19,42 @@ class Answer extends Component {
     answerScore: null,
   }
 
-  componentDidMount() {
-    let testinjo = JSON.parse(this.props.answerDescription)
-    if (this.props.answer) {
-      this.setState({
-        editorState: EditorState.createWithContent(convertFromRaw(testinjo)),
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    score: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    repository_url: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    question: PropTypes.number.isRequired,
+    comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        content: PropTypes.string.isRequired,
+        author: PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          username: PropTypes.string.isRequired,
+        }),
       })
-    }
-    // console.log(this.props)
+    ),
+  }
 
+  componentDidMount() {
+    const description = this.getDescription(this.props.description)
     this.setState({
       comments: this.props.comments,
       commentsReversed: this.props.comments.reverse(),
-      answerScore: this.props.answer.score,
+      questionScore: this.props.score,
+      editorState: description,
     })
+  }
 
-    // console.log(this.props.answer)
+  getDescription = description => {
+    try {
+      const richTextJson = JSON.parse(description)
+      return EditorState.createWithContent(convertFromRaw(richTextJson))
+    } catch (err) {
+      return EditorState.createWithContent(ContentState.createFromText(description))
+    }
   }
 
   createAnswerFromHtml = () => {
@@ -49,54 +67,44 @@ class Answer extends Component {
 
   submitComment = async (answer_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content)
-      let comment = _.get(res, 'data', null)
-
-      if (comment) {
-        this.setState(state => ({
-          comments: [...state.comments, comment.comment],
-          commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
-        }))
-      } else {
-        message.error('Could not submit comment!')
-      }
+      const res = await apiPost.sendComment('ANSWER_COMMENT', question_id, author_id, content)
+      const comment = _.get(res, 'data.comment', null)
+      if (!comment) throw new Error('No comment object available')
+      this.setState(state => ({
+        comments: [...state.comments, comment],
+        commentsReversed: [...state.commentsReversed, comment].reverse(),
+      }))
     } catch (error) {
-      message.error('Could not submit comment!')
+      console.error('[submitComment]', { error })
+      message.error('Internal server error')
     }
   }
 
-  handleCommentSummary = () => {
-    this.setState(state => ({ commentSummary: !state.commentSummary }))
-  }
+  handleCommentSummary = () => this.setState(prevState => ({ commentSummary: !prevState.commentSummary }))
 
   upvoteComment = async (userId, commentId) => {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'ANSWER_COMMENT', commentId)
-      let comment = _.get(res, 'data.comment', null)
-      let comment_id = _.get(res, 'data.comment.id', null)
-      if (comment) {
-        let index = _.findIndex(this.state.comments, { id: comment_id })
-        let newArr = this.state.comments
-        let newArrReversed = this.state.commentsReversed
+      const comment = _.get(res, 'data.comment', null)
+      if (!comment) throw new Error('No comment object available')
+      let index = _.findIndex(this.state.comments, { id: comment.comment.id })
+      let newArr = this.state.comments
+      let newArrReversed = this.state.commentsReversed
 
-        newArr.splice(index, 1, comment)
-        newArrReversed.splice(index, 1, comment)
+      newArr.splice(index, 1, comment.comment)
+      newArrReversed.splice(index, 1, comment.comment)
 
-        this.setState({ comments: newArr, commentsReversed: newArrReversed })
-        message.success('Comment score is successfully updated!')
-      }
+      this.setState({ comments: newArr, commentsReversed: newArrReversed })
     } catch (error) {
-      message.error(error.response.data.message)
+      console.error('[upvoteComment]', { error })
+      message.error('Internal server error')
     }
   }
 
   reportComment = async (userId, commentId) => {
     try {
-      const res = await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId)
-      let comment = _.get(res, 'data', null)
-      if (comment) {
-        message.success('Comment is successfully reported!')
-      }
+      await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId)
+      message.success('Comment is successfully reported!')
     } catch (error) {
       message.error(error.response.data.message)
     }
@@ -104,98 +112,31 @@ class Answer extends Component {
 
   updateAnswerScore = async (type, answerId, userId) => {
     try {
-      const res = await apiPut.updateAnswerScore(type, answerId, userId)
-      let score = _.get(res, 'data.answer.score', null)
-
-      if (score) {
-        this.setState({ answerScore: score })
-        message.success('Answer score is successfully updated!')
-      } else {
-        message.error('Could not update answer score!')
-      }
+      const res = await apiPut.updateAnswerScore(type, questionId, userId)
+      const score = _.get(res, 'data.answer.score', null)
+      if (!score) throw new Error('Retrieved score is null or undefined')
+      this.setState({ questionScore: score })
     } catch (error) {
-      message.error(error.response.data.message)
+      console.error('[updateAnswerScore]', { error })
+      message.error('Internal server error')
     }
   }
 
   render() {
-    const { editorState, comments, commentsReversed, answerScore } = this.state
-    const { answer, answerId, authorId, authorUsername, score, createdAt } = this.props
+    const { id, score, question, author, repository_url, created_at } = this.props
+    const { editorState } = this.state
+    const reverseeed =
+      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
+    const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
+    const postedAt = moment(created_at).fromNow()
+    //  const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
 
-    let reverseeed = comments.length > 3 ? commentsReversed.slice(0, 3) : commentsReversed
-    let commentSummary = this.state.commentSummary ? reverseeed : comments
-
-    const answerOptions = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="/">
-            3rd menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    )
     return (
-      <div className={classes.answer__container}>
-        <div className={classes.answer__info}>
-          <div className={classes.answer__detail}>
-            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
-              <div className={classes.answer__avatar}>
-                <img
-                  src={answer.author.avatar}
-                  alt={answer.author.username}
-                  className={classes['answer__avatar-img']}
-                />
-              </div>
-            </Link>
-            <span className={classes.answer__rep}>{score}</span>
-          </div>
-          <div className={classes['answer__user-info']}>
-            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
-              <a>
-                <span className={classes.answer__user}>{authorUsername}</span>
-              </a>
-            </Link>
+      <Card>
+        <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
+        {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
 
-            <span className={classes.answer__time}>{timeAgo(createdAt)}</span>
-          </div>
-        </div>
-        <div className={classes['answer__tags-wrapper']}>
-          <div>
-            <Link href="/">
-              <Button type="primary">Open in editor</Button>
-            </Link>
-          </div>
-        </div>
-        {editorState && <div className={classes.answer__text} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        <div className={classes.answer__controls}>
-          <Button
-            className={classes.answer__upvote}
-            type="primary"
-            onClick={() => this.updateAnswerScore('true', answerId, 1)}
-          >
-            Upvote
-            <FontAwesomeIcon icon="angle-up" className={classes.answer__arrow} />
-            <span className={classes.question__score} style={{ marginLeft: 8 }}>
-              {answerScore}
-            </span>
-          </Button>
-          <Button className={classes.answer__downvote} onClick={() => this.updateAnswerScore('false', answerId, 1)}>
-            Downvote
-          </Button>
-          <Dropdown overlay={answerOptions}>
-            <Icon type="more" style={{ fontSize: '30px' }} />
-          </Dropdown>
-        </div>
+        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={id} score={score} />
         {commentSummary.map(c => (
           <Comment
             key={c.id}
@@ -207,15 +148,10 @@ class Answer extends Component {
             reportComment={() => this.reportComment(1, c.id)}
           />
         ))}
-
         {this.state.comments.length > 3 && (
-          <span className={classes['question__view-all-comments']} onClick={this.handleCommentSummary}>
-            {this.state.commentSummary ? 'view all' : 'hide'}
-          </span>
+          <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
         )}
-
-        <AddComment objectId={answerId} submitComment={this.submitComment} />
-      </div>
+      </Card>
     )
   }
 }

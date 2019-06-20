@@ -1,20 +1,34 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 
-import classes from './index.scss'
-
-const BurgerMenu = ({ handleBurgerMenu }) => {
+const BurgerMenu = ({ onClick }) => {
   return (
-    <div className={classes.burger} onClick={handleBurgerMenu}>
-      <div />
-      <div />
-      <div />
-    </div>
+    <Wrapper onClick={onClick}>
+      <Line />
+      <Line />
+      <Line />
+    </Wrapper>
   )
 }
 
 BurgerMenu.propTypes = {
-  handleBurgerMenu: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
 }
+
+const Wrapper = styled.div`
+  display: none;
+  @media screen and (max-width: 745px) {
+    display: block;
+    margin-left: auto;
+    cursor: pointer;
+  }
+`
+const Line = styled.div`
+  width: 35px;
+  height: 5px;
+  background-color: black;
+  margin: 6px 0;
+`
 
 export default BurgerMenu

@@ -1,17 +1,27 @@
 import React from 'react'
-import { Input, Button } from 'antd';
-
-import classes from './index.scss';
+import styled from 'styled-components'
+import { Input, Button } from 'antd'
 
 const UrlTab = ({ url, handleUrlChange, onAddLink }) => {
   return (
-    <div className={classes.url__container}>
-      <Input className={classes.url__input} value={url} onChange={handleUrlChange} size="small" />
+    <Wrapper>
+      <StyledInput value={url} onChange={handleUrlChange} size="small" />
       <Button onClick={onAddLink} size="small">
         ADD LINK
       </Button>
-    </div>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+`
+
+const StyledInput = styled(Input)`
+  width: 120px;
+  margin-right: 8px;
+`
 
 export default UrlTab

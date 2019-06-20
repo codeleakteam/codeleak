@@ -1,9 +1,9 @@
-import React from 'react'
+import styled from 'styled-components'
 
-import classes from './index.scss'
-
-const Jobs = () => {
-  return <div className={classes.container}>JOBS</div>
-}
+const Jobs = styled.div`
+  border: 1px solid ${props => props.theme.antGrey};
+  padding: 8px;
+  border-radius: 4px;
+`
 
 export default Jobs

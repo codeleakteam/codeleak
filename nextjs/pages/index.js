@@ -1,60 +1,95 @@
 import React, { Component } from 'react'
+import Head from 'next/head'
+import styled, { css } from 'styled-components'
 import Link from 'next/link'
-import { Button, Alert, message } from 'antd'
-import QuestionSummaryContainer from '../components/QuestionSummaryContainer'
+import { Button, Alert } from 'antd'
+import QuestionList from '../components/QuestionList'
 import Banner from '../components/Banner'
 import PopularTags from '../components/SideWidgets/PopularTags'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
 import _ from 'lodash'
 
-import classes from '../styles/index/index.scss'
-
 class Index extends Component {
-  render() {
-    return (
-      <div
-        className={
-          !this.props.loggedIn ? [classes.section__container, classes['section__container--loggedOut']].join(' ') : null
-        }
-      >
-        {!this.props.loggedIn && <Banner />}
-        <div className={classes.section__heading}>
-          <h2 className={classes.section__title}>Questions</h2>
-          <Link href="/questions/ask">
-            <Button type="primary">Ask a question</Button>
-          </Link>
-        </div>
-        {!this.props.error && (
-          <TwoSideLayout
-            left={<QuestionSummaryContainer loggedIn={this.props.loggedIn} questions={this.props.questions} />}
-            right={<PopularTags />}
-          />
-        )}
-        {this.props.error && <Alert message="Could not load questions!" type="error" />}
-      </div>
-    )
-  }
-}
-
-Index.getInitialProps = async function() {
-  try {
-    let res = await apiGet.getIndex()
-    const questions = _.get(res, 'data.results', null)
-    if (!questions) {
+  static async getInitialProps() {
+    try {
+      const questionsRes = await apiGet.getIndex()
+      const tagsRes = await apiGet.getTags({ q: '' })
+      const questions = _.get(questionsRes, 'data.results', null)
+      const tags = _.get(tagsRes, 'data.tags', null)
+      if (!questions) throw new Error('[getInitialProps] questions not available')
+      if (!tags) throw new Error('[getInitialProps] tags not available')
+      return {
+        questions,
+        tags,
+        error: false,
+      }
+    } catch (error) {
+      console.error('[getInitialProps]', { error })
       return {
         error: true,
       }
     }
-    return {
-      questions,
-      error: false,
-    }
-  } catch (error) {
-    return {
-      error: true,
-    }
+  }
+
+  state = {
+    errorMessage: null,
+  }
+
+  render() {
+    return (
+      <Wrapper isLoggedIn={this.props.isLoggedIn}>
+        <Head>
+          <title>Codeleak</title>
+        </Head>
+        {!this.props.isloggedIn && <Banner />}
+        {this.props.error && <Alert message="Internal server error" type="error" />}
+        {!this.props.error && (
+          <React.Fragment>
+            <Heading>
+              <Title>Questions</Title>
+              <Link href="/questions/ask">
+                <Button type="primary">Ask a question</Button>
+              </Link>
+            </Heading>
+            <TwoSideLayout
+              mainSectionElement={<QuestionList isLoggedIn={this.props.isLoggedIn} questions={this.props.questions} />}
+              rightSectionElement={<PopularTags tags={this.props.tags} />}
+            />
+          </React.Fragment>
+        )}
+      </Wrapper>
+    )
   }
 }
+
+const Wrapper = styled.div`
+  ${props =>
+    props.isLoggedIn &&
+    css`
+      margin-top: 350px;
+      @media screen and (max-width: 740px) {
+        margin-top: 560px;
+      }
+    `}
+`
+
+const Heading = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 75%;
+  margin: 16px 0;
+  align-items: center;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+  }
+`
+
+const Title = styled.h2`
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 0;
+`
 
 export default Index

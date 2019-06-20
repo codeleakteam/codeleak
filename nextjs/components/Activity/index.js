@@ -1,38 +1,71 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import Link from 'next/link'
 import singularCheck from '../../helpers/functions/singularCheck'
 
-import classes from './index.scss'
-
 const Activity = ({ name, points, answers, time, slug, id }) => {
   return (
-    <div className={classes.activity__container}>
+    <Wrapper>
       <div>
         <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
           <a>
-            <span className={classes.activity__name}>{name}</span>
+            <ActivityName>{name}</ActivityName>
           </a>
         </Link>
-        <span className={classes.activity__points}>
+        <PointsCounter>
           {points} {singularCheck('point', points)}
-        </span>
+        </PointsCounter>
       </div>
-      <div className={classes.acitivies__history}>
-        <span className={classes.activity__answers}>
+      <div>
+        <AnswersCounter>
           {answers} {singularCheck('answer', answers)}
-        </span>
-        <span className={classes.acitivies__time}>Asked {time}</span>
+        </AnswersCounter>
+        <QuestionsCounter>Asked {time}</QuestionsCounter>
       </div>
-    </div>
+    </Wrapper>
   )
 }
 
 Activity.propTypes = {
+  id: PropTypes.number.isRequired,
+  slug: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   points: PropTypes.number.isRequired,
   answers: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
 }
 
+const Wrapper = styled.div`
+  margin-bottom: 16px;
+`
+const ActivityName = styled.span`
+  font-size: 16px;
+  line-height: 22px;
+  &:after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 50%;
+    background-color: black;
+    margin: 0 8px;
+  }
+`
+const AnswersCounter = styled.span`
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 22px;
+  margin-right: 8px;
+`
+
+const QuestionsCounter = styled.span`
+  font-size: 12px;
+  line-height: 22px;
+`
+const PointsCounter = styled.span`
+  font-size: 14px;
+  line-height: 22px;
+`
 export default Activity

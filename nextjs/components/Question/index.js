@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
-import { Button, Icon, Dropdown, Menu, message } from 'antd'
-import Link from 'next/link'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { message } from 'antd'
+import Card from '../Card'
 import TagWithLink from '../TagWithLink'
 import Comment from '../Comment'
+import UserSignature from '../UserSignature'
+import PostCTAS from '../PostCTAS'
 import moment from 'moment'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import PropTypes from 'prop-types'
-import AddComment from '../AddComment'
 import { apiPost, apiPut } from '../../api'
 import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import _ from 'lodash'
 
-import classes from './index.scss'
-import popularTagClasses from '../SideWidgets/PopularTags/index.scss'
 class Question extends Component {
   state = {
     editorState: null,
@@ -21,25 +20,33 @@ class Question extends Component {
     commentsReversed: [],
     commentSummary: true,
   }
-
-  // shouldComponentUpdate(props, state) {
-  //   return state.comments !== this.state.comments
-  // }
-
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
+    repository_url: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    comments: PropTypes.array.isRequired,
+    tags: PropTypes.array.isRequired,
+    author: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+  }
   componentDidMount() {
-    const description = this.getDescription(this.props.questionDescription)
+    const { comments, description } = this.props
+    const editorState = this.getDescription(description)
     this.setState({
-      editorState: description,
-      comments: this.props.questionComments,
-      commentsReversed: this.props.questionComments.reverse(),
+      editorState: editorState,
+      comments,
+      commentsReversed: comments.reverse(),
     })
   }
 
   createAnswerFromHtml = () => {
-    let editorState = this.state.editorState
-    let html = stateToHTML(editorState.getCurrentContent())
     return {
-      __html: html,
+      __html: stateToHTML(this.state.editorState.getCurrentContent()),
     }
   }
 
@@ -55,8 +62,8 @@ class Question extends Component {
   submitComment = async (question_id, author_id, content) => {
     try {
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
-      let comment = _.get(res, 'data', null)
-
+      const comment = _.get(res, 'data', null)
+      console.log('[submitComment]', { comment })
       if (comment) {
         this.setState(state => ({
           comments: [...state.comments, comment.comment],
@@ -65,7 +72,8 @@ class Question extends Component {
         message.error('Comment is successfully submited!')
       }
     } catch (error) {
-      message.error(error.response.data.message)
+      console.error('[submitComment]', { error })
+      message.error('Internal server error')
     }
   }
 
@@ -97,127 +105,53 @@ class Question extends Component {
 
   reportComment = async (userId, commentId) => {
     try {
-      const res = await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId)
-      let comment = _.get(res, 'data', null)
-      if (comment) {
-        message.success('Comment is successfully reported!')
-      }
+      await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId)
+      message.success('Comment is successfully reported!')
     } catch (error) {
-      message.error(error.response.data.message)
+      console.error('[reportComment]', { error })
+      message.error('Could not report comment!')
     }
   }
 
   render() {
     const {
+      id,
+      created_at,
+      author,
+      score,
+      title,
+      tags,
+      repository_url,
       updateQuestionScore,
       updatedQuestionScore,
-      createdAt,
-      repositoryUrl,
-      questionTitle,
-      authorId,
-      authorUsername,
-      authorReputation,
-      questionTags,
-      questionId,
-      questionScore,
     } = this.props
-
-    const { comments, commentsReversed } = this.state
-
-    let reverseeed = comments.length > 3 ? commentsReversed.slice(0, 3) : commentsReversed
-
-    let commentSummary = this.state.commentSummary ? reverseeed : comments
-
-    let formatDate = moment(createdAt).fromNow()
-
-    let testLink = repositoryUrl ? repositoryUrl.replace('/s/', '/embed/') : null
+    let reverseeed =
+      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
+    const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
+    const postedAt = moment(created_at).fromNow()
+    const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
 
     return (
-      <div className={classes.question__container}>
-        <h3 className={classes.question__name}>{questionTitle}</h3>
-        <div className={classes.question__info}>
-          <div className={classes.question__row}>
-            <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
-              <img
-                src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60"
-                alt={authorUsername}
-                className={classes.question__authorAvatar}
-              />
-            </Link>
-          </div>
-          <div className={classes.question__column}>
-            <div className={classes.question__row}>
-              <Link href={`/profile/${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
-                <a>
-                  <span className={classes.question__authorUsername}>{authorUsername}</span>
-                </a>
-              </Link>
-
-              <div className={classes.question__dotSeparator} />
-              <span className={classes.question__time}>{formatDate}</span>
-            </div>
-            <div className={classes.question__row}>
-              <img
-                className={classes.question__reputationIcon}
-                src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png"
-                alt="reputation"
-              />
-
-              <span className={classes.question__reputationCounter}>{authorReputation}</span>
-            </div>
-          </div>
-        </div>
-        <div className={classes['question__tags-wrapper']}>
-          <div>
-            {questionTags.map(q => {
-              return (
-                <TagWithLink
-                  customClass={popularTagClasses.tag}
-                  style={{ marginRight: '6px' }}
-                  url={`/tag/${q.slug}`}
-                  id={q.id}
-                  text={q.title}
-                  key={q.id}
-                />
-              )
-            })}
-          </div>
-          {/* <div>
-            <Link href="/">
-              <Button type="primary">Open in editor</Button>
-            </Link>
-          </div> */}
-        </div>
-        <div className={classes.question__text}>
+      <Card>
+        <Title>{title}</Title>
+        <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
+        <TagsList>
+          {tags.map(q => {
+            return (
+              <TagWithLink style={{ marginRight: '6px' }} url={`/tag/${q.slug}`} id={q.id} text={q.title} key={q.id} />
+            )
+          })}
+        </TagsList>
+        <Description>
           {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        </div>
-        {repositoryUrl && (
-          <iframe
-            src={`${testLink}?fontsize=14`}
-            title={questionTitle}
-            style={{ width: '100%', height: 500, border: 0, borderRadius: 4, overflow: 'hidden', marginBottom: '15px' }}
-            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          />
-        )}
-        <div className={classes.question__controls}>
-          <div className={classes.question__row}>
-            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('true', questionId, 1)}>
-              <img src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" className={classes.question__voteIcon} />
-              <span className={classes.question__counterValue}>
-                {updatedQuestionScore ? updatedQuestionScore : questionScore}
-              </span>
-            </button>
-            <button className={classes.question__voteBtn} onClick={() => updateQuestionScore('false', questionId, 1)}>
-              <img
-                src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png"
-                className={[classes.question__voteIcon, classes.question__downVoteIcon].join(' ')}
-              />
-            </button>
-          </div>
-          <Button default onClick={this.showCommentField} className={classes.comment__button}>
-            Edit question
-          </Button>
-        </div>
+        </Description>
+        <PostCTAS
+          postType="question"
+          submitComment={this.submitComment}
+          updateScore={updateQuestionScore}
+          id={id}
+          score={score}
+        />
         {commentSummary.map(c => (
           <Comment
             key={c.id}
@@ -231,19 +165,34 @@ class Question extends Component {
         ))}
 
         {this.state.comments.length > 3 && (
-          <span className={classes['question__view-all-comments']} onClick={this.handleCommentSummary}>
+          <ToggleAllComments onClick={this.handleCommentSummary}>
             {this.state.commentSummary ? 'view all' : 'hide'}
-          </span>
+          </ToggleAllComments>
         )}
-
-        {/* <AddComment objectId={questionId} submitComment={this.submitComment} /> */}
-      </div>
+      </Card>
     )
   }
 }
 
-Question.propTypes = {
-  updateQuestionScore: PropTypes.func.isRequired,
-}
+const Title = styled.h3`
+  font-size: 1.3rem;
+  font-weight: bold;
+`
+const TagsList = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`
 
+const Description = styled.div`
+  margin-bottom: 15px;
+`
+const ToggleAllComments = styled.span`
+  display: block;
+  padding: 4px;
+  text-align: right;
+  line-height: 1;
+  color: $antBlue;
+  cursor: pointer;
+`
 export default Question

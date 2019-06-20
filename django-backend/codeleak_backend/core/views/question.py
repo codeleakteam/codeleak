@@ -71,7 +71,9 @@ class ListCreateQuestionView(ListCreateAPIView):
                 except ObjectDoesNotExist:
                     return Response({ 'message': 'Tag with the ID: ' + str(t_id) + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({
+                   'question': serializer.data 
+                }, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateQuestionView(UpdateAPIView):

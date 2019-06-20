@@ -24,14 +24,17 @@
     "pm2": "^3.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.5",
-    "react-dom": "^16.8.5"
+    "react-dom": "^16.8.5",
+    "styled-components": "^4.3.1"
   },
   "scripts": {
     "dev": "node server.js",
+    "next-dev": "next",
     "build": "next build",
-    "start": "pm2 start pm2-apps.json"
+    "start": "NODE_ENV=production PORT=3000 node server.js"
   },
   "devDependencies": {
+    "babel-plugin-styled-components": "^1.10.0",
     "file-loader": "^3.0.1",
     "url-loader": "^1.1.2"
   }
