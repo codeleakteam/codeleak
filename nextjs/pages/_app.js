@@ -19,6 +19,7 @@ const theme = {
   darkGrey: '#757575',
   dirtyWhite: '#f1f1f1',
   lightBlack: '#757575',
+  nextBlack: '#141617',
 }
 
 class MyApp extends App {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { message } from 'antd'
+import { Menu, message } from 'antd'
 import moment from 'moment'
 import Comment from '../Comment'
 import UserSignature from '../UserSignature'
@@ -25,15 +25,7 @@ class Answer extends Component {
     description: PropTypes.string.isRequired,
     repository_url: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
-    question: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-    }),
-    author: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      username: PropTypes.string.isRequired,
-      reputation: PropTypes.number.isRequired,
-    }),
+    question: PropTypes.number.isRequired,
     comments: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -64,6 +56,7 @@ class Answer extends Component {
       return EditorState.createWithContent(ContentState.createFromText(description))
     }
   }
+
   createAnswerFromHtml = () => {
     let editorState = this.state.editorState
     let html = stateToHTML(editorState.getCurrentContent())
@@ -130,26 +123,20 @@ class Answer extends Component {
   }
 
   render() {
-    const { created_at, repository_url, author, question, id, score } = this.props
+    const { id, score, question, author, repository_url, created_at } = this.props
     const { editorState } = this.state
-
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
     const postedAt = moment(created_at).fromNow()
-    const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
+    //  const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
 
     return (
       <Card>
         <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
         {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        <PostCTAS
-          postType="answer"
-          submitComment={this.submitComment}
-          updateScore={this.updateAnswerScore}
-          id={id}
-          score={score}
-        />
+        
+        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={id} score={score} />
         {commentSummary.map(c => (
           <Comment
             key={c.id}

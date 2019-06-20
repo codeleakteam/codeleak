@@ -35,7 +35,6 @@ const InlineStyleControls = props => {
           style={type.style}
         />
       ))}
-      <StyleButton onToggle={props.openUrlTab} icon="link" active={props.addUrlOpen ? true : false} />
     </Controls>
   )
 }

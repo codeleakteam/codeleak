@@ -5,6 +5,7 @@ from core.models import Tag
 from core.serializers import TagSerializer
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 class ListCreateTagView(ListCreateAPIView):
     def post(self, request):
@@ -20,11 +21,13 @@ class ListCreateTagView(ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     def get(self, request):
+        query = request.GET.get('q', '')
         only_popular = request.GET.get("only_popular", None)
+
         if only_popular == 'true':
             tags = Tag.objects.order_by('-used_times')[:6]
         else:
-            tags = Tag.objects.all()
+            tags = Tag.objects.filter(Q(title__icontains=query))[:10]
 
         serializer = TagSerializer(tags, many=True)
         return Response({

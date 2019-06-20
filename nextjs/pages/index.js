@@ -14,7 +14,7 @@ class Index extends Component {
   static async getInitialProps() {
     try {
       const questionsRes = await apiGet.getIndex()
-      const tagsRes = await apiGet.getTags()
+      const tagsRes = await apiGet.getTags({q: ''})
       const questions = _.get(questionsRes, 'data.results', null)
       const tags = _.get(tagsRes, 'data.tags', null)
       if (!questions) throw new Error('[getInitialProps] questions not available')

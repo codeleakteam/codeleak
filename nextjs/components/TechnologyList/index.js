@@ -5,14 +5,6 @@ import { Icon } from 'antd'
 import CustomIcon from '../../assets/icons/index'
 
 class TechnologyStack extends Component {
-  state = {
-    otherTechVisible: false,
-  }
-
-  handleOtherTech = () => {
-    this.setState(state => ({ otherTechVisible: !state.otherTechVisible }))
-  }
-
   render() {
     return (
       <React.Fragment>
@@ -28,21 +20,17 @@ class TechnologyStack extends Component {
             )
           })}
         </TechList>
-        <ShowMoreButton onClick={this.handleOtherTech}>
-          <span style={{ color: 'white' }}>More</span>
-          <Icon type="more" style={{ marginLeft: 'auto' }} />
-        </ShowMoreButton>
+
         <OtherTechnologies>
-          {this.state.otherTechVisible &&
-            otherTechs.map(t => {
-              return (
-                <Link href={t.url} key={t.url + t.color + t.name}>
-                  <DropDownTechBox>
-                    <span style={{ color: t.color }}>{t.name}</span>
-                  </DropDownTechBox>
-                </Link>
-              )
-            })}
+          {otherTechs.map(t => {
+            return (
+              <Link href={t.url} key={t.url + t.color + t.name}>
+                <DropDownTechBox>
+                  <span style={{ color: t.color }}>{t.name}</span>
+                </DropDownTechBox>
+              </Link>
+            )
+          })}
         </OtherTechnologies>
       </React.Fragment>
     )
@@ -51,7 +39,7 @@ class TechnologyStack extends Component {
 
 const mainTechs = [
   {
-    name: 'Basic',
+    name: 'Vanilla JS / jQuery',
     color: 'white',
     url: 'https://codesandbox.io/s/github/codesandbox-app/static-template',
   },
@@ -74,6 +62,7 @@ const mainTechs = [
     icon: <CustomIcon name="vue" height="30px" />,
   },
 ]
+
 const otherTechs = [
   {
     name: 'Gatsby',
@@ -135,16 +124,18 @@ const TechList = styled.div`
 
 const TechBox = styled.a`
   position: relative;
+  font-weight: bold;
+  letter-spacing:0.2px;
+  margin:0;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #141617;
+  border: 1px solid;
   padding: 8px;
-  margin: 4px;
   color: white;
-  background-color: #1d2022;
-  border-radius: 3px;
+  background-color: ${props => props.theme.nextBlack};
+  border-radius: 4px;
   cursor: pointer;
   @media screen and (max-width: 940px) {
     width: 33%;
@@ -157,8 +148,7 @@ const TechBox = styled.a`
 
 const DropDownTechBox = styled(TechBox)`
   display: inline-block;
-  margin: 4px 7px 4px 0;
-  margin: 4px;
+  margin: 0;
   flex: auto;
 `
 
