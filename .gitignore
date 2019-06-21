@@ -93,3 +93,9 @@ migrations
 venv
 statics
 *.sqlite3
+
+# sjebo sam
+include
+Scripts
+lib
+tcl
