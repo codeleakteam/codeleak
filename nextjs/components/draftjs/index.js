@@ -4,7 +4,7 @@ import { styleMap } from './config'
 
 class DraftjsEditor extends Component {
   render() {
-    const { editorState, handleKeyCommand, plugins, placeholder, onChange, } = this.props
+    const { editorState, handleKeyCommand, placeholder, onChange } = this.props
     return (
       <Editor
         customStyleMap={styleMap}
@@ -14,7 +14,6 @@ class DraftjsEditor extends Component {
         placeholder={placeholder}
         ref="editor"
         spellCheck={true}
-        plugins={plugins}
       />
     )
   }

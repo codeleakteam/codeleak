@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Input } from 'antd'
-
-import classes from '../AddAnswer/index.scss'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { Button } from 'antd'
 
 export const INLINE_STYLES = [
   { icon: 'bold', style: 'BOLD' },
@@ -19,13 +19,13 @@ const StyleButton = props => {
   if (props.active) {
     type += 'primary'
   }
-  return <Button type={type} onMouseDown={onToggle} icon={props.icon} className={classes.answer__button} />
+  return <StyledButton type={type} onMouseDown={onToggle} icon={props.icon} />
 }
 
 const InlineStyleControls = props => {
   var currentStyle = props.editorState.getCurrentInlineStyle()
   return (
-    <div className={classes.answer__buttons}>
+    <Controls>
       {INLINE_STYLES.map(type => (
         <StyleButton
           key={type.icon}
@@ -35,9 +35,26 @@ const InlineStyleControls = props => {
           style={type.style}
         />
       ))}
-      <StyleButton onToggle={props.openUrlTab} icon="link" active={props.addUrlOpen ? true : false} />
-    </div>
+    </Controls>
   )
+}
+
+const Controls = styled.div`
+  margin-bottom: 8px;
+`
+
+const StyledButton = styled(Button)`
+  margin-right: 4px;
+  &:last-of-type {
+    margin-right: 0;
+  }
+`
+
+InlineStyleControls.propTypes = {
+  editorState: PropTypes.shape({
+    getCurrentInlineStyle: PropTypes.func.isRequired,
+  }),
+  onToggle: PropTypes.func.isRequired,
 }
 
 export default InlineStyleControls

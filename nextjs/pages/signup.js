@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd'
-
-import classes from '../styles/signupAndSignIn/index.scss'
+import styled from 'styled-components'
 
 class SignUp extends Component {
   handleSubmit = e => {
@@ -17,21 +16,19 @@ class SignUp extends Component {
     const { getFieldDecorator } = this.props.form
 
     return (
-      <div className={classes.container}>
-        <h2 className={classes.heading}>codeLeak</h2>
-        <p className={classes.description}>
-          An online-editor based question and answer platform for front-end developers
-        </p>
-        <div className={classes.container__socials}>
-          <Button type="primary" className={classes.socials__link} icon="google">
+      <Wrapper>
+        <Title>codeLeak</Title>
+        <Description>An online-editor based question and answer platform for front-end developers</Description>
+        <Socials>
+          <StyledSocialButton type="primary" icon="google">
             Google
-          </Button>
-          <Button type="primary" className={classes.socials__link} icon="twitter">
+          </StyledSocialButton>
+          <StyledSocialButton type="primary" icon="twitter">
             Twitter
-          </Button>
-        </div>
+          </StyledSocialButton>
+        </Socials>
 
-        <Form onSubmit={this.handleSubmit} className="login-form">
+        <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {getFieldDecorator('email', {
               rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
@@ -83,20 +80,52 @@ class SignUp extends Component {
             )}
           </Form.Item>
           <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className={['login-form-button', classes['btn--register']].join(' ')}
-            >
+            <StyledRegisterButton type="primary" htmlType="submit">
               Register
-            </Button>
+            </StyledRegisterButton>
           </Form.Item>
         </Form>
-      </div>
+      </Wrapper>
     )
   }
 }
 
 const WrapperSignUpForm = Form.create({ name: 'signup' })(SignUp)
+const Wrapper = styled.div`
+  max-width: 500px;
+  width: 70%;
+  margin: 0 auto;
+`
 
+const Socials = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+`
+
+const Title = styled.h2`
+  font-size: 44px;
+  line-height: 76px;
+  text-align: center;
+  color: black;
+`
+
+const Description = styled.p`
+  font-size: 14px;
+  line-height: 22px;
+  color: black;
+`
+
+const StyledSocialButton = styled(Button)`
+  margin-right: 16px;
+  max-width: 112px;
+  margin-bottom: 8px;
+  &:last-of-type {
+    margin-right: 0;
+  }
+`
+
+const StyledRegisterButton = styled(Button)`
+  width: 100%;
+`
 export default WrapperSignUpForm

@@ -11,8 +11,8 @@ export const apiGet = {
   getQuestion: id => {
     return axios.get(`${BASE_URL}/api/questions/${id}`)
   },
-  getTags: () => {
-    return axios.get(`${BASE_URL}/api/tags`)
+  getTags: ({q}) => {
+    return axios.get(`${BASE_URL}/api/tags?q=${q}`)
   },
   getUserProfile: id => axios.get(`${BASE_URL}/api/users/${id}`),
 }

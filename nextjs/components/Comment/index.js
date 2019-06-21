@@ -1,27 +1,77 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import _ from 'lodash'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import PropTypes from 'prop-types'
-
-import classes from './index.scss'
 
 const Comment = ({ authorName, content, score, upvoteComment, reportComment }) => {
   return (
-    <div className={classes.comment__container}>
-      <div className={classes.comment__heading}>
-        <span className={classes.comment__user}>{authorName}</span>
-        <span className={classes.comment__points}>{score} points</span>
-      </div>
-      <div className={classes.comment__box}>
-        <div className={classes.comment__controls}>
+    <Wrapper>
+      <Heading>
+        <AuthorName>{authorName}</AuthorName>
+        <PointsCounter>{score} points</PointsCounter>
+      </Heading>
+      <Row>
+        <ControlsWrapper>
           <FontAwesomeIcon icon="angle-up" size="lg" onClick={upvoteComment} />
           <FontAwesomeIcon icon="ban" size="sm" onClick={reportComment} />
-        </div>
-        <p className={classes.comment__text}>{content}</p>
-      </div>
-    </div>
+        </ControlsWrapper>
+        <CommentContent>{content}</CommentContent>
+      </Row>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  border: 1px solid $antGray;
+  width: 100%;
+  max-width: 450px;
+  margin: 8px 0 0 auto;
+  padding: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+`
+
+const Row = styled.div`
+  display: flex;
+`
+const Heading = styled.div`
+  line-height: 1;
+`
+
+const AuthorName = styled.span`
+  font-size: 13px;
+  line-height: 14px;
+  &:after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: black;
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px;
+  }
+`
+
+const PointsCounter = styled.span`
+  font-size: 13px;
+  line-height: 14px;
+`
+
+const ControlsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: 8px;
+  align-items: center;
+`
+
+const CommentContent = styled.span`
+  font-size: 13px;
+  line-height: 14px;
+`
 
 Comment.propTypes = {
   authorName: PropTypes.string.isRequired,
