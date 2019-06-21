@@ -60,7 +60,7 @@ class QuestionFullPage extends Component {
 
   render() {
     const { question, error } = this.props
-    console.log('[render]', { error, question })
+    // console.log('[render]', { error, question })
     const leftSideSection = (
       <React.Fragment>
         <Head>
