@@ -109,5 +109,5 @@ PostCTAS.propTypes = {
   id: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   updateScore: PropTypes.func.isRequired,
-  submitComment: PropTypes.func.isRequired,
+  // submitComment: PropTypes.func.isRequired,
 }
