@@ -11,10 +11,16 @@ export const apiGet = {
   getQuestion: id => {
     return axios.get(`${BASE_URL}/api/questions/${id}`)
   },
-  getTags: ({q}) => {
+  getTags: ({ q }) => {
     return axios.get(`${BASE_URL}/api/tags?q=${q}`)
   },
   getUserProfile: id => axios.get(`${BASE_URL}/api/users/${id}`),
+  searchQuery: q =>
+    axios.get(`${BASE_URL}/api/search`, {
+      params: {
+        q,
+      },
+    }),
 }
 
 export const apiPost = {

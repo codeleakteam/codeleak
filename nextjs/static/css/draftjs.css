@@ -27,9 +27,13 @@
   z-index: 1;
   /* custom */
   border: 1px solid #d9d9d9;
-  border-radius: 3px;
-
+  border-radius: 4px;
   margin-bottom: 4px;
+  transition: all 300ms;
+}
+.DraftEditor-editorContainer:hover {
+  /* custom */
+  border-color: #40a9ff;
 }
 .public-DraftEditor-block {
   position: relative;

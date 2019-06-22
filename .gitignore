@@ -94,7 +94,7 @@ venv
 statics
 *.sqlite3
 
-# sjebo sam
+# sjebo sam env
 include
 Scripts
 lib
