@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
-import { Input, Button } from 'antd'
 import BurgerMenu from '../BurgerMenu'
 import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
+import Search from '../Search'
 
 const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBurger }) => {
   return (
     <React.Fragment>
       <Wrapper isResponsive={isResponsive}>
-        <StyledInput placeholder="Search questions" />
+        <Search />
         <List>
           <ListItem>
             <Link href="/">
@@ -43,13 +43,6 @@ const List = styled.ul`
     flex-direction: column;
     margin-left: 0;
     padding-left: 0;
-  }
-`
-
-const StyledInput = styled(Input)`
-  width: 364px;
-  @media screen and (max-width: 364px) {
-    width: 100%;
   }
 `
 
