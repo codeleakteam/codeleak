@@ -25,17 +25,21 @@ class QuestionFullPage extends Component {
       }
     }
   }
+
   state = {
     questionScore: null,
     answers: _.get(this.props, 'question.answers', []),
+    authorReputation: _.get(this.props, 'question.author.reputation'),
   }
 
   updateQuestionScore = async (type, questionId, userId) => {
     try {
       const res = await apiPut.updateQuestionScore(type, questionId, userId)
       const score = _.get(res, 'data.question.score', null)
+      const authorReputation = _.get(res, 'data.question.author.reputation', null)
+
       if (!score) throw new Error('No score on updaeQuestionScore received')
-      this.setState({ questionScore: score })
+      this.setState(state => ({ questionScore: score, authorReputation }))
     } catch (error) {
       console.error('[updateQuestionScore]', { error })
       message.error('Internal server error')
@@ -82,6 +86,7 @@ class QuestionFullPage extends Component {
               comments={question.comments}
               tags={question.tags}
               author={question.author}
+              authorReputation={this.state.authorReputation}
             />
             <AnswerList answers={this.state.answers} />
             <AddAnswer questionId={question.id} sendAnswer={this.sendAnswerOnQuestion} />
