@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
+
 import PropTypes from 'prop-types'
 import { Menu, message } from 'antd'
 import moment from 'moment'
@@ -17,6 +19,7 @@ class Answer extends Component {
     commentsReversed: [],
     commentSummary: true,
     answerScore: null,
+    authorReputation: _.get(this.props, 'author.reputation'),
   }
 
   static propTypes = {
@@ -39,12 +42,15 @@ class Answer extends Component {
   }
 
   componentDidMount() {
+    console.log('propovi', this.props)
+
     const description = this.getDescription(this.props.description)
     this.setState({
       comments: this.props.comments,
       commentsReversed: this.props.comments.reverse(),
       questionScore: this.props.score,
       editorState: description,
+      // authorReputation: this.props.author.reputation,
     })
   }
 
@@ -67,7 +73,7 @@ class Answer extends Component {
 
   submitComment = async (answer_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment('ANSWER_COMMENT', question_id, author_id, content)
+      const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content)
       const comment = _.get(res, 'data.comment', null)
       if (!comment) throw new Error('No comment object available')
       this.setState(state => ({
@@ -85,7 +91,7 @@ class Answer extends Component {
   upvoteComment = async (userId, commentId) => {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'ANSWER_COMMENT', commentId)
-      const comment = _.get(res, 'data.comment', null)
+      let comment = _.get(res, 'data', null)
       if (!comment) throw new Error('No comment object available')
       let index = _.findIndex(this.state.comments, { id: comment.comment.id })
       let newArr = this.state.comments
@@ -112,10 +118,11 @@ class Answer extends Component {
 
   updateAnswerScore = async (type, answerId, userId) => {
     try {
-      const res = await apiPut.updateAnswerScore(type, questionId, userId)
+      const res = await apiPut.updateAnswerScore(type, answerId, userId)
       const score = _.get(res, 'data.answer.score', null)
+      const authorReputation = _.get(res, 'data.answer.author.reputation', null)
       if (!score) throw new Error('Retrieved score is null or undefined')
-      this.setState({ questionScore: score })
+      this.setState({ answerScore: score, authorReputation })
     } catch (error) {
       console.error('[updateAnswerScore]', { error })
       message.error('Internal server error')
@@ -133,10 +140,22 @@ class Answer extends Component {
 
     return (
       <Card>
-        <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
+        <UserSignature
+          id={author.id}
+          username={author.username}
+          reputation={this.state.authorReputation}
+          postedAt={postedAt}
+        />
         {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
 
-        <PostCTAS postType="answer" updateScore={this.updateAnswerScore} id={id} score={score} />
+        <PostCTAS
+          postType="answer"
+          updateScore={this.updateAnswerScore}
+          id={id}
+          score={score}
+          updatedScore={this.state.answerScore}
+          submitComment={this.submitComment}
+        />
         {commentSummary.map(c => (
           <Comment
             key={c.id}
