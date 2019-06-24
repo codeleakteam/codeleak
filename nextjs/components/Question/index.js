@@ -35,7 +35,7 @@ class Question extends Component {
     }),
   }
   componentDidMount() {
-    const { comments, description } = this.props
+    const { comments, description, author } = this.props
     const editorState = this.getDescription(description)
     this.setState({
       editorState: editorState,
@@ -69,7 +69,7 @@ class Question extends Component {
           comments: [...state.comments, comment.comment],
           commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
         }))
-        message.error('Comment is successfully submited!')
+        message.success('Comment is successfully submited!')
       }
     } catch (error) {
       console.error('[submitComment]', { error })
@@ -124,17 +124,17 @@ class Question extends Component {
       repository_url,
       updateQuestionScore,
       updatedQuestionScore,
+      authorReputation,
     } = this.props
     let reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
     const postedAt = moment(created_at).fromNow()
     const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
-
     return (
       <Card>
         <Title>{title}</Title>
-        <UserSignature id={author.id} username={author.username} reputation={author.reputation} postedAt={postedAt} />
+        <UserSignature id={author.id} username={author.username} reputation={authorReputation} postedAt={postedAt} />
         <TagsList>
           {tags.map(q => {
             return (
@@ -151,6 +151,7 @@ class Question extends Component {
           updateScore={updateQuestionScore}
           id={id}
           score={score}
+          updatedScore={updatedQuestionScore}
         />
         {commentSummary.map(c => (
           <Comment

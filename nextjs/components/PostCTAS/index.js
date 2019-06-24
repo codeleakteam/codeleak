@@ -19,14 +19,14 @@ export default class PostCTAS extends React.Component {
   handleCommentInputChange = e => this.setState({ commentValue: e.target.value })
 
   render() {
-    const { postType, id, score } = this.props
+    const { postType, id, score, updatedScore } = this.props
     return (
       <Column>
         <Row>
           <div>
             <VoteButton onClick={() => this.props.updateScore('true', id, 1)}>
               <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-              <CounterValue>{score}</CounterValue>
+              <CounterValue>{updatedScore ? updatedScore : score}</CounterValue>
             </VoteButton>
             <VoteButton onClick={() => this.props.updateScore('false', id, 1)}>
               <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
@@ -42,7 +42,8 @@ export default class PostCTAS extends React.Component {
             <StyledSendAnswerButton
               type="primary"
               onClick={() => {
-                this.props.submitComment(this.props.id, 2, this.state.commentValue)
+                this.props.submitComment(this.props.id, 1, this.state.commentValue)
+                this.toggleCommentVisibility()
               }}
             >
               Send your comment
@@ -109,5 +110,7 @@ PostCTAS.propTypes = {
   id: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   updateScore: PropTypes.func.isRequired,
+  updatedScore: PropTypes.number,
+
   // submitComment: PropTypes.func.isRequired,
 }

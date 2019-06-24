@@ -19,7 +19,6 @@ export default function UserSignature({ id, username, reputation, postedAt }) {
               <AuthorUsername>{username}</AuthorUsername>
             </a>
           </Link>
-
           <DotSeparator />
           <PostTimestamp>{postedAt}</PostTimestamp>
         </Row>
