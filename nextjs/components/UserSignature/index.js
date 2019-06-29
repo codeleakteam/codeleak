@@ -60,6 +60,7 @@ const AuthorAvatar = styled.img`
   height: 40px;
   border-radius: 100%;
   margin-right: 10px;
+  cursor: pointer;
 `
 
 const AuthorUsername = styled.span`
