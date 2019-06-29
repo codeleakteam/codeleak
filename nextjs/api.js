@@ -21,6 +21,7 @@ export const apiGet = {
         q,
       },
     }),
+  getTagList: () => axios.get(`${BASE_URL}/api/tags`),
 }
 
 export const apiPost = {
