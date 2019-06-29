@@ -18,7 +18,7 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBu
             </Link>
           </ListItem>
           <ListItem>
-            <Link href="/">
+            <Link href="/taglist">
               <Anchor>Tags</Anchor>
             </Link>
           </ListItem>
