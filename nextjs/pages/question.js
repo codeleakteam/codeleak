@@ -64,15 +64,16 @@ class QuestionFullPage extends Component {
 
   render() {
     const { question, error } = this.props
-    // console.log('[render]', { error, question })
-    const leftSideSection = (
-      <React.Fragment>
+
+    return (
+      <div>
         <Head>
           <title>{!error ? question.title : 'Internal server error'}</title>
         </Head>
 
         {error && <Alert message="Internal server error" type="error" />}
         {!error && (
+<<<<<<< HEAD
           <React.Fragment>
             <Question
               id={question.id}
@@ -91,15 +92,45 @@ class QuestionFullPage extends Component {
             <AnswerList answers={this.state.answers} />
             <AddAnswer questionId={question.id} sendAnswer={this.sendAnswerOnQuestion} />
           </React.Fragment>
+=======
+          <TwoSideLayout
+            mainSectionElement={
+              <QuestionWithAnswersWrapper
+                answers={this.state.answers}
+                sendAnswerOnQuestion={this.sendAnswerOnQuestion}
+                updateQuestionScore={this.updateQuestionScore}
+                questionScore={this.state.questionScore}
+                question={question}
+              />
+            }
+          />
+>>>>>>> Profile page WIP
         )}
-      </React.Fragment>
-    )
-    return (
-      <div>
-        <TwoSideLayout mainSectionElement={leftSideSection} />
       </div>
     )
   }
+}
+
+function QuestionWithAnswersWrapper({ question, questionScore, updateQuestionScore, sendAnswerOnQuestion, answers }) {
+  return (
+    <React.Fragment>
+      <Question
+        id={question.id}
+        title={question.title}
+        description={question.description}
+        score={question.score}
+        created_at={question.created_at}
+        repository_url={question.repository_url}
+        updateQuestionScore={updateQuestionScore}
+        updatedQuestionScore={questionScore}
+        comments={question.comments}
+        tags={question.tags}
+        author={question.author}
+      />
+      <AnswerList answers={answers} />
+      <AddAnswer questionId={question.id} sendAnswer={sendAnswerOnQuestion} />
+    </React.Fragment>
+  )
 }
 
 export default QuestionFullPage
