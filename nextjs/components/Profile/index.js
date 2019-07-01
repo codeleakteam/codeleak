@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
