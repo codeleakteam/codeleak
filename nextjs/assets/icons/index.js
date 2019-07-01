@@ -12,6 +12,7 @@ import TwitterIcon from './twitterIcon'
 import GithubIcon from './githubIcon'
 import EmailIcon from './emailIcon'
 import LocationIcon from './locationIcon'
+import JobIcon from './jobIcon'
 
 const Icon = props => {
   switch (props.name) {
@@ -39,6 +40,8 @@ const Icon = props => {
       return <EmailIcon {...props} />
     case 'location':
       return <LocationIcon {...props} />
+    case 'job':
+      return <JobIcon {...props} />
     default:
       return
   }

@@ -21,7 +21,7 @@ TagWithLink.propTypes = {
 }
 
 const StyledAntTag = styled(Tag)`
-  margin: 4px 0;
+  margin:4px 2px;
   text-align: center;
   padding: 0 5px;
   border: 1px solid #e0e0e0;

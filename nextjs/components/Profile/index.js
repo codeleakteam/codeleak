@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button } from 'antd'
 import PropTypes from 'prop-types'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
@@ -31,49 +31,59 @@ const Profile = ({
         <Username>@{username}</Username>
         <UserBio>Co-founder & CEO, Hashnode</UserBio>
         <Button default>Edit profile</Button>
-
         <Break />
 
         <div>
-          <Row>
-            <span
-              css={css`
-                font-size: 1rem;
+          <UserSection>
+            <Row
+              css={`
+                align-items: center;
               `}
             >
-              📍 Belgrade, Serbia
-            </span>
-          </Row>
-          <Row>
-            <span
-              css={css`
-                font-size: 1rem;
-              `}
-            >
-              💻 Full-stack web developer @ Makonda
-            </span>
-          </Row>
+              <UserSectionTitle>REPUTATION</UserSectionTitle>
+            </Row>
+            <ReputationCounter>205</ReputationCounter>
+          </UserSection>
+
+          <UserSection>
+            <UserSectionTitle>INFO</UserSectionTitle>
+            <Row>
+              <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
+              <GreyText>Belgrade, Serbia</GreyText>
+            </Row>
+            <Row>
+              <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
+              <BlueText>Looking for a job</BlueText>
+            </Row>
+            <Row>
+              <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
+              <BlueText>Sign In to view email</BlueText>
+            </Row>
+          </UserSection>
         </div>
 
-        <Links>
-          <Link href="">
-            <CustomIcon name="website" height="22px" />
-          </Link>
+        <UserSection>
+          <UserSectionTitle>Links</UserSectionTitle>
+          <Links>
+            <Link href="">
+              <LoweredOpacityIcon name="website" height="22px" />
+            </Link>
 
-          <Link href="">
-            <CustomIcon name="twitter" height="22px" />
-          </Link>
+            <Link href="">
+              <LoweredOpacityIcon name="twitter" height="22px" />
+            </Link>
 
-          <Link href="">
-            <CustomIcon name="github" height="22px" />
-          </Link>
-
-          <Link href="">
-            <CustomIcon name="email" height="22px" />
-          </Link>
-        </Links>
+            <Link href="">
+              <LoweredOpacityIcon name="github" height="22px" />
+            </Link>
+          </Links>
+        </UserSection>
       </LeftSide>
       <RightSide>
+        <Card>
+          <ContentSwitchButton active>Answers(13)</ContentSwitchButton>
+          <ContentSwitchButton>Questions(0)</ContentSwitchButton>
+        </Card>
         <Card>
           <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
         </Card>
@@ -81,6 +91,7 @@ const Profile = ({
     </Wrapper>
   )
 }
+
 Profile.propTypes = {
   id: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired,
@@ -104,9 +115,12 @@ const Wrapper = styled.div`
 
 const Row = styled.div`
   display: flex;
+  align-items: center;
+  margin-bottom: 2px;
 `
 
 const LeftSide = styled.div`
+  width: 246px;
   margin-right: 32px;
   display: flex;
   flex-direction: column;
@@ -120,18 +134,20 @@ const AvatarWrapper = styled.div`
   height: 246px;
   overflow: hidden;
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 `
 
 const Avatar = styled.img`
   width: 100%;
 `
-
-const CountBox = styled.div`
-  border: 1px solid ${props => props.theme.darkGrey};
-  padding: 8px;
-  margin-bottom: 8px;
-  font-size: 18px;
+const ContentSwitchButton = styled.span`
+  font-weight: bold;
+  color: ${props => (props.active ? props.theme.antBlue : props.theme.darkerDarkGrey)};
+  text-transform: uppercase;
+  margin-right: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const Break = styled.div`
@@ -142,31 +158,67 @@ const Break = styled.div`
   margin: 10px 0;
 `
 
-const Links = styled.div`
-  display: flex;
+const UserSectionTitle = styled.p`
+  font-size 0.85rem;
+  color: ${props => props.theme.darkerDarkGrey};
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: .64;
+  margin-bottom: 5px;
+  margin-right:5px;
 `
 
-const Link = styled.a`
+const ReputationIcon = styled.img`
+  width: 22px;
+  height: 22px;
+  margin-bottom: 3px;
   margin-right: 5px;
 `
 
-const StyledCustomIconWithMargin = styled(CustomIcon)`
-  margin-right: 7px;
+const ReputationCounter = styled.p`
+  color: ${props => props.theme.nextBlack};
+  font-weight: bold;
+  font-size: 1.1rem;
+  line-height: 1;
+`
+const Links = styled.div`
+  display: flex;
+  margin: -5px;
 `
 
-const RightSide = styled.div``
-const UserCompanyWrapper = styled.div``
+const Link = styled.a`
+  margin: 5px;
+`
+
+const UserSection = styled.div`
+  margin-bottom: 15px;
+`
+
+const GreyText = styled.span`
+  font-size: 0.9rem;
+  color: ${props => props.theme.darkerDarkGrey};
+`
+const BlueText = styled.span`
+  font-size: 0.9rem;
+  color: ${props => props.theme.antBlue};
+`
+
+const LoweredOpacityIcon = styled(CustomIcon)`
+  margin-right: 8px;
+  opacity: 0.64;
+`
+
+const RightSide = styled.div`
+  width: 100%;
+`
+
 const Username = styled.p`
   font-size: 16px;
   color: ${props => props.theme.darkerDarkGrey};
   opacity: 0.64;
   margin-bottom: 15px;
 `
-const UserHeadline = styled.span`
-  color: black;
-  font-size: 20px;
-  line-height: 28px;
-`
+
 const UserFullName = styled.span`
   font-size: 25px;
   line-height: 25px;

@@ -73,26 +73,6 @@ class QuestionFullPage extends Component {
 
         {error && <Alert message="Internal server error" type="error" />}
         {!error && (
-<<<<<<< HEAD
-          <React.Fragment>
-            <Question
-              id={question.id}
-              title={question.title}
-              description={question.description}
-              score={question.score}
-              created_at={question.created_at}
-              repository_url={question.repository_url}
-              updateQuestionScore={this.updateQuestionScore}
-              updatedQuestionScore={this.state.questionScore}
-              comments={question.comments}
-              tags={question.tags}
-              author={question.author}
-              authorReputation={this.state.authorReputation}
-            />
-            <AnswerList answers={this.state.answers} />
-            <AddAnswer questionId={question.id} sendAnswer={this.sendAnswerOnQuestion} />
-          </React.Fragment>
-=======
           <TwoSideLayout
             mainSectionElement={
               <QuestionWithAnswersWrapper
@@ -104,7 +84,6 @@ class QuestionFullPage extends Component {
               />
             }
           />
->>>>>>> Profile page WIP
         )}
       </div>
     )
