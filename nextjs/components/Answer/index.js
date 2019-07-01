@@ -42,7 +42,7 @@ class Answer extends Component {
   }
 
   componentDidMount() {
-    console.log('propovi', this.props)
+    // console.log('propovi', this.props)
 
     const description = this.getDescription(this.props.description)
     this.setState({

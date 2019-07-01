@@ -9,15 +9,15 @@ const Navigation = ({ isMenuActive, handleBurgerMenuClick, showLogo, showBurger,
   const navJSX = isLoggedIn ? (
     <LoggedInNav
       isMenuActive={isMenuActive}
-      handleBurgerMenuClick={handleBurgerMenuClick}
+      handleBurgerMenu={handleBurgerMenuClick}
       isResponsive={isResponsive}
       showBurger={showBurger}
     />
   ) : (
     <LoggedOutNav
-      isResponsive={isResponsive}
       isMenuActive={isMenuActive}
       handleBurgerMenu={handleBurgerMenuClick}
+      isResponsive={isResponsive}
       showBurger={showBurger}
     />
   )

@@ -6,22 +6,32 @@ import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
 import Search from '../Search'
 
-const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBurger }) => {
+const links = [
+  {
+    name: 'Jobs',
+    href: '/',
+  },
+  {
+    name: 'Tags',
+    href: '/taglist',
+  },
+]
+
+const LoggedInNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger }) => {
   return (
     <React.Fragment>
       <Wrapper isResponsive={isResponsive}>
-        <Search />
+        <Search isResponsive={isResponsive} />
         <List>
-          <ListItem>
-            <Link href="/">
-              <Anchor>Jobs</Anchor>
-            </Link>
-          </ListItem>
-          <ListItem>
-            <Link href="/taglist">
-              <Anchor>Tags</Anchor>
-            </Link>
-          </ListItem>
+          {links.map(l => {
+            return (
+              <ListItem key={l.name}>
+                <Link href={l.href}>
+                  {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
+                </Link>
+              </ListItem>
+            )
+          })}
           <ListItem>
             <Link href="/profile">
               <UserAvatar />
@@ -29,7 +39,7 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBu
           </ListItem>
         </List>
       </Wrapper>
-      {showBurger && <BurgerMenu isMenuActive={isMenuActive} onClick={handleBurgerMenuClick} />}
+      {showBurger && <BurgerMenu isMenuActive={isMenuActive} onClick={handleBurgerMenu} />}
     </React.Fragment>
   )
 }
@@ -56,7 +66,7 @@ const UserAvatar = styled.div`
 
 LoggedInNav.propTypes = {
   isMenuActive: PropTypes.bool.isRequired,
-  handleBurgerMenuClick: PropTypes.func.isRequired,
+  handleBurgerMenu: PropTypes.func.isRequired,
   showBurger: PropTypes.bool.isRequired,
   isResponsive: PropTypes.bool.isRequired,
 }

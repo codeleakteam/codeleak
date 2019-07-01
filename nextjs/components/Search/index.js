@@ -27,12 +27,12 @@ class Search extends Component {
   }
 
   render() {
+    const { isResponsive } = this.props
+
     let daRealOptions = []
     Object.keys(this.state.results).map(group => {
       daRealOptions.push({ title: group, children: this.state.results[group] })
     })
-    console.log(daRealOptions)
-
     const options = daRealOptions.map(group => {
       return (
         <OptGroup key={group.title} label={group.title}>
@@ -71,7 +71,7 @@ class Search extends Component {
           className="certain-category-search"
           dropdownClassName="certain-category-search-dropdown"
           dropdownMatchSelectWidth={false}
-          dropdownStyle={{ width: 300 }}
+          dropdownStyle={{ width: isResponsive ? 100 : 300 }}
           size="large"
           style={{ width: '100%' }}
           dataSource={options}
@@ -84,10 +84,15 @@ class Search extends Component {
   }
 }
 
+const dropdown = {
+  width: 300,
+}
+
 const SearchWrapper = styled.div`
   width: 364px;
-  @media screen and (max-width: 364px) {
-    width: 100%;
+  @media screen and (max-width: 750px) {
+    max-width: 96%;
+    margin: 4px 0;
   }
 `
 
