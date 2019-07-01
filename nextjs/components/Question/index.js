@@ -63,7 +63,7 @@ class Question extends Component {
     try {
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
       const comment = _.get(res, 'data', null)
-      console.log('[submitComment]', { comment })
+      // console.log('[submitComment]', { comment })
       if (comment) {
         this.setState(state => ({
           comments: [...state.comments, comment.comment],
@@ -97,7 +97,7 @@ class Question extends Component {
         message.success('Comment score is successfully updated!')
       }
     } catch (error) {
-      console.log(error.response.message)
+      // console.log(error.response.message)
 
       message.error('Could not upvote comment!')
     }

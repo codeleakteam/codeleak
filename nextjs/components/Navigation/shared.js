@@ -5,16 +5,16 @@ export const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   flex: 1;
-  @media screen and (max-width: 745px) {
+  @media screen and (max-width: 750px) {
     display: none;
+    ${props =>
+      props.isResponsive &&
+      css`
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      `}
   }
-  ${props =>
-    props.isResponsive &&
-    css`
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    `}
 `
 
 export const Anchor = styled.a`

@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { Input } from 'antd'
 import BurgerMenu from '../BurgerMenu'
 import { Wrapper, ListItem, Anchor } from './shared'
+import Search from '../Search'
 
-const LoggedOutNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showBurger }) => {
+const LoggedOutNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger }) => {
   return (
     <React.Fragment>
       <Wrapper isResponsive={isResponsive}>
-        <StyledInput placeholder="Search question" />
+        <Search isResponsive={isResponsive} />
         <List>
           <ListItem>
             <Link href="/signin">
@@ -24,7 +25,7 @@ const LoggedOutNav = ({ isMenuActive, handleBurgerMenuClick, isResponsive, showB
           </ListItem>
         </List>
       </Wrapper>
-      {showBurger && <BurgerMenu menuActive={isMenuActive} onClick={handleBurgerMenuClick} />}
+      {showBurger && <BurgerMenu isMenuActive={isMenuActive} onClick={handleBurgerMenu} />}
     </React.Fragment>
   )
 }
@@ -51,7 +52,7 @@ const StyledInput = styled(Input)`
 
 LoggedOutNav.propTypes = {
   isMenuActive: PropTypes.bool.isRequired,
-  handleBurgerMenuClick: PropTypes.func.isRequired,
+  handleBurgerMenu: PropTypes.func.isRequired,
   showBurger: PropTypes.bool.isRequired,
   isResponsive: PropTypes.bool.isRequired,
 }

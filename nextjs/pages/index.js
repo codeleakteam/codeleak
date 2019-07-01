@@ -42,7 +42,7 @@ class Index extends Component {
         <Head>
           <title>Codeleak</title>
         </Head>
-        {!this.props.isloggedIn && <Banner />}
+        {!this.props.isLoggedIn && <Banner />}
         {this.props.error && <Alert message="Internal server error" type="error" />}
         {!this.props.error && (
           <React.Fragment>
@@ -65,7 +65,7 @@ class Index extends Component {
 
 const Wrapper = styled.div`
   ${props =>
-    props.isLoggedIn &&
+    !props.isLoggedIn &&
     css`
       margin-top: 350px;
       @media screen and (max-width: 740px) {
