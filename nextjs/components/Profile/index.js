@@ -17,22 +17,28 @@ const Profile = ({
   company_headquarters,
   full_name,
   username,
+  location,
+  looking_for_job,
+  website_url,
+  twitter_username,
+  github_username,
+  changeTab,
+  activeTab,
 }) => {
   return (
     <Wrapper>
       <LeftSide>
         <AvatarWrapper>
-          <Avatar
-            src={`https://hashnode.imgix.net/res/hashnode/image/upload/v1559308217154/bN4BiCPyN.jpeg?w=400&h=400&fit=crop&crop=faces&auto=format,enhance&q=60`}
-            alt="avatar"
-          />
+          <Avatar src={avatar} alt={username} />
         </AvatarWrapper>
         <UserFullName>{full_name}</UserFullName>
         <Username>@{username}</Username>
-        <UserBio>Co-founder & CEO, Hashnode</UserBio>
+        <UserBio>
+          {role_in_company} {company && '@'} {company}
+          {company_headquarters && ','} {company_headquarters}
+        </UserBio>
         <Button default>Edit profile</Button>
         <Break />
-
         <div>
           <UserSection>
             <Row
@@ -42,19 +48,21 @@ const Profile = ({
             >
               <UserSectionTitle>REPUTATION</UserSectionTitle>
             </Row>
-            <ReputationCounter>205</ReputationCounter>
+            <ReputationCounter>{reputation}</ReputationCounter>
           </UserSection>
 
           <UserSection>
             <UserSectionTitle>INFO</UserSectionTitle>
             <Row>
               <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-              <GreyText>Belgrade, Serbia</GreyText>
+              <GreyText>{location}</GreyText>
             </Row>
-            <Row>
-              <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
-              <BlueText>Looking for a job</BlueText>
-            </Row>
+            {looking_for_job && (
+              <Row>
+                <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
+                <BlueText>Looking for a job</BlueText>
+              </Row>
+            )}
             <Row>
               <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
               <BlueText>Sign In to view email</BlueText>
@@ -65,27 +73,39 @@ const Profile = ({
         <UserSection>
           <UserSectionTitle>Links</UserSectionTitle>
           <Links>
-            <Link href="">
-              <LoweredOpacityIcon name="website" height="22px" />
-            </Link>
-
-            <Link href="">
-              <LoweredOpacityIcon name="twitter" height="22px" />
-            </Link>
-
-            <Link href="">
-              <LoweredOpacityIcon name="github" height="22px" />
-            </Link>
+            {website_url && (
+              <Link href={website_url} target="_blank">
+                <LoweredOpacityIcon name="website" height="22px" />
+              </Link>
+            )}
+            {twitter_username && (
+              <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
+                <LoweredOpacityIcon name="twitter" height="22px" />
+              </Link>
+            )}
+            {github_username && (
+              <Link href={`https://github.com/${github_username}`} target="_blank">
+                <LoweredOpacityIcon name="github" height="22px" />
+              </Link>
+            )}
           </Links>
         </UserSection>
       </LeftSide>
       <RightSide>
         <Card>
-          <ContentSwitchButton active>Answers(13)</ContentSwitchButton>
-          <ContentSwitchButton>Questions(0)</ContentSwitchButton>
+          <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
+            Answers({answers.length})
+          </ContentSwitchButton>
+          <ContentSwitchButton id="questions" onClick={changeTab} active={activeTab === 'questions' ? true : false}>
+            Questions({questions.length})
+          </ContentSwitchButton>
         </Card>
         <Card>
-          <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
+          {activeTab === 'answers' ? (
+            <RecentActivities type="Answers" typeCounts={answers.length} data={answers} />
+          ) : (
+            <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
+          )}
         </Card>
       </RightSide>
     </Wrapper>

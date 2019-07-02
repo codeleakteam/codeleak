@@ -19,6 +19,7 @@ const QuestionList = ({ questions }) => {
             authorId={question.author.id}
             questionId={question.id}
             slug={question.slug}
+            authorAvatar={question.author.avatar}
           />
         )
       })}

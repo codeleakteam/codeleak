@@ -34,7 +34,7 @@ RecentActivities.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
       score: PropTypes.number.isRequired,
       answers: PropTypes.array.isRequired,
       slug: PropTypes.string.isRequired,
