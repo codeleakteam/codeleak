@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import Head from 'next/head'
 import TwoSideLayout from '../components/TwoSideLayout'
-import Jobs from '../components/SideWidgets/Jobs'
 import Profile from '../components/Profile'
 import { apiGet } from '../api'
 import _ from 'lodash'
@@ -25,13 +25,17 @@ class ProfilePage extends Component {
     }
   }
   render() {
+    console.log("[render]", this.props.error, this.props.user)
     return (
-      <div>
-        {this.props.error && <Alert message="Could not load profile!" type="error" />}
+      <React.Fragment>
+        <Head>
+          <title>{!this.props.error ? this.props.user.full_name: 'Internal server error'}</title>
+        </Head>
+        {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (
-          <TwoSideLayout mainSectionElement={<Profile {...this.props.user} />} rightSectionElement={<Jobs />} />
+          <TwoSideLayout mainSectionElement={<Profile {...this.props.user} />}/> 
         )}
-      </div>
+      </React.Fragment>
     )
   }
 }

@@ -7,21 +7,19 @@ import singularCheck from '../../helpers/functions/singularCheck'
 const Activity = ({ name, points, answers, time, slug, id }) => {
   return (
     <Wrapper>
-      <div>
+      <div css={`margin-bottom:5px;`}>
         <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
           <a>
             <ActivityName>{name}</ActivityName>
           </a>
         </Link>
-        <PointsCounter>
-          {points} {singularCheck('point', points)}
-        </PointsCounter>
+        <PointsCounter>{points}</PointsCounter> <PointsIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" />
       </div>
       <div>
         <AnswersCounter>
           {answers} {singularCheck('answer', answers)}
         </AnswersCounter>
-        <QuestionsCounter>Asked {time}</QuestionsCounter>
+        <AskedTimes>Asked {time}</AskedTimes>
       </div>
     </Wrapper>
   )
@@ -40,7 +38,7 @@ const Wrapper = styled.div`
   margin-bottom: 16px;
 `
 const ActivityName = styled.span`
-  font-size: 16px;
+  font-size: 1.1rem;
   line-height: 22px;
   &:after {
     content: '';
@@ -55,17 +53,24 @@ const ActivityName = styled.span`
 `
 const AnswersCounter = styled.span`
   font-weight: 700;
-  font-size: 12px;
+  font-size: 0.9rem;
   line-height: 22px;
   margin-right: 8px;
+
 `
 
-const QuestionsCounter = styled.span`
-  font-size: 12px;
+const AskedTimes = styled.span`
+  font-size: 0.9rem;
   line-height: 22px;
 `
 const PointsCounter = styled.span`
   font-size: 14px;
   line-height: 22px;
+  font-weight: bold;
+  color: ${props => props.theme.darkerDarkGrey};
+`
+const PointsIcon = styled.img`
+  width:18px;
+  height:18px;
 `
 export default Activity

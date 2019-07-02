@@ -44,10 +44,10 @@ class QuestionSummary extends Component {
         </Link>
 
         <Row>
-          <Link href={`/profile/?=${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
+          <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
             <UserAvatar src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60" />
           </Link>
-          <Link href={`/profile/?=${authorId}`} as={`/profile/${authorId}/${authorUsername}`}>
+          <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
             <UserDisplayName>{authorUsername}</UserDisplayName>
           </Link>
 

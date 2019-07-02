@@ -5,8 +5,8 @@ import styled from 'styled-components'
 const TwoSideLayout = ({ mainSectionElement, rightSectionElement }) => {
   return (
     <Wrapper>
-      <MainSection>{mainSectionElement}</MainSection>
-      <SideSection>{rightSectionElement}</SideSection>
+      <MainSection shouldRenderInFullWidth={!rightSectionElement}>{mainSectionElement}</MainSection>
+      {rightSectionElement && <SideSection>{rightSectionElement}</SideSection>}
     </Wrapper>
   )
 }
@@ -18,7 +18,7 @@ const Wrapper = styled.section`
 `
 
 const MainSection = styled.div`
-  width: 75%;
+  width: ${props => (props.shouldRenderInFullWidth ? '100%' : '75%')};
   @media screen and (max-width: 740px) {
     width: 100%;
   }

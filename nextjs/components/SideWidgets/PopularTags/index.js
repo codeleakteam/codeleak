@@ -43,9 +43,9 @@ const Title = styled.h4`
 
 const List = styled.div`
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   padding: 0 4px;
   border-radius: 4px;
+  margin: -2px;
 `
 export default PopularTags
