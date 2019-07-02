@@ -34,6 +34,7 @@ class QuestionSummary extends Component {
       questionId,
       authorId,
       slug,
+      authorAvatar,
     } = this.props
     const descriptionText = this.getDescriptionText(description)
 
@@ -45,7 +46,7 @@ class QuestionSummary extends Component {
 
         <Row>
           <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
-            <UserAvatar src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60" />
+            <UserAvatar src={authorAvatar} alt={authorUsername} />
           </Link>
           <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
             <UserDisplayName>{authorUsername}</UserDisplayName>

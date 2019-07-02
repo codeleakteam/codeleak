@@ -24,16 +24,29 @@ class ProfilePage extends Component {
       }
     }
   }
+
+  state = {
+    activeTab: 'answers',
+  }
+
+  changeTab = e => {
+    this.setState({ activeTab: e.target.id })
+  }
+
   render() {
-    console.log("[render]", this.props.error, this.props.user)
+    console.log('[render]', this.props.error, this.props.user)
     return (
       <React.Fragment>
         <Head>
-          <title>{!this.props.error ? this.props.user.full_name: 'Internal server error'}</title>
+          <title>{!this.props.error ? this.props.user.full_name : 'Internal server error'}</title>
         </Head>
         {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (
-          <TwoSideLayout mainSectionElement={<Profile {...this.props.user} />}/> 
+          <TwoSideLayout
+            mainSectionElement={
+              <Profile changeTab={this.changeTab} activeTab={this.state.activeTab} {...this.props.user} />
+            }
+          />
         )}
       </React.Fragment>
     )
