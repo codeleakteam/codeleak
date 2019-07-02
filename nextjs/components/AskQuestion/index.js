@@ -25,7 +25,7 @@ class AskQuestion extends Component {
     tagsAutocompleteDatasource: [],
 
     // Draftjs editor state
-    descriptionEditorState: EditorState.createEmpty(),
+    editorState: EditorState.createEmpty(),
 
     // Set to true when this component mounts
     _mounted: false,
@@ -43,15 +43,15 @@ class AskQuestion extends Component {
 
   // draftjs handler
   handleKeyCommand = command => {
-    const descriptionEditorState = RichUtils.handleKeyCommand(this.state.descriptionEditorState, command)
-    this.setState({ descriptionEditorState })
+    const editorState = RichUtils.handleKeyCommand(this.state.editorState, command)
+    this.setState({ editorState })
     return true
   }
 
   // draftjs handler
   toggleInlineStyle = inlineStyle => {
-    const descriptionEditorState = RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
-    this.setState({ descriptionEditorState })
+    const editorState = RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
+    this.setState({ editorState })
   }
 
   getTags = async q => {
@@ -69,8 +69,8 @@ class AskQuestion extends Component {
     this.setState({ titleValue: e.target.value })
   }
 
-  handleDescriptionInputChange = descriptionEditorState => {
-    this.setState({ descriptionEditorState })
+  handleDescriptionInputChange = editorState => {
+    this.setState({ editorState })
   }
 
   handleRepositoryUrlInputChange = e => {
@@ -113,7 +113,7 @@ class AskQuestion extends Component {
 
   getDescription = () => {
     try {
-      const description = JSON.stringify(convertToRaw(this.state.descriptionEditorState.getCurrentContent()))
+      const description = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
       return description
     } catch (err) {
       console.error("[getDescription] Can't stringify editor state", err)
@@ -132,7 +132,7 @@ class AskQuestion extends Component {
   }
 
   render() {
-    const { descriptionEditorState, _mounted } = this.state
+    const { editorState, _mounted } = this.state
 
     return (
       <div>
@@ -148,10 +148,10 @@ class AskQuestion extends Component {
         />
         <InputLabel text="Description" />
         <React.Fragment>
-          <InlineStyleControls editorState={descriptionEditorState} onToggle={this.toggleInlineStyle} />
+          <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
           {_mounted && (
             <DraftjsEditor
-              editorState={descriptionEditorState}
+              editorState={editorState}
               handleKeyCommand={this.handleKeyCommand}
               plugins={this.plugins}
               placeholder="Describe your question here. Don't insert any code."
