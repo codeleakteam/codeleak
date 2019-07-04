@@ -28,6 +28,39 @@ class ProfilePage extends Component {
   state = {
     activeTab: 'answers',
     editMode: false,
+    user: {
+      username: '',
+      avatar: '',
+      reputation: null,
+      answers: [],
+      questions: [],
+      biography: '',
+      full_name: '',
+      location: '',
+      looking_for_job: null,
+      website_url: '',
+      twitter_username: '',
+      github_username: '',
+    },
+  }
+
+  componentDidMount() {
+    this.setState({
+      user: {
+        username: this.props.user.username,
+        avatar: this.props.user.avatar,
+        reputation: this.props.user.reputation,
+        answers: this.props.user.answers,
+        questions: this.props.user.questions,
+        biography: this.props.user.biography,
+        full_name: this.props.user.full_name,
+        location: this.props.user.location,
+        looking_for_job: this.props.user.looking_for_job,
+        website_url: this.props.user.website_url,
+        twitter_username: this.props.user.twitter_username,
+        github_username: this.props.user.github_username,
+      },
+    })
   }
 
   changeTab = e => {
@@ -57,7 +90,7 @@ class ProfilePage extends Component {
                 editMode={this.state.editMode}
                 enableEditMode={this.enableEditMode}
                 saveChanges={this.saveChanges}
-                {...this.props.user}
+                {...this.state.user}
               />
             }
           />

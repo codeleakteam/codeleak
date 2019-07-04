@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
+import Loader from '../Loader'
 
 const { TextArea } = Input
 const { Dragger } = Upload
@@ -49,129 +50,135 @@ const Profile = ({
   }
 
   return (
-    <Wrapper>
-      <LeftSide>
-        <AvatarWrapper>
-          {editMode ? (
-            <Dragger {...uploadImageProps}>
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-              </p>
-            </Dragger>
-          ) : (
-            <Avatar src={avatar} alt={username} />
-          )}
-        </AvatarWrapper>
-        {editMode ? <Input placeholder={full_name} /> : <UserFullName>{full_name}</UserFullName>}
-        {editMode ? <Input placeholder={username} /> : <Username>@{username}</Username>}
-        {editMode ? <TextArea placeholder={biography} style={{ height: 100 }} /> : <UserBio>{biography}</UserBio>}
-        {editMode ? (
-          <Button type="primary" onClick={() => saveChanges()}>
-            Save changes
-          </Button>
-        ) : (
-          <Button type="default" onClick={() => enableEditMode()}>
-            Edit Profile
-          </Button>
-        )}
-        <Break />
-        <div>
-          <UserSection>
-            <Row
-              css={`
-                align-items: center;
-              `}
-            >
-              <UserSectionTitle>REPUTATION</UserSectionTitle>
-            </Row>
-            <ReputationCounter>{reputation}</ReputationCounter>
-          </UserSection>
+    <React.Fragment>
+      {!username ? (
+        <Loader text="Getting data" />
+      ) : (
+        <Wrapper>
+          <LeftSide>
+            <AvatarWrapper>
+              {editMode ? (
+                <Dragger {...uploadImageProps}>
+                  <p className="ant-upload-drag-icon">
+                    <Icon type="inbox" />
+                  </p>
+                  <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                  <p className="ant-upload-hint">
+                    Support for a single or bulk upload. Strictly prohibit from uploading company data or other band
+                    files
+                  </p>
+                </Dragger>
+              ) : (
+                <Avatar src={avatar} alt={username} />
+              )}
+            </AvatarWrapper>
+            {editMode ? <Input placeholder={full_name} /> : <UserFullName>{full_name}</UserFullName>}
+            {editMode ? <Input placeholder={username} /> : <Username>@{username}</Username>}
+            {editMode ? <TextArea placeholder={biography} style={{ height: 100 }} /> : <UserBio>{biography}</UserBio>}
+            {editMode ? (
+              <Button type="primary" onClick={() => saveChanges()}>
+                Save changes
+              </Button>
+            ) : (
+              <Button type="default" onClick={() => enableEditMode()}>
+                Edit Profile
+              </Button>
+            )}
+            <Break />
+            <div>
+              <UserSection>
+                <Row
+                  css={`
+                    align-items: center;
+                  `}
+                >
+                  <UserSectionTitle>REPUTATION</UserSectionTitle>
+                </Row>
+                <ReputationCounter>{reputation}</ReputationCounter>
+              </UserSection>
 
-          <UserSection>
-            <UserSectionTitle>INFO</UserSectionTitle>
-            <Row>
-              <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-              {editMode ? <Input placeholder={location} /> : <GreyText>{location}</GreyText>}
-            </Row>
-            {looking_for_job && !editMode ? (
-              <Row>
-                <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
-                <BlueText>Looking for a job</BlueText>
-              </Row>
-            ) : (
-              <Checkbox defaultChecked={looking_for_job}>Looking for job</Checkbox>
-            )}
+              <UserSection>
+                <UserSectionTitle>INFO</UserSectionTitle>
+                <Row>
+                  <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
+                  {editMode ? <Input placeholder={location} /> : <GreyText>{location}</GreyText>}
+                </Row>
+                {looking_for_job && !editMode ? (
+                  <Row>
+                    <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
+                    <BlueText>Looking for a job</BlueText>
+                  </Row>
+                ) : (
+                  <Checkbox defaultChecked={looking_for_job}>Looking for job</Checkbox>
+                )}
 
-            <Row>
-              <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
-              <BlueText>Sign In to view email</BlueText>
-            </Row>
-          </UserSection>
-        </div>
+                <Row>
+                  <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
+                  <BlueText>Sign In to view email</BlueText>
+                </Row>
+              </UserSection>
+            </div>
 
-        <UserSection>
-          <UserSectionTitle>Links</UserSectionTitle>
-          <Links editMode={editMode}>
-            {website_url && !editMode ? (
-              <Link href={website_url} target="_blank">
-                <LoweredOpacityIcon name="website" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <LoweredOpacityIcon name="website" height="22px" />
-                <Input placeholder={website_url} />
-              </div>
-            )}
-            {twitter_username && !editMode ? (
-              <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
-                <LoweredOpacityIcon name="twitter" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <LoweredOpacityIcon name="twitter" height="22px" />
-                <Input placeholder={twitter_username} />
-              </div>
-            )}
-            {github_username && !editMode ? (
-              <Link href={`https://github.com/${github_username}`} target="_blank">
-                <LoweredOpacityIcon name="github" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <LoweredOpacityIcon name="github" height="22px" />
-                <Input placeholder={github_username} />
-              </div>
-            )}
-          </Links>
-        </UserSection>
-      </LeftSide>
-      <RightSide>
-        <Card>
-          <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
-            Answers({answers.length})
-          </ContentSwitchButton>
-          <ContentSwitchButton id="questions" onClick={changeTab} active={activeTab === 'questions' ? true : false}>
-            Questions({questions.length})
-          </ContentSwitchButton>
-        </Card>
-        <Card>
-          {activeTab === 'answers' ? (
-            <RecentActivities type="Answers" typeCounts={answers.length} data={answers} />
-          ) : (
-            <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
-          )}
-        </Card>
-      </RightSide>
-    </Wrapper>
+            <UserSection>
+              <UserSectionTitle>Links</UserSectionTitle>
+              <Links editMode={editMode}>
+                {website_url && !editMode ? (
+                  <Link href={website_url} target="_blank">
+                    <LoweredOpacityIcon name="website" height="22px" />
+                  </Link>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <LoweredOpacityIcon name="website" height="22px" />
+                    <Input placeholder={website_url} />
+                  </div>
+                )}
+                {twitter_username && !editMode ? (
+                  <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
+                    <LoweredOpacityIcon name="twitter" height="22px" />
+                  </Link>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <LoweredOpacityIcon name="twitter" height="22px" />
+                    <Input placeholder={twitter_username} />
+                  </div>
+                )}
+                {github_username && !editMode ? (
+                  <Link href={`https://github.com/${github_username}`} target="_blank">
+                    <LoweredOpacityIcon name="github" height="22px" />
+                  </Link>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <LoweredOpacityIcon name="github" height="22px" />
+                    <Input placeholder={github_username} />
+                  </div>
+                )}
+              </Links>
+            </UserSection>
+          </LeftSide>
+          <RightSide>
+            <Card>
+              <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
+                Answers({answers.length})
+              </ContentSwitchButton>
+              <ContentSwitchButton id="questions" onClick={changeTab} active={activeTab === 'questions' ? true : false}>
+                Questions({questions.length})
+              </ContentSwitchButton>
+            </Card>
+            <Card>
+              {activeTab === 'answers' ? (
+                <RecentActivities type="Answers" typeCounts={answers.length} data={answers} />
+              ) : (
+                <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
+              )}
+            </Card>
+          </RightSide>
+        </Wrapper>
+      )}
+    </React.Fragment>
   )
 }
 
 Profile.propTypes = {
-  id: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired,
   reputation: PropTypes.number.isRequired,
   avatar: PropTypes.string.isRequired,
