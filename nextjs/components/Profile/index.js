@@ -1,10 +1,13 @@
 import React from 'react'
-import { Button } from 'antd'
+import { Button, Input, Checkbox, Upload, Icon, message } from 'antd'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
+
+const { TextArea } = Input
+const { Dragger } = Upload
 
 const Profile = ({
   avatar,
@@ -24,20 +27,57 @@ const Profile = ({
   github_username,
   changeTab,
   activeTab,
+  editMode,
+  enableEditMode,
+  saveChanges,
 }) => {
+  const uploadImageProps = {
+    name: 'file',
+    multiple: false,
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    onChange(info) {
+      const { status } = info.file
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`)
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`)
+      }
+    },
+  }
+
   return (
     <Wrapper>
       <LeftSide>
         <AvatarWrapper>
-          <Avatar src={avatar} alt={username} />
+          {editMode ? (
+            <Dragger {...uploadImageProps}>
+              <p className="ant-upload-drag-icon">
+                <Icon type="inbox" />
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+              </p>
+            </Dragger>
+          ) : (
+            <Avatar src={avatar} alt={username} />
+          )}
         </AvatarWrapper>
-        <UserFullName>{full_name}</UserFullName>
-        <Username>@{username}</Username>
-        <UserBio>
-          {role_in_company} {company && '@'} {company}
-          {company_headquarters && ','} {company_headquarters}
-        </UserBio>
-        <Button default>Edit profile</Button>
+        {editMode ? <Input placeholder={full_name} /> : <UserFullName>{full_name}</UserFullName>}
+        {editMode ? <Input placeholder={username} /> : <Username>@{username}</Username>}
+        {editMode ? <TextArea placeholder={biography} style={{ height: 100 }} /> : <UserBio>{biography}</UserBio>}
+        {editMode ? (
+          <Button type="primary" onClick={() => saveChanges()}>
+            Save changes
+          </Button>
+        ) : (
+          <Button type="default" onClick={() => enableEditMode()}>
+            Edit Profile
+          </Button>
+        )}
         <Break />
         <div>
           <UserSection>
@@ -55,14 +95,17 @@ const Profile = ({
             <UserSectionTitle>INFO</UserSectionTitle>
             <Row>
               <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-              <GreyText>{location}</GreyText>
+              {editMode ? <Input placeholder={location} /> : <GreyText>{location}</GreyText>}
             </Row>
-            {looking_for_job && (
+            {looking_for_job && !editMode ? (
               <Row>
                 <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
                 <BlueText>Looking for a job</BlueText>
               </Row>
+            ) : (
+              <Checkbox defaultChecked={looking_for_job}>Looking for job</Checkbox>
             )}
+
             <Row>
               <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
               <BlueText>Sign In to view email</BlueText>
@@ -72,21 +115,36 @@ const Profile = ({
 
         <UserSection>
           <UserSectionTitle>Links</UserSectionTitle>
-          <Links>
-            {website_url && (
+          <Links editMode={editMode}>
+            {website_url && !editMode ? (
               <Link href={website_url} target="_blank">
                 <LoweredOpacityIcon name="website" height="22px" />
               </Link>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <LoweredOpacityIcon name="website" height="22px" />
+                <Input placeholder={website_url} />
+              </div>
             )}
-            {twitter_username && (
+            {twitter_username && !editMode ? (
               <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
                 <LoweredOpacityIcon name="twitter" height="22px" />
               </Link>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <LoweredOpacityIcon name="twitter" height="22px" />
+                <Input placeholder={twitter_username} />
+              </div>
             )}
-            {github_username && (
+            {github_username && !editMode ? (
               <Link href={`https://github.com/${github_username}`} target="_blank">
                 <LoweredOpacityIcon name="github" height="22px" />
               </Link>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <LoweredOpacityIcon name="github" height="22px" />
+                <Input placeholder={github_username} />
+              </div>
             )}
           </Links>
         </UserSection>
@@ -204,6 +262,7 @@ const ReputationCounter = styled.p`
 const Links = styled.div`
   display: flex;
   margin: -5px;
+  flex-direction: ${props => (props.editMode ? 'column' : 'row')};
 `
 
 const Link = styled.a`

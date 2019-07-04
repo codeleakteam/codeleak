@@ -27,14 +27,21 @@ class ProfilePage extends Component {
 
   state = {
     activeTab: 'answers',
+    editMode: false,
   }
 
   changeTab = e => {
     this.setState({ activeTab: e.target.id })
   }
 
+  enableEditMode = () => this.setState({ editMode: true })
+
+  saveChanges = () => {
+    console.log('saving changes')
+    this.setState({ editMode: false })
+  }
+
   render() {
-    console.log('[render]', this.props.error, this.props.user)
     return (
       <React.Fragment>
         <Head>
@@ -44,7 +51,14 @@ class ProfilePage extends Component {
         {!this.props.error && (
           <TwoSideLayout
             mainSectionElement={
-              <Profile changeTab={this.changeTab} activeTab={this.state.activeTab} {...this.props.user} />
+              <Profile
+                changeTab={this.changeTab}
+                activeTab={this.state.activeTab}
+                editMode={this.state.editMode}
+                enableEditMode={this.enableEditMode}
+                saveChanges={this.saveChanges}
+                {...this.props.user}
+              />
             }
           />
         )}
