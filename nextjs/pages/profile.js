@@ -29,49 +29,41 @@ class ProfilePage extends Component {
     activeTab: 'answers',
     editMode: false,
     user: {
-      username: '',
-      avatar: '',
-      reputation: null,
-      answers: [],
-      questions: [],
-      biography: '',
-      full_name: '',
-      location: '',
-      looking_for_job: null,
-      website_url: '',
-      twitter_username: '',
-      github_username: '',
+      username: this.props.user.username,
+      avatar: this.props.user.avatar,
+      reputation: this.props.user.reputation,
+      answers: this.props.user.answers,
+      questions: this.props.user.questions,
+      biography: this.props.user.biography,
+      full_name: this.props.user.full_name,
+      location: this.props.user.location,
+      looking_for_job: this.props.user.looking_for_job,
+      website_url: this.props.user.website_url,
+      twitter_username: this.props.user.twitter_username,
+      github_username: this.props.user.github_username,
     },
-  }
-
-  componentDidMount() {
-    this.setState({
-      user: {
-        username: this.props.user.username,
-        avatar: this.props.user.avatar,
-        reputation: this.props.user.reputation,
-        answers: this.props.user.answers,
-        questions: this.props.user.questions,
-        biography: this.props.user.biography,
-        full_name: this.props.user.full_name,
-        location: this.props.user.location,
-        looking_for_job: this.props.user.looking_for_job,
-        website_url: this.props.user.website_url,
-        twitter_username: this.props.user.twitter_username,
-        github_username: this.props.user.github_username,
-      },
-    })
   }
 
   changeTab = e => {
     this.setState({ activeTab: e.target.id })
   }
 
-  enableEditMode = () => this.setState({ editMode: true })
+  enableEditMode = () => this.setState({
+    editMode: true
+  })
 
   saveChanges = () => {
     console.log('saving changes')
     this.setState({ editMode: false })
+  }
+
+  editProfileFields = e => {
+    if (e.target.name === 'looking_for_job') {
+      this.setState({ user: { ...this.state.user, [e.target.name]: e.target.checked } })
+
+    } else {
+      this.setState({ user: { ...this.state.user, [e.target.name]: e.target.value } })
+    }
   }
 
   render() {
@@ -90,7 +82,8 @@ class ProfilePage extends Component {
                 editMode={this.state.editMode}
                 enableEditMode={this.enableEditMode}
                 saveChanges={this.saveChanges}
-                {...this.state.user}
+                userData={this.state.user}
+                editProfileFields={this.editProfileFields}
               />
             }
           />
