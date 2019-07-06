@@ -84,4 +84,7 @@ export const apiPut = {
       comment_type: type,
     })
   },
+  updateUser: (data, id) => {
+    return axios.put(`${BASE_URL}/api/users/${id}`, data)
+  },
 }

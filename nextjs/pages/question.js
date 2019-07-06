@@ -81,6 +81,7 @@ class QuestionFullPage extends Component {
                 updateQuestionScore={this.updateQuestionScore}
                 questionScore={this.state.questionScore}
                 question={question}
+                authorReputation={this.state.authorReputation}
               />
             }
           />
@@ -90,7 +91,14 @@ class QuestionFullPage extends Component {
   }
 }
 
-function QuestionWithAnswersWrapper({ question, questionScore, updateQuestionScore, sendAnswerOnQuestion, answers }) {
+function QuestionWithAnswersWrapper({
+  question,
+  questionScore,
+  updateQuestionScore,
+  sendAnswerOnQuestion,
+  answers,
+  authorReputation,
+}) {
   return (
     <React.Fragment>
       <Question
@@ -105,6 +113,7 @@ function QuestionWithAnswersWrapper({ question, questionScore, updateQuestionSco
         comments={question.comments}
         tags={question.tags}
         author={question.author}
+        authorReputation={authorReputation}
       />
       <AnswerList answers={answers} />
       <AddAnswer questionId={question.id} sendAnswer={sendAnswerOnQuestion} />
