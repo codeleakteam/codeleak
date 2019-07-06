@@ -10,8 +10,8 @@ const { TextArea } = Input
 const { Dragger } = Upload
 
 const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enableEditMode, editProfileFields }) => {
-
-  let { username,
+  let {
+    username,
     avatar,
     reputation,
     answers,
@@ -22,7 +22,9 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     looking_for_job,
     website_url,
     twitter_username,
-    github_username } = userData
+    github_username,
+  } = userData
+
   const uploadImageProps = {
     name: 'file',
     multiple: false,
@@ -39,8 +41,6 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
       }
     },
   }
-  console.log(looking_for_job);
-
 
   return (
     <Wrapper>
@@ -53,34 +53,46 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
               </p>
               <p className="ant-upload-text">Click or drag file to this area to upload</p>
               <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band
-                files
-                    </p>
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+              </p>
             </Dragger>
           ) : (
-              <Avatar src={avatar} alt={username} />
-            )}
+            <Avatar linkToImage={avatar} alt={username} />
+          )}
         </AvatarWrapper>
-        {editMode ? <Input onChange={editProfileFields} value={full_name} name="full_name" /> : <UserFullName>{full_name}</UserFullName>}
-        {editMode ? <Input onChange={editProfileFields} value={username} name="username" /> : <Username>@{username}</Username>}
-        {editMode ? <TextArea onChange={editProfileFields} value={biography} name="biography" style={{ height: 100 }} /> : <UserBio>{biography}</UserBio>}
+        {editMode ? (
+          <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
+        ) : (
+          <UserFullName>{full_name}</UserFullName>
+        )}
+        {editMode ? (
+          <Input onChange={editProfileFields} value={username} name="username" style={{ marginBottom: 15 }} />
+        ) : (
+          <Username>@{username}</Username>
+        )}
+        {editMode ? (
+          <TextArea
+            onChange={editProfileFields}
+            value={biography}
+            name="biography"
+            style={{ height: 100, marginBottom: 15 }}
+          />
+        ) : (
+          <UserBio>{biography}</UserBio>
+        )}
         {editMode ? (
           <Button type="primary" onClick={() => saveChanges()}>
             Save changes
-                </Button>
+          </Button>
         ) : (
-            <Button type="default" onClick={() => enableEditMode()}>
-              Edit Profile
-                </Button>
-          )}
+          <Button type="default" onClick={() => enableEditMode()}>
+            Edit Profile
+          </Button>
+        )}
         <Break />
         <div>
           <UserSection>
-            <Row
-              css={`
-                      align-items: center;
-                    `}
-            >
+            <Row>
               <UserSectionTitle>REPUTATION</UserSectionTitle>
             </Row>
             <ReputationCounter>{reputation}</ReputationCounter>
@@ -90,16 +102,28 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             <UserSectionTitle>INFO</UserSectionTitle>
             <Row>
               <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-              {editMode ? <Input onChange={editProfileFields} value={location} name="location" /> : <GreyText>{location}</GreyText>}
+              {editMode ? (
+                <Input onChange={editProfileFields} value={location} name="location" />
+              ) : (
+                <GreyText>{location}</GreyText>
+              )}
             </Row>
-            {looking_for_job && !editMode ? (
+            {looking_for_job && !editMode && (
               <Row>
                 <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
                 <BlueText>Looking for a job</BlueText>
               </Row>
-            ) : (
-                <Checkbox onChange={editProfileFields} defaultChecked={looking_for_job} name="looking_for_job">Looking for job</Checkbox>
-              )}
+            )}
+            {editMode && (
+              <Checkbox
+                onChange={editProfileFields}
+                defaultChecked={looking_for_job}
+                name="looking_for_job"
+                style={{ marginBottom: 15 }}
+              >
+                Looking for job
+              </Checkbox>
+            )}
 
             <Row>
               <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
@@ -116,31 +140,31 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
                 <LoweredOpacityIcon name="website" height="22px" />
               </Link>
             ) : (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <LoweredOpacityIcon name="website" height="22px" />
-                  <Input onChange={editProfileFields} value={website_url} name="website_url" />
-                </div>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
+                <LoweredOpacityIcon name="website" height="22px" />
+                <Input onChange={editProfileFields} value={website_url} name="website_url" />
+              </div>
+            )}
             {twitter_username && !editMode ? (
               <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
                 <LoweredOpacityIcon name="twitter" height="22px" />
               </Link>
             ) : (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <LoweredOpacityIcon name="twitter" height="22px" />
-                  <Input onChange={editProfileFields} value={twitter_username} name="twitter_username" />
-                </div>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
+                <LoweredOpacityIcon name="twitter" height="22px" />
+                <Input onChange={editProfileFields} value={twitter_username} name="twitter_username" />
+              </div>
+            )}
             {github_username && !editMode ? (
               <Link href={`https://github.com/${github_username}`} target="_blank">
                 <LoweredOpacityIcon name="github" height="22px" />
               </Link>
             ) : (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <LoweredOpacityIcon name="github" height="22px" />
-                  <Input onChange={editProfileFields} value={github_username} name="github_username" />
-                </div>
-              )}
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
+                <LoweredOpacityIcon name="github" height="22px" />
+                <Input onChange={editProfileFields} value={github_username} name="github_username" />
+              </div>
+            )}
           </Links>
         </UserSection>
       </LeftSide>
@@ -148,27 +172,22 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
         <Card>
           <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
             Answers({answers.length})
-                </ContentSwitchButton>
+          </ContentSwitchButton>
           <ContentSwitchButton id="questions" onClick={changeTab} active={activeTab === 'questions' ? true : false}>
             Questions({questions.length})
-                </ContentSwitchButton>
+          </ContentSwitchButton>
         </Card>
         <Card>
           {activeTab === 'answers' ? (
             <RecentActivities type="Answers" typeCounts={answers.length} data={answers} />
           ) : (
-              <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
-            )}
+            <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
+          )}
         </Card>
       </RightSide>
     </Wrapper>
   )
-
 }
-
-
-
-
 
 // Profile.propTypes = {
 //   username: PropTypes.string.isRequired,
@@ -182,55 +201,57 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
 // }
 
 const Wrapper = styled.div`
-display: flex;
-@media screen and (max-width: 740px) {
-  flex-direction: column;
-}
+  display: flex;
+  @media screen and (max-width: 740px) {
+    flex-direction: column;
+  }
 `
 
 const Row = styled.div`
-display: flex;
-align-items: center;
-margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
 `
 
 const LeftSide = styled.div`
-width: 246px;
-margin-right: 32px;
-display: flex;
-flex-direction: column;
-@media screen and (max-width: 740px) {
-  margin: 0 auto;
-}
+  width: 246px;
+  margin-right: 32px;
+  display: flex;
+  flex-direction: column;
+  @media screen and (max-width: 740px) {
+    margin: 0 auto;
+  }
 `
 
 const AvatarWrapper = styled.div`
-width: 246px;
-height: 246px;
-overflow: hidden;
-border-radius: 8px;
-margin-bottom: 10px;
+  width: 246px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 10px;
 `
 
-const Avatar = styled.img`
-width: 100%;
+const Avatar = styled.div`
+  width: 100%;
+  height: 246px;
+  background-image: url(${props => (props.linkToImage ? props.linkToImage : null)});
+  background-size: cover;
 `
 const ContentSwitchButton = styled.span`
-font-weight: bold;
-color: ${props => (props.active ? props.theme.antBlue : props.theme.darkerDarkGrey)};
-text-transform: uppercase;
-margin-right: 20px;
-&:hover {
-  cursor: pointer;
-}
+  font-weight: bold;
+  color: ${props => (props.active ? props.theme.antBlue : props.theme.darkerDarkGrey)};
+  text-transform: uppercase;
+  margin-right: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const Break = styled.div`
-width: 100%;
-height: 1.5px;
-background: ${props => props.theme.antGrey};
-opacity: 0.35;
-margin: 10px 0;
+  width: 100%;
+  height: 1.5px;
+  background: ${props => props.theme.antGrey};
+  opacity: 0.35;
+  margin: 10px 0;
 `
 
 const UserSectionTitle = styled.p`
@@ -244,68 +265,67 @@ margin-right:5px;
 `
 
 const ReputationIcon = styled.img`
-width: 22px;
-height: 22px;
-margin-bottom: 3px;
-margin-right: 5px;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 3px;
+  margin-right: 5px;
 `
 
 const ReputationCounter = styled.p`
-color: ${props => props.theme.nextBlack};
-font-weight: bold;
-font-size: 1.1rem;
-line-height: 1;
+  color: ${props => props.theme.nextBlack};
+  font-weight: bold;
+  font-size: 1.1rem;
+  line-height: 1;
 `
 const Links = styled.div`
-display: flex;
-margin: -5px;
-flex-direction: ${props => (props.editMode ? 'column' : 'row')};
+  display: flex;
+  margin: -5px;
+  flex-direction: ${props => (props.editMode ? 'column' : 'row')};
 `
 
 const Link = styled.a`
-margin: 5px;
+  margin: 5px;
 `
 
 const UserSection = styled.div`
-margin-bottom: 15px;
+  margin-bottom: 15px;
 `
 
 const GreyText = styled.span`
-font-size: 0.9rem;
-color: ${props => props.theme.darkerDarkGrey};
+  font-size: 0.9rem;
+  color: ${props => props.theme.darkerDarkGrey};
 `
 const BlueText = styled.span`
-font-size: 0.9rem;
-color: ${props => props.theme.antBlue};
+  font-size: 0.9rem;
+  color: ${props => props.theme.antBlue};
 `
 
 const LoweredOpacityIcon = styled(CustomIcon)`
-margin-right: 8px;
-opacity: 0.64;
+  margin-right: 8px;
+  opacity: 0.64;
 `
 
 const RightSide = styled.div`
-width: 100%;
+  width: 100%;
 `
 
 const Username = styled.p`
-font-size: 16px;
-color: ${props => props.theme.darkerDarkGrey};
-opacity: 0.64;
-margin-bottom: 15px;
+  font-size: 16px;
+  color: ${props => props.theme.darkerDarkGrey};
+  opacity: 0.64;
+  margin-bottom: 15px;
 `
 
 const UserFullName = styled.span`
-font-size: 25px;
-line-height: 25px;
-font-weight: bold;
+  font-size: 25px;
+  line-height: 25px;
+  font-weight: bold;
 `
 const UserBio = styled.span`
-font-size: 16px;
-color: ${props => props.theme.darkerDarkGrey};
-line-height: 22px;
-margin-bottom: 15px;
+  font-size: 16px;
+  color: ${props => props.theme.darkerDarkGrey};
+  line-height: 22px;
+  margin-bottom: 15px;
 `
-
 
 export default Profile

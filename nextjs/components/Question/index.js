@@ -126,6 +126,8 @@ class Question extends Component {
       updatedQuestionScore,
       authorReputation,
     } = this.props
+    console.log(authorReputation)
+
     let reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
@@ -134,7 +136,13 @@ class Question extends Component {
     return (
       <Card>
         <Title>{title}</Title>
-        <UserSignature id={author.id} username={author.username} reputation={authorReputation} postedAt={postedAt} />
+        <UserSignature
+          id={author.id}
+          username={author.username}
+          reputation={authorReputation}
+          postedAt={postedAt}
+          avatar={author.avatar}
+        />
         <TagsList>
           {tags.map(q => {
             return (

@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import Head from 'next/head'
 import TwoSideLayout from '../components/TwoSideLayout'
 import Profile from '../components/Profile'
-import { apiGet } from '../api'
+import { apiGet, apiPut } from '../api'
 import _ from 'lodash'
-import { Alert } from 'antd'
+import { Alert, message } from 'antd'
 
 class ProfilePage extends Component {
   static async getInitialProps({ query }) {
@@ -48,21 +48,33 @@ class ProfilePage extends Component {
     this.setState({ activeTab: e.target.id })
   }
 
-  enableEditMode = () => this.setState({
-    editMode: true
-  })
+  enableEditMode = () =>
+    this.setState({
+      editMode: true,
+    })
 
   saveChanges = () => {
-    console.log('saving changes')
     this.setState({ editMode: false })
+    this.updateUser(this.state.user, this.props.user.id)
   }
 
   editProfileFields = e => {
     if (e.target.name === 'looking_for_job') {
       this.setState({ user: { ...this.state.user, [e.target.name]: e.target.checked } })
-
     } else {
       this.setState({ user: { ...this.state.user, [e.target.name]: e.target.value } })
+    }
+  }
+
+  updateUser = async (data, id) => {
+    try {
+      const res = await apiPut.updateUser(data, id)
+      let user = _.get(res, 'data', null)
+      let userId = _.get(res, 'data.id', null)
+      if (!userId) throw new Error('Cannot update user data!')
+      message.success('Profile is successfully updated!')
+    } catch (error) {
+      message.error('Could not update user data!')
     }
   }
 

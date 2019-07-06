@@ -3,14 +3,11 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 
-export default function UserSignature({ id, username, reputation, postedAt }) {
+export default function UserSignature({ id, username, reputation, postedAt, avatar }) {
   return (
     <Wrapper>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
-        <AuthorAvatar
-          src="https://hashnode.imgix.net/res/hashnode/image/upload/v1559555582766/Bm5xyeBqE.jpeg?w=80&h=80&fit=crop&crop=faces&auto=format,enhance&q=60"
-          alt={username}
-        />
+        <AuthorAvatar src={avatar} alt={username} />
       </Link>
       <Column>
         <Row>
