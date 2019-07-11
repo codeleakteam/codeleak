@@ -7,16 +7,19 @@ from .question import (
     ListCreateQuestionView,
     ReportQuestionView
     )
-from .user import GetUpdateUserView,ListUserView
+from .user import GetUserView, UpdateUserView, ListUserView
 from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
 from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView
+from .auth import GithubLoginView, LoginViewCustom, VerifyEmailViewCustom
+
 
 __all__ = [
     'HomeView',
     'ListUserView',
-    'GetUpdateUserView',
+    'GetUserView',
+    'UpdateUserView',
     'UpdateQuestionView',
     'ReportQuestionView',
     'ListCreateTagView',
@@ -33,5 +36,8 @@ __all__ = [
     'ReportAnswerView',
     'ListCreateCommentView',
     'UpdateCommentScoreView',
-    'ReportCommentView'
+    'ReportCommentView',
+    'LoginViewCustom',
+    'VerifyEmailViewCustom',
+    'GithubLoginView'
 ]

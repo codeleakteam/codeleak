@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 GENDER_CHOICES = (
     ('Male', 'Male'),
@@ -7,10 +8,10 @@ GENDER_CHOICES = (
     ('Other', 'Other'),
 )
 
-class User(models.Model):
+class User(AbstractUser):
     # Required
     email = models.EmailField()
-    username = models.CharField(max_length=150, blank=False, null=False)
+    username = models.CharField(max_length=150, unique=True, blank=False, null=False)
     password_hash = models.CharField(max_length=255, blank=False, null=False)
     # Optional
     full_name = models.CharField(max_length=255, blank=True, null=True)

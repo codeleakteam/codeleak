@@ -29,9 +29,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Writes registration data into console instead of wanting to send it over SMTP server
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Rest-auth by default needs both username and email for login
+ACCOUNT_EMAIL_REQUIRED = True   
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+# Saying we are using custom User model(extends Django's AbstractUser)
+AUTH_USER_MODEL = 'core.User'
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,9 +49,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    # needed for social
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'core',
     'corsheaders'
 ]
+
+# Needed for rest-auth/allauth
+SITE_ID = 1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -149,5 +170,8 @@ STATICFILES_DIRS = [
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
 }
