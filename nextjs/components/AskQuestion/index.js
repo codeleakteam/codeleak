@@ -125,7 +125,7 @@ class AskQuestion extends Component {
       this.state.titleValue,
       this.getDescription(),
       this.state.selectedTags,
-      1,
+      3,
       1,
       this.state.repositoryUrlValue
     )

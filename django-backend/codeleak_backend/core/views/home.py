@@ -21,17 +21,11 @@ class CustomPagination(PageNumberPagination):
         })
 
 class HomeView(generics.ListAPIView):
+    permission_classes = ()
     pagination_class = CustomPagination
 
     # Used by self.get_serializer() down below
     # serializer_class = QuestionSerializer
-    """
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAdminUser,)
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
-
     question_serializer = QuestionSerializer
     tag_serializer = TagSerializerMinimal
 

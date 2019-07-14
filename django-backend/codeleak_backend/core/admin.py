@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from core.models import (
     Tag,
     Question,
@@ -17,10 +18,37 @@ from core.models import (
     AnswerCommentReport
 )
 
+
+UserAdmin.fieldsets += ('Custom fields set', 
+    {'fields': 
+        (
+            'cv_url',
+            'website_url',
+            'github_username',
+            'full_name',
+            'twitter_username',
+            'avatar',
+            'gender',
+            'company',
+            'company_headquarters',
+            'role_in_company',
+            'biography',
+            'location',
+            'birth',
+            'student',
+            'verified',
+            'looking_for_job',
+            'reputation',
+            'reported_times',
+            'created_at',
+        )
+    }
+),
+
 # Register your models here.
 admin.site.register(Tag)
 admin.site.register(Question)
-admin.site.register(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(Editor)
 admin.site.register(Answer)
 admin.site.register(QuestionComment)
