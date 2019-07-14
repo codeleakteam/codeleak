@@ -32,6 +32,7 @@ def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
 class GetQuestionView(RetrieveAPIView):
+    permission_classes = ()
     def get(self, request, question_id):
         try:
             question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]

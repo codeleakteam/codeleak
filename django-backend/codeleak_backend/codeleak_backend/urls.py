@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework_jwt.views import refresh_jwt_token
 from core.views import (
     HomeView,
     ListCreateQuestionView,
@@ -46,7 +47,8 @@ from core.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^rest-auth/login/$', LoginViewCustom.as_view(), name='rest_login'),
+    url(r'^rest-auth/login', LoginViewCustom.as_view(), name='rest_login'),
+    url(r'^rest-auth/refresh', refresh_jwt_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/verify-email/$', csrf_exempt(VerifyEmailViewCustom.as_view()), name='rest_verify'),
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),

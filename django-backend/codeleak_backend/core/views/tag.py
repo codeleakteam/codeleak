@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 class ListCreateTagView(ListCreateAPIView):
+    permission_classes = ()
     def post(self, request):
         data = request.data
 

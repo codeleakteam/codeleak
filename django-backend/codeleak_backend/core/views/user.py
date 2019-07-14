@@ -27,6 +27,7 @@ class UpdateUserView(UpdateAPIView):
         return Response(serializer.errors, status=status.HTTP_202_ACCEPTED)
 
 class GetUserView(RetrieveAPIView):
+    permission_classes = ()
     def get(self, request, user_id):
         user = User.objects.filter(pk=user_id).prefetch_related('question_author', 'answer_author')[0]
         serializer = UserSerializer(user)
