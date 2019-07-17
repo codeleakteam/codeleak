@@ -1,6 +1,12 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView, ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import (
+    UpdateAPIView,
+    RetrieveAPIView,
+    ListCreateAPIView,
+    UpdateAPIView,
+    RetrieveUpdateAPIView
+) 
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
@@ -23,6 +29,7 @@ from core.serializers import (
     QuestionVoteSerializer,
     QuestionReportSerializer
 )
+from rest_framework import permissions
 
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
@@ -31,20 +38,20 @@ QUESTION_VOTE_VALUE = 20
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
 
-class GetQuestionView(RetrieveAPIView):
-    permission_classes = ()
-    def get(self, request, question_id):
-        try:
-            question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
-            question.viewed_times += 1
-            question.save()
-            serializer = QuestionSerializer(question)
-            return Response({
-                'question': serializer.data,
-            }, status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+SAFE_METHODS = ["GET", "OPTIONS", "HEAD"]
 
+class IsAuthorOrReadOnly(permissions.BasePermission):
+    message = 'Question edit not allowed'
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        print("user", request.user)
+        print("obj", obj)
+        return request.user.id == obj.author.id
+
+
+# list questions is used for dev only
+# question fetching on home page is done on /home endpoint
 class ListCreateQuestionView(ListCreateAPIView):
     def get(self,request):
         questions = Question.objects.all()
@@ -77,11 +84,26 @@ class ListCreateQuestionView(ListCreateAPIView):
                 }, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UpdateQuestionView(UpdateAPIView):
+class GetUpdateQuestionView(RetrieveUpdateAPIView):
+    permission_classes = (IsAuthorOrReadOnly, )
+
+    def get(self, request, question_id):
+        try:
+            question = Question.objects.filter(pk=question_id).prefetch_related('question_answer', 'question_comment')[0]
+            question.viewed_times += 1
+            question.save()
+            serializer = QuestionSerializer(question)
+            return Response({
+                'question': serializer.data,
+            }, status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
     def put(self, request, question_id):
         print("Update quesiton data: ", request.data)
         print("Update question id: ", question_id)
         question = Question.objects.get(pk=question_id)
+        self.check_object_permissions(request, question)
         serializer = QuestionCreateUpdateSerializer(question, data=request.data)
         if serializer.is_valid():
             serializer.save()
