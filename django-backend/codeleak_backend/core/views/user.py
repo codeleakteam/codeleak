@@ -10,9 +10,8 @@ from rest_framework import status
 from core.models import User
 from core.serializers import UserSerializer
 from rest_framework import permissions
-from django.shortcuts import get_object_or_404
 
-SAFE_METHODS = ["GET","OPTIONS", "HEAD"]
+SAFE_METHODS = ["GET", "OPTIONS", "HEAD"]
 
 class IsMeOrReadOnly(permissions.BasePermission):
     message = 'User edit not allowed'

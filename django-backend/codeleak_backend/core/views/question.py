@@ -23,6 +23,7 @@ from core.serializers import (
     QuestionVoteSerializer,
     QuestionReportSerializer
 )
+from rest_framework import permissions
 
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
@@ -30,6 +31,18 @@ QUESTION_VOTE_VALUE = 20
 # Helper that evaluates 'true' to True and does so for false values
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
+
+SAFE_METHODS = ["GET", "OPTIONS", "HEAD"]
+
+class IsAuthorOrReadOnly(permissions.BasePermission):
+    message = 'User edit not allowed'
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        print("user", request.user)
+        print("obj", obj)
+        return request.user.id == obj.author
+
 
 class GetQuestionView(RetrieveAPIView):
     permission_classes = ()
@@ -45,6 +58,8 @@ class GetQuestionView(RetrieveAPIView):
         except ObjectDoesNotExist:
             return Response({ 'message': 'Question with the ID: ' + question_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
+# list questions is used for dev only
+# question fetching on home page is done on /home endpoint
 class ListCreateQuestionView(ListCreateAPIView):
     def get(self,request):
         questions = Question.objects.all()
@@ -78,6 +93,7 @@ class ListCreateQuestionView(ListCreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateQuestionView(UpdateAPIView):
+    permission_classes = (IsAuthorOrReadOnly, )
     def put(self, request, question_id):
         print("Update quesiton data: ", request.data)
         print("Update question id: ", question_id)
