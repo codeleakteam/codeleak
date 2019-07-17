@@ -15,6 +15,7 @@ from core.serializers import (
     AnswerReportSerializer
 )
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import permissions
 from core.models import AnswerVote
 
 ANSWER_VOTE_VALUE = 20
@@ -22,6 +23,18 @@ ANSWER_VOTE_VALUE = 20
 # Helper that evaluates 'true' to True and does so for false values
 def str2bool(v):
   return v.lower() in ("yes", "true", "t", "1")
+
+SAFE_METHODS = ["GET", "OPTIONS", "HEAD"]
+
+class IsQuestionAuthorOrReadOnly(permissions.BasePermission):
+    message = 'Accept answer not allowed'
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        print("user", request.user.id)
+        print("obj", obj.question.author.id)
+        return request.user.id == obj.question.author.id
+
 
 class CreateAnswerView(CreateAPIView):
     def post(self, request):
@@ -38,7 +51,7 @@ class CreateAnswerView(CreateAPIView):
         try:
             question = Question.objects.get(pk=question)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'Question with the ID: ' + answer_id+ ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'message': 'Question with the ID: ' + question + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             user = User.objects.get(pk=author)
@@ -68,19 +81,14 @@ class GetUpdateAnswerView(RetrieveUpdateAPIView):
         pass
 
 class AcceptAnswerView(APIView):
+    permission_classes = (IsQuestionAuthorOrReadOnly, )
     def post(self, request, answer_id):
-        # TODO: Only question author can accept answer
-        user_id = request.data.get("user_id", None)
-
-        # Field checks
-        if user_id == None:
-            return Response({ 'message': 'user_id param not provided'}, status.HTTP_400_BAD_REQUEST)
-
         try:
             answer = Answer.objects.filter(pk=answer_id).select_related('question')[0]
             if answer.question.has_accepted_answer:
                 return Response({'message': 'Question already has an accepted answer'}, status=status.HTTP_400_BAD_REQUEST)
             else:
+                self.check_object_permissions(request, answer)
                 answer.is_accepted = True
                 answer.question.has_accepted_answer = True
                 answer.save()
