@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'core',
-    'corsheaders'
+    'corsheaders',
+    'notifications'
 ]
 
 # Needed for rest-auth/allauth
@@ -117,8 +118,12 @@ WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'codeleak',
+        'USER': 'postgres',
+        'PASSWORD': 'lamerajlame321',
+        'HOST': '134.209.195.55',
+        'PORT': '5432',
     }
 }
 
