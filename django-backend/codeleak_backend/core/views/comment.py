@@ -165,11 +165,14 @@ class UpdateCommentScoreView(UpdateAPIView):
 
         # Vote value(adds up only on answer score)
         vote_value = None
+        verb = None
 
         if is_upvote:
             vote_value = COMMENT_UPVOTE_VALUE
+            verb = 'COMMENT_UPVOTE'
         else:
             vote_value = COMMENT_DOWNVOTE_VALUE
+            verb = 'COMMENT_DOWNVOTE'
 
         # Dynamically get comment model and its serializer
         CommentModel = COMMENT_TYPES[comment_type]['model']
@@ -177,7 +180,6 @@ class UpdateCommentScoreView(UpdateAPIView):
         CommentVoteSerializer = COMMENT_TYPES[comment_type]['vote_serializer']
         comment_key = COMMENT_TYPES[comment_type]['key']
 
-        # Checking if user exists
         try:
             user = User.objects.get(pk=request.user.id)
         except ObjectDoesNotExist:
@@ -202,6 +204,16 @@ class UpdateCommentScoreView(UpdateAPIView):
                 user.reputation += vote_value * 2
                 user.save()
 
+
+                notify.send(
+                    verb=verb,
+                    action_object=comment_vote,
+                    target=comment,
+                    sender=request.user,
+                    recipient=comment.author,
+                    vote_value=vote_value
+                )
+
                 serializer = CommentSerializer(comment)
                 return Response({
                     'comment_vote': comment_vote_serializer.data,
@@ -222,15 +234,26 @@ class UpdateCommentScoreView(UpdateAPIView):
             }
             data[comment_key] = comment_id
             comment_vote_serializer = CommentVoteSerializer(data=data)
+            comment_vote = None
+
             if comment_vote_serializer.is_valid():
                 print("comment_vote_serializer is valid. saving...")
-                comment_vote_serializer.save()
+                comment_vote = comment_vote_serializer.save()
             else:
                 print("comment_vote_serializer isn't valid. aborting...")
                 return Response(comment_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             comment.score += vote_value
             comment.save()
+
+            notify.send(
+                verb=verb,
+                action_object=comment_vote,
+                target=comment,
+                sender=request.user,
+                recipient=comment.author,
+                vote_value=vote_value
+            )
             serializer = CommentSerializer(comment)
             return Response({
                 'comment_vote': comment_vote_serializer.data,
