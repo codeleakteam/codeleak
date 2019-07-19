@@ -11,6 +11,7 @@ from core.models import (
     Subscriber,
     AnswerVote,
     QuestionVote,
+    QuestionCommentVote,
     AnswerCommentVote,
     QuestionReport,
     QuestionCommentReport,
@@ -58,6 +59,7 @@ admin.site.register(Subscriber)
 # Votes
 admin.site.register(AnswerVote)
 admin.site.register(QuestionVote)
+admin.site.register(QuestionCommentVote)
 admin.site.register(AnswerCommentVote)
 
 # Reports

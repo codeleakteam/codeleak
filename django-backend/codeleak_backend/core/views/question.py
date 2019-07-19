@@ -30,6 +30,7 @@ from core.serializers import (
     QuestionReportSerializer
 )
 from rest_framework import permissions
+from notifications.signals import notify
 
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
@@ -113,23 +114,19 @@ class GetUpdateQuestionView(RetrieveUpdateAPIView):
 class UpdateQuestionScoreView(UpdateAPIView):
     def put(self, request, question_id):
         is_upvote = request.data.get('is_upvote', None)
-        user_id = request.data.get('user_id', None)
 
         # Field checks
         if is_upvote == None:
             return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
-
-        if user_id == None:
-            return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if is_upvote != 'true' and is_upvote != 'false':
             return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
 
         # If user is not found, ObjectDoesNotExist will be caught
         try:
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk=request.user.id)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'message': 'User with the ID: ' + request.user.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # If question is not found, ObjectDoesNotExist will be caught
         try:
@@ -142,14 +139,18 @@ class UpdateQuestionScoreView(UpdateAPIView):
 
         # Vote value(adds up only on answer score)
         vote_value = None
+        verb = None
+
         if is_upvote:
             vote_value = QUESTION_VOTE_VALUE
+            verb = 'QUESTION_UPVOTE'
         else:
             vote_value = -QUESTION_VOTE_VALUE
+            verb = 'QUESTION_DOWNVOTE'
 
         try:
             # If QuestionVote already exists we just update val
-            question_vote = QuestionVote.objects.get(author=user_id, question=question_id)
+            question_vote = QuestionVote.objects.get(author=request.user.id, question=question_id)
             print("Question_vote already exists. ")
 
             # Case where user might be switching from upvote to downvote
@@ -165,6 +166,15 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 user.reputation += vote_value * 2
                 user.save()
 
+                notify.send(
+                    verb=verb,
+                    action_object=question_vote,
+                    target=question,
+                    sender=request.user,
+                    recipient=question.author,
+                    vote_value=vote_value
+                )
+
                 serializer = QuestionSerializer(question)
                 return Response({
                     'question_vote': question_vote_serializer.data,
@@ -178,14 +188,15 @@ class UpdateQuestionScoreView(UpdateAPIView):
 
         # If it does not exist, we create one
         except ObjectDoesNotExist:
+            question_vote = None
             question_vote_serializer = QuestionVoteSerializer(data={
-                'author': user_id,
+                'author': request.user.id,
                 'question': question_id,
                 'is_upvote': is_upvote
             })
             if question_vote_serializer.is_valid():
                 print("question_vote_serializer is valid. saving...")
-                question_vote_serializer.save()
+                question_vote = question_vote_serializer.save()
             else:
                 print("question_vote_serializer isn't valid. aborting...")
                 return Response(question_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -196,6 +207,14 @@ class UpdateQuestionScoreView(UpdateAPIView):
             user.reputation += vote_value
             user.save()
 
+            notify.send(
+                verb=verb,
+                action_object=question_vote,
+                target=question,
+                sender=request.user,
+                recipient=question.author,
+                vote_value=vote_value
+            )
             serializer = QuestionSerializer(question)
             return Response({
                 'question_vote': question_vote_serializer.data,
@@ -204,16 +223,10 @@ class UpdateQuestionScoreView(UpdateAPIView):
 
 class ReportQuestionView(APIView):
     def post(self, request, question_id):
+        print("body:", request.data)
+        is_report = request.data.get("is_report", None)
+
         try:
-            print("body:", request.data)
-            user_id = request.data.get("user_id", None)
-            is_report = request.data.get("is_report", None)
-
-            if user_id == None:
-                return Response({
-                    'message': 'No user_id param provided'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
             if is_report == None:
                 return Response({
                     'message': 'No is_report param provided'
@@ -231,7 +244,7 @@ class ReportQuestionView(APIView):
             try:
                 report = QuestionReport.objects.get(
                     question=question_id,
-                    author=user_id
+                    author=request.user.id
                 )
                 if is_report:
                     return Response({
@@ -248,7 +261,7 @@ class ReportQuestionView(APIView):
                     print("Report object does not exist. Will create one")
                     report_serializer = QuestionReportSerializer(data={
                         'question': question_id,
-                        'author': user_id
+                        'author': request.user.id
                     })
                     if report_serializer .is_valid():
                         report_serializer.save()

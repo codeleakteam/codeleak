@@ -12,7 +12,7 @@ class User(AbstractUser):
     # Required
     email = models.EmailField()
     username = models.CharField(max_length=150, unique=True, blank=False, null=False)
-    password_hash = models.CharField(max_length=255, blank=False, null=False)
+    password = models.CharField(max_length=255, blank=False, null=False)
     # Optional
     full_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.URLField(blank=True, null=True)

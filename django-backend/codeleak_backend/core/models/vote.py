@@ -39,7 +39,7 @@ class AnswerVote(Vote):
         on_delete=models.CASCADE,
         related_name='answer_vote_author'
     )
-
+    
 class QuestionCommentVote(Vote):
     # FKs
     question_comment = models.ForeignKey(

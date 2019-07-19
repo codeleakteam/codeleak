@@ -40,8 +40,9 @@ from core.views import (
     CreateAnswerView,
     LoginViewCustom,
     GithubLoginView,
-    VerifyEmailViewCustom
+    VerifyEmailViewCustom,
 )
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -70,5 +71,5 @@ urlpatterns = [
     path('api/tags', ListCreateTagView.as_view()),
     url(r'^api/tags/(?P<tag_id>[0-9]+)$', GetTagView.as_view()),
     path('api/search', user_question_tag_search),
-    url(r'^api-auth/', include('rest_framework.urls'))
+    url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]
