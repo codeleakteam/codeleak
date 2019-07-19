@@ -110,14 +110,8 @@ class AcceptAnswerView(APIView):
 class ReportAnswerView(APIView):
     def post(self, request, answer_id):
         print("body:", request.data)
-        user_id = request.data.get("user_id", None)
         is_report = request.data.get("is_report", None)
-
-        if user_id == None:
-            return Response({
-                'message': 'No user_id param provided'
-            }, status=status.HTTP_400_BAD_REQUEST)
-
+        
         if is_report == None:
             return Response({
                 'message': 'No is_report param provided'
@@ -135,7 +129,7 @@ class ReportAnswerView(APIView):
             try:
                 report = AnswerReport.objects.get(
                     answer=answer_id,
-                    author=user_id
+                    author=request.user.id
                 )
                 if is_report:
                     return Response({
@@ -152,7 +146,7 @@ class ReportAnswerView(APIView):
                     print("Report object does not exist. Will create one")
                     report_serializer = AnswerReportSerializer(data={
                         'answer': answer_id,
-                        'author': user_id
+                        'author': request.user.id 
                     })
                     if report_serializer.is_valid():
                         report_serializer.save()
@@ -184,23 +178,19 @@ class ReportAnswerView(APIView):
 class UpdateAnswerScoreView(UpdateAPIView):
     def put(self, request, answer_id):
         is_upvote = request.data.get('is_upvote')
-        user_id = request.data.get('user_id')
 
         # Field checks
         if is_upvote == None:
             return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
-
-        if user_id == None:
-            return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         if is_upvote != 'true' and is_upvote != 'false':
             return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
 
         # If user is not found, ObjectDoesNotExist will be caught
         try:
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk=request.user.id)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'message': 'User with the ID: ' + request.user.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # If answer is not found, ObjectDoesNotExist will be caught
         try:
@@ -213,14 +203,18 @@ class UpdateAnswerScoreView(UpdateAPIView):
 
         # Vote value(adds up only on answer score)
         vote_value = None
+        verb = None
+
         if is_upvote:
             vote_value = ANSWER_VOTE_VALUE
+            verb = 'ANSWER_UPVOTE'
         else:
             vote_value = -ANSWER_VOTE_VALUE
+            verb = 'ANSWER_DOWNVOTE'
 
         try:
             # If AnswerVote already exists we just update val
-            answer_vote = AnswerVote.objects.get(author=user_id, answer=answer_id)
+            answer_vote = AnswerVote.objects.get(author=request.user.id, answer=answer_id)
             print("Answer_vote already exists. ")
 
             # Case where user might be switching from upvote to downvote
@@ -236,6 +230,14 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 user.reputation += vote_value * 2
                 user.save()
 
+                notify.send(
+                    verb=verb,
+                    action_object=answer_vote,
+                    target=answer,
+                    sender=request.user,
+                    recipient=answer.author,
+                    vote_value=vote_value
+                )
                 serializer = AnswerSerializer(answer)
                 return Response({
                     'answer_vote': answer_vote_serializer.data,
@@ -249,14 +251,15 @@ class UpdateAnswerScoreView(UpdateAPIView):
 
         # If it does not exist, we create one
         except ObjectDoesNotExist:
+            answer_vote = None
             answer_vote_serializer = AnswerVoteSerializer(data={
-                'author': user_id,
+                'author': request.user.id,
                 'answer': answer_id,
                 'is_upvote': is_upvote
             })
             if answer_vote_serializer.is_valid():
                 print("answer_vote_serializer is valid. saving...")
-                answer_vote_serializer.save()
+                answer_vote = answer_vote_serializer.save()
             else:
                 print("answer_vote_serializer isn't valid. aborting...")
                 return Response(answer_vote_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -267,6 +270,14 @@ class UpdateAnswerScoreView(UpdateAPIView):
             user.reputation += vote_value
             user.save()
 
+            notify.send(
+                verb=verb,
+                action_object=answer_vote,
+                target=answer,
+                sender=request.user,
+                recipient=answer.author,
+                vote_value=vote_value
+            )
             serializer = AnswerSerializer(answer)
             return Response({
                 'answer_vote': answer_vote_serializer.data,

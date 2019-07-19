@@ -172,6 +172,7 @@ class UpdateQuestionScoreView(UpdateAPIView):
                     target=question,
                     sender=request.user,
                     recipient=question.author,
+                    vote_value=vote_value
                 )
 
                 serializer = QuestionSerializer(question)
@@ -212,6 +213,7 @@ class UpdateQuestionScoreView(UpdateAPIView):
                 target=question,
                 sender=request.user,
                 recipient=question.author,
+                vote_value=vote_value
             )
             serializer = QuestionSerializer(question)
             return Response({
