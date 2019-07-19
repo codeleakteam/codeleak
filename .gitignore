@@ -99,3 +99,4 @@ include
 Scripts
 lib
 tcl
+*.idea

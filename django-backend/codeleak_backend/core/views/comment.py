@@ -24,6 +24,7 @@ from core.serializers import (
     QuestionCommentReportSerializer,
     AnswerCommentReportSerializer
 )
+from notifications.signals import notify
 
 COMMENT_UPVOTE_VALUE = 20
 COMMENT_DOWNVOTE_VALUE = -5
@@ -80,17 +81,15 @@ class ListCreateCommentView(ListCreateAPIView):
     def post(self, request):
         comment_type = request.data.get('comment_type', None)
         object_id = request.data.get('object_id', None)
-        author = request.data.get('author', None)
 
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
         if object_id == None:
             return Response({ 'message': 'object_id param not provided'}, status.HTTP_400_BAD_REQUEST)
-        if author == None:
-            return Response({ 'message': 'author param not provided'}, status.HTTP_400_BAD_REQUEST)
         if comment_type not in COMMENT_TYPES:
             return Response({ 'message': 'comment_type param is invalid'}, status.HTTP_400_BAD_REQUEST)
 
+        # object/class references
         CommentModel = COMMENT_TYPES[comment_type]['model']
         ModelCommentedOn = COMMENT_TYPES[comment_type]['model_commented_on']
         CreateCommentSerializer = COMMENT_TYPES[comment_type]['create_serializer']
@@ -99,22 +98,34 @@ class ListCreateCommentView(ListCreateAPIView):
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         object_commented_on = None
+
         try:
             object_commented_on = ModelCommentedOn.objects.get(pk=object_id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'Object with the ID: ' + str(object_id) + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         write_data = request.data
+        write_data['author'] = request.user.id
         if comment_type == 'QUESTION_COMMENT':
             write_data['question'] = object_id
         else:
             write_data['answer'] = object_id
+
         create_comment_serializer = CreateCommentSerializer(data=write_data)
+
         if create_comment_serializer.is_valid():
             object_commented_on.has_comments = True
             object_commented_on.save()
             new_comment_obj = create_comment_serializer.save()
             read_comment_serializer = CommentSerializer(new_comment_obj)
+            notify.send(
+                verb='ADD_COMMENT',
+                action_object=new_comment_obj,
+                target=object_commented_on,
+                sender=request.user,
+                recipient=object_commented_on.author,
+            )
+
             return Response({
                 'has_comments': object_commented_on.has_comments,
                 'comment': read_comment_serializer.data
@@ -125,7 +136,6 @@ class UpdateCommentScoreView(UpdateAPIView):
     COMMENT_TYPES = COMMENT_TYPES
     def put(self, request, comment_id):
         is_upvote = request.data.get('is_upvote', None)
-        user_id = request.data.get('user_id', None)
         comment_type = request.data.get('comment_type', None)
         COMMENT_TYPES = self.COMMENT_TYPES
         # Field checks
@@ -138,18 +148,9 @@ class UpdateCommentScoreView(UpdateAPIView):
         if is_upvote == None:
             return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
 
-        if user_id == None:
-            return Response({ 'message': 'user_id value param not provided'}, status.HTTP_400_BAD_REQUEST)
-
         if is_upvote != 'true' and is_upvote != 'false':
             return Response({ 'message': 'Invalid is_upvote param'}, status.HTTP_400_BAD_REQUEST)
-
-        # Checking if user exists
-        try:
-            user = User.objects.get(pk=user_id)
-        except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-
+        
         # Checking if comment entity exists
         try:
             if comment_type == 'QUESTION_COMMENT':
@@ -176,11 +177,17 @@ class UpdateCommentScoreView(UpdateAPIView):
         CommentVoteSerializer = COMMENT_TYPES[comment_type]['vote_serializer']
         comment_key = COMMENT_TYPES[comment_type]['key']
 
+        # Checking if user exists
+        try:
+            user = User.objects.get(pk=request.user.id)
+        except ObjectDoesNotExist:
+            return Response({ 'message': 'User with the ID: ' + request.user.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
         try:
             if comment_type == 'QUESTION_COMMENT':
-                comment_vote = QuestionCommentVote.objects.get(author=user_id, question_comment=comment_id)
+                comment_vote = QuestionCommentVote.objects.get(author=request.user.id, question_comment=comment_id)
             else:
-                comment_vote = AnswerCommentVote.objects.get(author=user_id, answer_comment=comment_id)
+                comment_vote = AnswerCommentVote.objects.get(author=request.user.id, answer_comment=comment_id)
 
             # Case where user might be switching from upvote to downvote
             if comment_vote.is_upvote != is_upvote:
@@ -210,7 +217,7 @@ class UpdateCommentScoreView(UpdateAPIView):
         # If it does not exist, we create one
         except ObjectDoesNotExist:
             data = {
-                'author': user_id,
+                'author': request.user.id,
                 'is_upvote': is_upvote
             }
             data[comment_key] = comment_id
