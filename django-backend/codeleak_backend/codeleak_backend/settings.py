@@ -229,3 +229,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+DJANGO_NOTIFICATIONS_CONFIG = { 'SOFT_DELETE': True }

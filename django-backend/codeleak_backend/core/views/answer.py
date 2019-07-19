@@ -17,6 +17,7 @@ from core.serializers import (
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 from core.models import AnswerVote
+from notifications.signals import notify
 
 ANSWER_VOTE_VALUE = 20
 
@@ -54,7 +55,7 @@ class CreateAnswerView(CreateAPIView):
             return Response({ 'message': 'Question with the ID: ' + question + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            user = User.objects.get(pk=author)
+            author = User.objects.get(pk=author)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + author + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -63,6 +64,14 @@ class CreateAnswerView(CreateAPIView):
             serializer.save()
             print("Saving answer...")
             answer = Answer.objects.get(pk=serializer.data['id'])
+            print("answer:", )
+            notify.send(
+                    verb='ADD_ANSWER',
+                    action_object=answer,
+                    target=answer.question,
+                    sender=author,
+                    recipient=answer.question.author,
+                )
             read_serializer = AnswerSerializer(answer)
             return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

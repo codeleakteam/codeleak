@@ -40,9 +40,9 @@ from core.views import (
     CreateAnswerView,
     LoginViewCustom,
     GithubLoginView,
-    VerifyEmailViewCustom
+    VerifyEmailViewCustom,
 )
-import notifications.urls 
+import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),

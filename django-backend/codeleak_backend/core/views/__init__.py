@@ -13,7 +13,6 @@ from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerVie
 from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView
 from .auth import GithubLoginView, LoginViewCustom, VerifyEmailViewCustom
 
-
 __all__ = [
     'HomeView',
     'ListUserView',
@@ -36,5 +35,5 @@ __all__ = [
     'ReportCommentView',
     'LoginViewCustom',
     'VerifyEmailViewCustom',
-    'GithubLoginView'
+    'GithubLoginView',
 ]
