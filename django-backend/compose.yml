@@ -4,7 +4,25 @@ services:
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
+    # networks: 
+    #   - postgres_django
     volumes:
       - ./codeleak_backend:/code
     ports:
       - '8000:8000'
+#   db:
+#     image: postgres
+#     restart: always
+#     networks:
+#       - postgres_django
+#     environment:
+#       POSTGRES_USER: codeleak_user
+#       POSTGRES_DB: codeleak
+#       POSTGRES_PASSWORD: lamerajlame 
+#     ports:
+#       - '5432:5432'
+
+# networks:
+#   postgres_django:
+#     external: true
+        
