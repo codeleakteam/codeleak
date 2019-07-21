@@ -25,6 +25,7 @@ from core.serializers import (
     AnswerCommentReportSerializer
 )
 from notifications.signals import notify
+import requests
 
 COMMENT_UPVOTE_VALUE = 20
 COMMENT_DOWNVOTE_VALUE = -5
@@ -98,6 +99,7 @@ class ListCreateCommentView(ListCreateAPIView):
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         object_commented_on = None
+        question = None
 
         try:
             object_commented_on = ModelCommentedOn.objects.get(pk=object_id)
@@ -106,10 +108,16 @@ class ListCreateCommentView(ListCreateAPIView):
 
         write_data = request.data
         write_data['author'] = request.user.id
+
+        # If a new question comment is added we already have question_id and have already gotten a question object
         if comment_type == 'QUESTION_COMMENT':
             write_data['question'] = object_id
+            question = object_commented_on
+            print("question comment, object commented on: ", question)
         else:
             write_data['answer'] = object_id
+            question = object_commented_on.question
+            print("answer comment, object commented on: ", question)
 
         create_comment_serializer = CreateCommentSerializer(data=write_data)
 
@@ -125,6 +133,23 @@ class ListCreateCommentView(ListCreateAPIView):
                 sender=request.user,
                 recipient=object_commented_on.author,
             )
+
+            r = requests.post(
+                "https://api.mailgun.net/v3/codeleak.io/messages",
+                auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
+                # edit this when registration flow on front is finished
+                data={"from": "{} <mailgun@codeleak.io>".format("Branko Zivanovic"),
+                        "to": [question.author.email],
+                        "subject": "Re: {}".format(question.title),
+                        "template": "answer-comment-inbox-alert",
+                        "o:tag": ["inbox"],
+                        "v:question_title": question.title,
+                        # edit this when registration flow on front is finished
+                        "v:author_full_name": 'Branko Zivanovic',
+                        "v:foreword": "has just added a comment on your question.",
+                        "v:answer_or_comment_description": new_comment_obj.content,
+                        "v:codeleak_question_link": "http://localhost:3000/question/{}/{}".format(question.id, question.slug) 
+                })
 
             return Response({
                 'has_comments': object_commented_on.has_comments,
