@@ -69,15 +69,23 @@ class CreateAnswerView(CreateAPIView):
                     sender=author,
                     recipient=answer.question.author,
                 )
-            requests.post(
+            r = requests.post(
                 "https://api.mailgun.net/v3/codeleak.io/messages",
                 auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
-                data={"from": "{} <mailgun@codeleak.io>".format(author.email),
+                # edit this when registration flow on front is finished
+                data={"from": "{} <mailgun@codeleak.io>".format("Branko Zivanovic"),
                         "to": [question.author.email],
                         "subject": "Re: {}".format(question.title),
+                        "template": "answer-comment-inbox-alert",
                         "o:tag": ["inbox"],
-                        "text": ""
-                    })
+                        "v:question_title": question.title,
+                        # edit this when registration flow on front is finished
+                        "v:author_full_name": 'Branko Zivanovic',
+                        "v:foreword": "has just added an answer on your question.",
+                        "v:answer_or_comment_description": answer.description,
+                        "v:codeleak_question_link": "http://localhost:3000/question/{}/{}".format(question.id, question.slug) 
+                })
+            print("mailgun response", r.text)
             read_serializer = AnswerSerializer(answer)
             return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
