@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions
 from core.models import AnswerVote
 from notifications.signals import notify
+import requests
 
 ANSWER_VOTE_VALUE = 20
 
@@ -40,14 +41,10 @@ class IsQuestionAuthorOrReadOnly(permissions.BasePermission):
 class CreateAnswerView(CreateAPIView):
     def post(self, request):
         question = request.data.get("question", None)
-        author = request.data.get("author", None)
 
         # Field checks
         if question == None:
             return Response({ 'message': 'question param not provided'}, status.HTTP_400_BAD_REQUEST)
-
-        if author == None:
-            return Response({ 'message': 'author param not provided'}, status.HTTP_400_BAD_REQUEST)
 
         try:
             question = Question.objects.get(pk=question)
@@ -55,7 +52,7 @@ class CreateAnswerView(CreateAPIView):
             return Response({ 'message': 'Question with the ID: ' + question + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
-            author = User.objects.get(pk=author)
+            author = User.objects.get(pk=request.user.id)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + author + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -72,6 +69,15 @@ class CreateAnswerView(CreateAPIView):
                     sender=author,
                     recipient=answer.question.author,
                 )
+            requests.post(
+                "https://api.mailgun.net/v3/codeleak.io/messages",
+                auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
+                data={"from": "{} <mailgun@codeleak.io>".format(author.email),
+                        "to": [question.author.email],
+                        "subject": "Re: {}".format(question.title),
+                        "o:tag": ["inbox"],
+                        "text": ""
+                    })
             read_serializer = AnswerSerializer(answer)
             return Response(read_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
