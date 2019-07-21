@@ -31,12 +31,20 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # Writes registration data into console instead of wanting to send it over SMTP server
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Rest-auth by default needs both username and email for login
 ACCOUNT_EMAIL_REQUIRED = True   
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'support@codeleak.io'
+EMAIL_HOST_PASSWORD = '5eab2c91367e887ffc1f0bf2de1df85a-fd0269a6-d9b79fcb'
+
+# Does not work. Signup/register will ask for password1&password2 fields
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE=False
 
 AUTHENTICATION_BACKENDS = (
@@ -55,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -65,7 +74,6 @@ INSTALLED_APPS = [
     # needed for social
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'core',
     'corsheaders',
     'notifications'
 ]
@@ -87,7 +95,6 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    
     'localhost:3000'
 )
 
@@ -97,7 +104,9 @@ ROOT_URLCONF = 'codeleak_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            "/code/codeleak_backend/core/templates"
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
