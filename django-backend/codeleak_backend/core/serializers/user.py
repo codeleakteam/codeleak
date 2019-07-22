@@ -12,16 +12,45 @@ class UserSerializer(serializers.ModelSerializer):
         return QuestionSerializer(user_obj.question_author.all(), many=True).data
 
     def get_answers(self, user_obj):
-        print("USER_OBJ", user_obj)
         from .answer import AnswerSerializer
         return AnswerSerializer(user_obj.answer_author.all(), many=True).data
 
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = [
+            'password',
+            'is_superuser',
+            'is_staff',
+            'is_active',
+            'user_permissions',
+            'groups'
+        ]
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    reputation = serializers.IntegerField(read_only=True)
+    reported_times = serializers.IntegerField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    last_login = serializers.DateTimeField(read_only=True)
+    date_joined = serializers.DateTimeField(read_only=True)
+    class Meta:
+        model = User
+        exclude = [
+            'password',
+            'is_superuser',
+            'is_staff',
+            'is_active',
+            'user_permissions',
+            'groups'
+        ] 
 
 class UserSerializerMinimal(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     class Meta:
         model = User
         fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
+
+
+

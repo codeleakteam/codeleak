@@ -2,10 +2,10 @@ from django.db import models
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
 from core.models import Question, User, Tag
-from .user import UserSerializerMinimal
 from .tag import TagSerializerMinimal, TagCreateUpdateSerializer
 from .comment import QuestionCommentSerializer
 from .answer import AnswerSerializer
+from .user import UserSerializerMinimal
 
 class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -30,7 +30,8 @@ class QuestionCreateUpdateSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(), read_only=False
     )
-    # tags = TagCreateUpdateSerializer(many=True)
+    created_at = serializers.DateTimeField(read_only=True)
+        # tags = TagCreateUpdateSerializer(many=True)
 
     def create(self, validated_data):
         title = validated_data.get('title', None)
@@ -47,5 +48,6 @@ class QuestionCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = "__all__"
+        exclude = ['reported_times']
+
 

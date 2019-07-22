@@ -29,7 +29,6 @@ class User(AbstractUser):
     birth = models.DateField(blank=True, null=True)
     # Flags
     student = models.BooleanField(default=False, blank=True, null=False)
-    verified = models.BooleanField(default=False, blank=True, null=False)
     looking_for_job = models.BooleanField(default=False, blank=True, null=False)
     # Counters
     reputation = models.IntegerField(default=0, blank=True, null=False)
