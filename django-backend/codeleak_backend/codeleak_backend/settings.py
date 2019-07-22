@@ -82,6 +82,9 @@ STATIC_URL = "https://codeleak.sfo2.digitaloceanspaces.com/%s/" % (AWS_STATIC_LO
 AWS_AUTO_CREATE_BUCKET = True
 AWS_BUCKET_ACL = None
 AWS_STORAGE_BUCKET_NAME = "codeleak"
+
+# Removes unecessary query params from manually uploaded file on s3
+AWS_QUERYSTRING_AUTH = False
 STATIC_ROOT = STATIC_URL
 # STATIC_URL = '/static/'
 

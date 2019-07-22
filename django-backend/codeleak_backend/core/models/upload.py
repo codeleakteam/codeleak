@@ -1,15 +1,16 @@
 from django.db import models
 from django.conf import settings
 from .user import User
-from mysite.storage_backends import (
+from core.storage_backends import (
     PrivateMediaStorage,
     PublicMediaStorage 
 )
 
+# not using any of these anymore
 class Upload(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     # we've already set default file storage in settings
-    upload = models.FileField()
+    file = models.FileField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class PrivateUpload(models.Model):

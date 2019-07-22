@@ -24,6 +24,8 @@ from .report import (
     AnswerReportSerializer,
     AnswerCommentReportSerializer
 )
+from .upload import UploadSerializer
+
 __all__ = [
     "UserSerializer",
     "UserSerializerMinimal",
@@ -47,6 +49,6 @@ __all__ = [
     "QuestionReportSerializer",
     "QuestionCommentReportSerializer",
     "AnswerReportSerializer",
-    "AnswerCommentReportSerializer"
+    "AnswerCommentReportSerializer",
+    "UploadSerializer"
 ]
-

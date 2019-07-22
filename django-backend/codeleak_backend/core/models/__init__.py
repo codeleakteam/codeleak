@@ -17,6 +17,7 @@ from .report import (
     AnswerReport,
     AnswerCommentReport
 )
+from .upload import Upload
 
 __all__ = [
     'Editor',
@@ -34,5 +35,6 @@ __all__ = [
     'QuestionReport',
     'QuestionCommentReport',
     'AnswerReport',
-    'AnswerCommentReport'
+    'AnswerCommentReport',
+    'Upload'
  ]
