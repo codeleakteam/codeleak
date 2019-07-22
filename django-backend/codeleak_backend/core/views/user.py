@@ -8,7 +8,7 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 from rest_framework import status
 from core.models import User
-from core.serializers import UserSerializer
+from core.serializers import UserSerializer, UserSerializerMinimal, UpdateUserSerializer
 from rest_framework import permissions
 from rest_framework.parsers import FormParser, MultiPartParser
 
@@ -26,7 +26,7 @@ class IsMeOrReadOnly(permissions.BasePermission):
 class ListUserView(ListAPIView):
     def get(self, request):
         users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
+        serializer = UserSerializerMinimal(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetUpdateUserView(RetrieveUpdateAPIView):
@@ -56,7 +56,7 @@ class GetUpdateUserView(RetrieveUpdateAPIView):
         self.check_object_permissions(request, user)
         if file_obj is not None:
             request.data['avatar'] = file_obj
-        serializer = UserSerializer(user, data=request.data, partial=True)
+        serializer = UpdateUserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

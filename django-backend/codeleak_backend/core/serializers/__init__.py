@@ -2,7 +2,7 @@ from .question import (
     QuestionSerializer,
     QuestionCreateUpdateSerializer
 )
-from .user import UserSerializer, UserSerializerMinimal
+from .user import UserSerializer, UserSerializerMinimal, UpdateUserSerializer
 from .tag import(
     TagSerializerMinimal,
     TagIDSerializer,
@@ -29,6 +29,7 @@ from .upload import UploadSerializer
 __all__ = [
     "UserSerializer",
     "UserSerializerMinimal",
+    "UpdateUserSerializer",
     "TagSerializer",
     "TagSerializerMinimal",
     "TagIDSerializer",
