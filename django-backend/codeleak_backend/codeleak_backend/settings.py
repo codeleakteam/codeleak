@@ -55,6 +55,36 @@ AUTHENTICATION_BACKENDS = (
 # Saying we are using custom User model(extends Django's AbstractUser)
 AUTH_USER_MODEL = 'core.User'
 
+# Django-storages
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID='Z6B6SM3XFN7Z4T6EJUGD'
+AWS_SECRET_ACCESS_KEY='WoX8mWzjbHQwHzA88Hq1W/GRNQgby279aqITj3gCgo4'
+AWS_S3_ENDPOINT_URL='https://sfo2.digitaloceanspaces.com'
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_STATIC_LOCATION = 'static'
+STATICFILES_STORAGE = 'core.storage_backends.StaticStorage'
+
+AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
+DEFAULT_FILE_STORAGE = 'core.storage_backends.PublicMediaStorage'
+
+AWS_PRIVATE_MEDIA_LOCATION = 'media/private'
+PRIVATE_FILE_STORAGE = 'core.storage_backends.PrivateMediaStorage'
+
+# AWS_LOCATION = 'static'
+
+STATIC_URL = "https://codeleak.sfo2.digitaloceanspaces.com/%s/" % (AWS_STATIC_LOCATION)
+AWS_AUTO_CREATE_BUCKET = True
+AWS_BUCKET_ACL = None
+AWS_STORAGE_BUCKET_NAME = "codeleak"
+STATIC_ROOT = STATIC_URL
+# STATIC_URL = '/static/'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -75,7 +105,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'corsheaders',
-    'notifications'
+    'notifications',
+    'storages'
 ]
 
 # Needed for rest-auth/allauth
@@ -183,8 +214,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
