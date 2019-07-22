@@ -10,6 +10,7 @@ from rest_framework import status
 from core.models import User
 from core.serializers import UserSerializer
 from rest_framework import permissions
+from rest_framework.parsers import FormParser, MultiPartParser
 
 SAFE_METHODS = ["GET", "OPTIONS", "HEAD"]
 
@@ -29,6 +30,7 @@ class ListUserView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetUpdateUserView(RetrieveUpdateAPIView):
+    parser_classes = [FormParser, MultiPartParser, ]
     permission_classes = (IsMeOrReadOnly, )
     
     def get(self, request, user_id):
@@ -48,8 +50,12 @@ class GetUpdateUserView(RetrieveUpdateAPIView):
     def put(self, request, user_id):
         print("Update quesiton data: ", request.data)
         print("Update question id: ", user_id)
+        file_obj = request.FILES.get('avatar', None)
+        print("file obj", file_obj)
         user = User.objects.get(pk=user_id)
         self.check_object_permissions(request, user)
+        if file_obj is not None:
+            request.data['avatar'] = file_obj
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
