@@ -61,7 +61,6 @@ class ListCreateCommentView(ListCreateAPIView):
 
     def get(self, request):
         comment_type = request.GET.get('comment_type', None)
-        print("TAP", comment_type)
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
 
@@ -71,14 +70,11 @@ class ListCreateCommentView(ListCreateAPIView):
         CommentSerializer = COMMENT_TYPES[comment_type]['serializer']
         comment_key = COMMENT_TYPES[comment_type]['key']
 
-        try:
-            comments = CommentModel.objects.all()[:10]
-            serializer = CommentSerializer(comments, many=True)
-            response = {}
-            response[comment_key] = serializer.data
-            return Response(response, status.HTTP_200_OK)
-        except Exception as err:
-            return Response({'message': 'Internal server error'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        comments = CommentModel.objects.all()[:10]
+        serializer = CommentSerializer(comments, many=True)
+        response = {}
+        response[comment_key] = serializer.data
+        return Response(response, status.HTTP_200_OK)
     def post(self, request):
         comment_type = request.data.get('comment_type', None)
         object_id = request.data.get('object_id', None)
