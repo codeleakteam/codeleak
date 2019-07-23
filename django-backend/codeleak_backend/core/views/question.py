@@ -1,3 +1,4 @@
+import logging
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.generics import (
@@ -32,6 +33,8 @@ from core.serializers import (
 from rest_framework import permissions
 from notifications.signals import notify
 
+logger = logging.getLogger()
+
 # Upvoting question means +20 on its score, and downvoting means -20
 QUESTION_VOTE_VALUE = 20
 
@@ -46,8 +49,6 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        print("user", request.user)
-        print("obj", obj)
         return request.user.id == obj.author.id
 
 

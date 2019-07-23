@@ -13,6 +13,27 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import sys
 import datetime
+import sentry_sdk
+import logging.config
+import raven
+from django.utils.log import DEFAULT_LOGGING
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
+LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
+
+sentry_logging = LoggingIntegration(
+    level=logging.INFO,        # Capture info and above as breadcrumbs
+    event_level=logging.ERROR  # Send errors as events
+)
+sentry_sdk.init(
+    dsn="https://66e6fd9fe82e42f1b636c99f0e5cc527@sentry.io/1510922",
+    integrations=[DjangoIntegration(), sentry_logging]
+)
+
+
+
+LOGGING_CONFIG = None
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -109,7 +130,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'corsheaders',
     'notifications',
-    'storages'
+    'storages',
+    'raven.contrib.django.raven_compat'
 ]
 
 # Needed for rest-auth/allauth

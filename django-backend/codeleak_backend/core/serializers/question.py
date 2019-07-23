@@ -1,3 +1,4 @@
+import logging
 from django.db import models
 from rest_framework import serializers
 from django.template.defaultfilters import slugify
@@ -6,6 +7,7 @@ from .tag import TagSerializerMinimal, TagCreateUpdateSerializer
 from .comment import QuestionCommentSerializer
 from .answer import AnswerSerializer
 from .user import UserSerializerMinimal
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
