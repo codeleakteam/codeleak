@@ -2,79 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import _ from 'lodash'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import UserSignature from '../UserSignature'
 
-const Comment = ({ authorName, content, score, upvoteComment, reportComment }) => {
+const Comment = ({ id, created_at, username, reputation, avatar, content, score, upvoteComment, reportComment }) => {
   return (
     <Wrapper>
-      <Heading>
-        <AuthorName>{authorName}</AuthorName>
-        <PointsCounter>{score} points</PointsCounter>
-      </Heading>
-      <Row>
-        <ControlsWrapper>
-          <FontAwesomeIcon icon="angle-up" size="lg" onClick={upvoteComment} />
-          <FontAwesomeIcon icon="ban" size="sm" onClick={reportComment} />
-        </ControlsWrapper>
-        <CommentContent>{content}</CommentContent>
-      </Row>
+      <UserSignature id={id} username={username} avatar={avatar} reputation={reputation} postedAt={created_at} />
+      <p>{content}</p>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  border: 1px solid $antGray;
   width: 100%;
-  max-width: 450px;
-  margin: 8px 0 0 auto;
-  padding: 4px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-`
-
-const Row = styled.div`
-  display: flex;
-`
-const Heading = styled.div`
-  line-height: 1;
-`
-
-const AuthorName = styled.span`
-  font-size: 13px;
-  line-height: 14px;
-  &:after {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: black;
-    color: black;
-    display: inline-block;
-    vertical-align: middle;
-    margin: 0 8px;
-  }
-`
-
-const PointsCounter = styled.span`
-  font-size: 13px;
-  line-height: 14px;
-`
-
-const ControlsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-right: 8px;
-  align-items: center;
-`
-
-const CommentContent = styled.span`
-  font-size: 13px;
-  line-height: 14px;
 `
 
 Comment.propTypes = {
-  authorName: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  avatar: PropTypes.string.isRequired,
+  created_at: PropTypes.string.isRequired,
+  reputation: PropTypes.number.isRequired,
   content: PropTypes.string.isRequired,
   score: PropTypes.number.isRequired,
   upvoteComment: PropTypes.func.isRequired,

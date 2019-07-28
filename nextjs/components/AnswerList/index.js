@@ -1,16 +1,22 @@
 import React from 'react'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Answer from '../Answer'
 
 const AnswerList = ({ answers }) => {
   return (
-    <div>
+    <Wrapper>
       {answers.map(answer => {
         return <Answer key={answer.id} id={answer.id} {...answer} />
       })}
-    </div>
+    </Wrapper>
   )
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+`
 
 AnswerList.propTypes = {
   answers: PropTypes.arrayOf(

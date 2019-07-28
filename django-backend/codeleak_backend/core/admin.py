@@ -37,11 +37,9 @@ UserAdmin.fieldsets += ('Custom fields set',
             'location',
             'birth',
             'student',
-            'verified',
             'looking_for_job',
             'reputation',
             'reported_times',
-            'created_at',
         )
     }
 ),

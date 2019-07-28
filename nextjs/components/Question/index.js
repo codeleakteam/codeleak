@@ -7,7 +7,6 @@ import TagWithLink from '../TagWithLink'
 import Comment from '../Comment'
 import UserSignature from '../UserSignature'
 import PostCTAS from '../PostCTAS'
-import moment from 'moment'
 import { apiPost, apiPut } from '../../api'
 import { convertFromRaw, EditorState, ContentState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
@@ -131,54 +130,65 @@ class Question extends Component {
     let reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    const postedAt = moment(created_at).fromNow()
     const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
     return (
-      <Card>
-        <Title>{title}</Title>
-        <UserSignature
-          id={author.id}
-          username={author.username}
-          reputation={authorReputation}
-          postedAt={postedAt}
-          avatar={author.avatar}
-        />
-        <TagsList>
-          {tags.map(q => {
-            return (
-              <TagWithLink style={{ marginRight: '6px' }} url={`/tag/${q.slug}`} id={q.id} text={q.title} key={q.id} />
-            )
-          })}
-        </TagsList>
-        <Description>
-          {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-        </Description>
-        <PostCTAS
-          postType="question"
-          submitComment={this.submitComment}
-          updateScore={updateQuestionScore}
-          id={id}
-          score={score}
-          updatedScore={updatedQuestionScore}
-        />
-        {commentSummary.map(c => (
-          <Comment
-            key={c.id}
-            id={c.id}
-            authorName={c.author.username}
-            content={c.content}
-            score={c.score}
-            upvoteComment={() => this.upvoteComment(1, c.id)}
-            reportComment={() => this.reportComment(1, c.id)}
+      <Wrapper>
+        <Card>
+          <Title>{title}</Title>
+          <UserSignature
+            id={author.id}
+            username={author.username}
+            reputation={authorReputation}
+            postedAt={created_at}
+            avatar={author.avatar}
           />
+          <TagsList>
+            {tags.map(q => {
+              return (
+                <TagWithLink
+                  style={{ marginRight: '6px' }}
+                  url={`/tag/${q.slug}`}
+                  id={q.id}
+                  text={q.title}
+                  key={q.id}
+                />
+              )
+            })}
+          </TagsList>
+          <Description>
+            {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
+          </Description>
+          <PostCTAS
+            postType="question"
+            submitComment={this.submitComment}
+            updateScore={updateQuestionScore}
+            id={id}
+            score={score}
+            updatedScore={updatedQuestionScore}
+          />
+        </Card>
+        {commentSummary.map((c, i) => (
+          <Card isComment={true} key={i}>
+            <Comment
+              key={c.id}
+              id={c.id}
+              created_at={c.created_at}
+              username={c.author.username}
+              avatar={c.author.avatar}
+              reputation={c.author.reputation}
+              content={c.content}
+              score={c.score}
+              upvoteComment={() => this.upvoteComment(1, c.id)}
+              reportComment={() => this.reportComment(1, c.id)}
+            />
+            {this.state.comments.length > 3 && (
+              <ToggleAllComments onClick={this.handleCommentSummary}>
+                {this.state.commentSummary ? 'view all' : 'hide'}
+              </ToggleAllComments>
+            )}
+          </Card>
         ))}
-
-        {this.state.comments.length > 3 && (
-          <ToggleAllComments onClick={this.handleCommentSummary}>
-            {this.state.commentSummary ? 'view all' : 'hide'}
-          </ToggleAllComments>
-        )}
-      </Card>
+      </Wrapper>
     )
   }
 }
@@ -191,6 +201,11 @@ const TagsList = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
 `
 
 const Description = styled.div`
