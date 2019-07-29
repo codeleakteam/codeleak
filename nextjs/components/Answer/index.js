@@ -150,6 +150,18 @@ class Answer extends Component {
             <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />
           )}
 
+          <iframe
+            src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
+            style={{
+              width: '100%',
+              height: '90vh',
+              border: 0,
+              'border-radius': '4px',
+              overflow: 'hidden',
+            }}
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+          />
+
           <PostCTAS
             postType="answer"
             updateScore={this.updateAnswerScore}

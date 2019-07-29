@@ -49,7 +49,7 @@ class Index extends Component {
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button type="primary">Ask a question</Button>
+                <Button type="primary">Submit question</Button>
               </Link>
             </Heading>
             <TwoSideLayout

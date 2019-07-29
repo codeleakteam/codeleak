@@ -93,7 +93,7 @@ QuestionSummary.propTypes = {
 const Row = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 7px;
+  margin: 8px 0;
 `
 
 const Title = styled.p`
@@ -150,7 +150,7 @@ const Description = styled.p`
 `
 
 const TagsList = styled.div`
-  margin-bottom: 20px;
+  margin: 10px 0 20px -2px;
 `
 
 const CountersRow = styled(Row)`
