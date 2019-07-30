@@ -85,6 +85,16 @@ const templates = [
     color: '#61dafb',
     url: 'https://codesandbox.io/s/new',
     icons: ['react'],
+    stackBlitzTemplate: 'create-react-app',
+    dependencies: {},
+    fs: {
+      '/public/index.html': `
+          <div>LMAO</div>
+        `,
+      '/src/index.js': `
+        console.log("boo")
+      `,
+    },
   },
   {
     name: 'Next.js',

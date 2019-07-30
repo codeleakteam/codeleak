@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import _ from 'lodash'
+import stackBlitzSdk from '@stackblitz/sdk'
 import { Input, Steps, Alert, Button, message } from 'antd'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
@@ -15,21 +16,6 @@ import Router from 'next/router'
 // const { TextArea } = Input
 
 const { Step } = Steps
-
-const steps = [
-  {
-    title: 'Choose a template',
-    content: 'First-content',
-  },
-  {
-    title: 'Code',
-    content: 'Second-content',
-  },
-  {
-    title: 'Details',
-    content: 'Last-content',
-  },
-]
 
 class AskQuestion extends Component {
   state = {
@@ -160,17 +146,42 @@ class AskQuestion extends Component {
     this.setState({ currentStep })
   }
 
+  createAndEmbedStackblitzProject = async chosenTemplate => {
+    console.log('chosenTemplate', chosenTemplate)
+    this._stackBlitzVm = await stackBlitzSdk.embedProject(
+      'stackblitz-iframe',
+      {
+        files: chosenTemplate.fs,
+        dependencies: chosenTemplate.dependencies,
+        title: 'Dynamically Generated Project',
+        description: 'Created with <3 by the StackBlitz',
+        template: chosenTemplate.stackBlitzTemplate,
+      },
+      {
+        height: 320,
+      }
+    )
+  }
+
   setTemplate = chosenTemplate => {
     this.setState({ chosenTemplate, currentStep: chosenTemplate !== null ? 1 : 0 }, () => {
       console.log('[setTemplate]', { chosenTemplate })
-      if (chosenTemplate) {
-        this._iframeRef.src = chosenTemplate.url
-      }
+      if (chosenTemplate) this.createAndEmbedStackblitzProject(chosenTemplate)
     })
   }
 
   proceed = () => {
-    console.log(this._iframeRef.contentWindow.document)
+    const project = {
+      files: {
+        'index.ts': code,
+        'index.html': html,
+      },
+      title: 'Dynamically Generated Project',
+      description: 'Created with <3 by the StackBlitz SDK!',
+      dependencies: {
+        moment: '*', // * = latest version
+      },
+    }
   }
 
   render() {
@@ -199,7 +210,6 @@ class AskQuestion extends Component {
                 type="info"
                 showIcon
               />
-
               <Row>
                 <StyledCodeCTAButton onClick={this.setTemplate.bind(this, null)}>
                   Choose a different template
@@ -209,18 +219,9 @@ class AskQuestion extends Component {
                 </StyledCodeCTAButton>
               </Row>
               <IFrameWrapper>
-                <iframe
-                  ref={r => (this._iframeRef = r)}
-                  style={{
-                    width: '100%',
-                    minHeight: '100vh',
-                    border: 0,
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                  }}
-                  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-                />
+                <div id="stackblitz-iframe" />
               </IFrameWrapper>
+              >
             </React.Fragment>
           )}
         </StepContentWrapper>
@@ -272,12 +273,28 @@ class AskQuestion extends Component {
   }
 }
 
+const steps = [
+  {
+    title: 'Choose a template',
+  },
+  {
+    title: 'Code',
+  },
+  {
+    title: 'Details',
+  },
+]
 const StyledAskQuestionButton = styled(Button)`
   margin-top: 16px;
 `
 
 const IFrameWrapper = styled.div`
+  width: 100%;
+  min-height: 90vh;
   padding: 15px 0;
+  #stackblitz-iframe {
+    min-height: 90vh;
+  }
 `
 
 const StyledCodeCTAButton = styled(Button)`
