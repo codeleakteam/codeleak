@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import _ from 'lodash'
-import { Input, Button, message } from 'antd'
+import { Input, Steps, Alert, Button, message } from 'antd'
 import InputLabel from '../InputLabel'
-import TechnologyList from '../TechnologyList'
+import TemplateList from '../TemplateList'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 // import addLinkPlugin from '../draftjs/addLinkPlugin'
 import InlineStyleControls from '../draftjs/InlineStyleControls'
@@ -14,8 +14,32 @@ import { apiGet, apiPost } from '../../api'
 import Router from 'next/router'
 // const { TextArea } = Input
 
+const { Step } = Steps
+
+const steps = [
+  {
+    title: 'Choose a template',
+    content: 'First-content',
+  },
+  {
+    title: 'Code',
+    content: 'Second-content',
+  },
+  {
+    title: 'Details',
+    content: 'Last-content',
+  },
+]
+
 class AskQuestion extends Component {
   state = {
+    currentStep: 0,
+
+    contentLoading: false,
+    chosenTemplate: null,
+
+    repositoryHasBeenSaved: false,
+
     // Form data
     titleValue: '',
     repositoryUrlValue: '',
@@ -131,15 +155,76 @@ class AskQuestion extends Component {
     )
   }
 
+  onChange = currentStep => {
+    console.log('onChange:', currentStep)
+    this.setState({ currentStep })
+  }
+
+  setTemplate = chosenTemplate => {
+    this.setState({ chosenTemplate, currentStep: chosenTemplate !== null ? 1 : 0 }, () => {
+      console.log('[setTemplate]', { chosenTemplate })
+      if (chosenTemplate) {
+        this._iframeRef.src = chosenTemplate.url
+      }
+    })
+  }
+
+  proceed = () => {
+    console.log(this._iframeRef.contentWindow.document)
+  }
+
   render() {
     const { editorState, _mounted } = this.state
 
     return (
       <div>
         <Head>
-          <title>Ask Question</title>
+          <title>Submit question</title>
         </Head>
-        <InputLabel text="Title" />
+        <Steps current={this.state.currentStep}>
+          {steps.map(item => (
+            <Step key={item.title} title={item.title} />
+          ))}
+        </Steps>{' '}
+        <StepContentWrapper>
+          {this.state.currentStep === 0 && (
+            <React.Fragment>
+              {!this.state.chosenTemplate && <TemplateList setTemplate={this.setTemplate} />}
+            </React.Fragment>
+          )}
+          {this.state.currentStep === 1 && this.state.chosenTemplate && (
+            <React.Fragment>
+              <Alert
+                message="Please hit the save button (File -> Save) inside editor or press Ctrl + S when editor is focused before proceeding forward"
+                type="info"
+                showIcon
+              />
+
+              <Row>
+                <StyledCodeCTAButton onClick={this.setTemplate.bind(this, null)}>
+                  Choose a different template
+                </StyledCodeCTAButton>
+                <StyledCodeCTAButton type="primary" onClick={this.proceed}>
+                  I'm done
+                </StyledCodeCTAButton>
+              </Row>
+              <IFrameWrapper>
+                <iframe
+                  ref={r => (this._iframeRef = r)}
+                  style={{
+                    width: '100%',
+                    minHeight: '100vh',
+                    border: 0,
+                    borderRadius: '4px',
+                    overflow: 'hidden',
+                  }}
+                  sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+                />
+              </IFrameWrapper>
+            </React.Fragment>
+          )}
+        </StepContentWrapper>
+        {/* <InputLabel text="Title" />
         <Input
           placeholder="Question title"
           type="primary"
@@ -162,7 +247,6 @@ class AskQuestion extends Component {
         </React.Fragment>
 
         <InputLabel text="Technology stack" />
-        <TechnologyList />
 
         <InputLabel text="CodeSandbox url" />
         <Input
@@ -182,7 +266,7 @@ class AskQuestion extends Component {
 
         <StyledAskQuestionButton type="primary" onClick={this.handleSubmit}>
           {this.props.type === 'edit' ? 'Edit question' : 'Send question'}
-        </StyledAskQuestionButton>
+        </StyledAskQuestionButton> */}
       </div>
     )
   }
@@ -190,6 +274,26 @@ class AskQuestion extends Component {
 
 const StyledAskQuestionButton = styled(Button)`
   margin-top: 16px;
+`
+
+const IFrameWrapper = styled.div`
+  padding: 15px 0;
+`
+
+const StyledCodeCTAButton = styled(Button)`
+  flex: 1;
+  margin: 0 5px;
+`
+
+const StepContentWrapper = styled.div`
+  padding: 20px 0;
+`
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px 0;
+  margin: 0 -5px;
 `
 
 export default AskQuestion

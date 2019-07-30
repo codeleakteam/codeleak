@@ -180,7 +180,7 @@ class Question extends Component {
           />
         </Card>
         {commentSummary.map((c, i) => (
-          <Card isComment={true} key={i}>
+          <Card hoverable={true} isComment={true} key={i}>
             <Comment
               key={c.id}
               id={c.id}

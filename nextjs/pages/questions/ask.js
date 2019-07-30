@@ -8,7 +8,7 @@ class Ask extends Component {
   render() {
     return (
       <div>
-        <Title>Ask a question</Title>
+        <Title>Submit question</Title>
         <AskQuestion />
       </div>
     )

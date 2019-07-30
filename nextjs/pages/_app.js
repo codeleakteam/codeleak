@@ -82,7 +82,7 @@ class MyApp extends App {
 
 const GlobalStyle = createGlobalStyle`
   * {
-    font-family: 'Karla', sans-serif;
+    font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -96,7 +96,7 @@ const GlobalStyle = createGlobalStyle`
   // reset
   body {
     margin: 0;
-    font-family: 'Karla', sans-serif;
+    font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     height: 100%;
     min-height: 100%;
     background: #e6e8ed;
