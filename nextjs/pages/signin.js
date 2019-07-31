@@ -72,7 +72,7 @@ const Wrapper = styled.div`
 const Socials = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 `
 
 const Title = styled.h2`
@@ -89,7 +89,7 @@ const Description = styled.p`
 `
 
 const StyledSocialButton = styled(Button)`
-  margin-right: 16px;
+  margin-right: 1rem;
   max-width: 112px;
   margin-bottom: 8px;
   &:last-of-type {
@@ -99,7 +99,7 @@ const StyledSocialButton = styled(Button)`
 
 const StyledLoginButton = styled(Button)`
   width: 112px;
-  margin-right: 16px;
+  margin-right: 1rem;
   @media screen and (max-width: 740px) {
     width: 100%;
   }

@@ -12,7 +12,7 @@ class TemplateList extends Component {
 
   render() {
     return (
-      <Wrapper>
+      <React.Fragment>
         <List>
           {templates.map(t => {
             return (
@@ -30,7 +30,7 @@ class TemplateList extends Component {
             )
           })}
         </List>
-      </Wrapper>
+      </React.Fragment>
     )
   }
 }
@@ -88,12 +88,8 @@ const templates = [
     stackBlitzTemplate: 'create-react-app',
     dependencies: {},
     fs: {
-      '/public/index.html': `
-          <div>LMAO</div>
-        `,
-      '/src/index.js': `
-        console.log("boo")
-      `,
+      'index.html': '',
+      'index.js': '',
     },
   },
   {
@@ -158,9 +154,6 @@ const templates = [
   },
 ]
 
-const Wrapper = styled.div`
-  padding: 25px 0;
-`
 const List = styled.div`
   display: grid;
   gap: 1rem 1rem;

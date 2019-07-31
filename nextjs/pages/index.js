@@ -79,7 +79,7 @@ const Heading = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 75%;
-  margin: 16px 0;
+  margin: 1rem 0;
   align-items: center;
   @media screen and (max-width: 740px) {
     width: 100%;

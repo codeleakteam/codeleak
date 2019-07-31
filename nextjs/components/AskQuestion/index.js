@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
+import axios from 'axios'
 import styled from 'styled-components'
 import _ from 'lodash'
 import stackBlitzSdk from '@stackblitz/sdk'
-import { Input, Steps, Alert, Button, message } from 'antd'
+import { Input, Steps, Spin, Alert, Button, message } from 'antd'
+import FormField from '../FormField'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
@@ -24,26 +26,18 @@ class AskQuestion extends Component {
     contentLoading: false,
     chosenTemplate: null,
 
-    repositoryHasBeenSaved: false,
+    sandbox_id: null,
 
     // Form data
     titleValue: '',
     repositoryUrlValue: '',
     selectedTags: [], // Array of tag ids
 
-    // Autocomplete datasource
-    tagsAutocompleteDatasource: [],
-
     // Draftjs editor state
     editorState: EditorState.createEmpty(),
 
     // Set to true when this component mounts
     _mounted: false,
-  }
-
-  constructor(props) {
-    super(props)
-    this.debouncedGetTags = _.debounce(this.getTags, 200)
   }
 
   componentDidMount() {
@@ -64,17 +58,6 @@ class AskQuestion extends Component {
     this.setState({ editorState })
   }
 
-  getTags = async q => {
-    try {
-      const res = await apiGet.getTags({ q })
-      const tagsAutocompleteDatasource = _.get(res, 'data.tags', null)
-      if (!tagsAutocompleteDatasource) throw new Error('Internal server error')
-      this.setState({ tagsAutocompleteDatasource })
-    } catch (err) {
-      message.error('Internal server error')
-    }
-  }
-
   handleTitleInputChange = e => {
     this.setState({ titleValue: e.target.value })
   }
@@ -87,13 +70,7 @@ class AskQuestion extends Component {
     this.setState({ repositoryUrlValue: e.target.value })
   }
 
-  handleTagsAutocompleteInputKeyDown = e => {
-    this.debouncedGetTags(e.target.value)
-  }
-
   handleTagsAutocompleteSelect = tagTitle => {
-    const tag = this.state.tagsAutocompleteDatasource.filter(t => t.title === tagTitle)[0]
-    if (!tag) return
     this.setState(prevState => ({
       ...prevState,
       selectedTags: [...prevState.selectedTags, tag.id],
@@ -141,133 +118,151 @@ class AskQuestion extends Component {
     )
   }
 
-  onChange = currentStep => {
-    console.log('onChange:', currentStep)
-    this.setState({ currentStep })
-  }
-
   createAndEmbedStackblitzProject = async chosenTemplate => {
     console.log('chosenTemplate', chosenTemplate)
-    this._stackBlitzVm = await stackBlitzSdk.embedProject(
-      'stackblitz-iframe',
-      {
+    try {
+      this.setState({ contentLoading: true })
+      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', {
         files: chosenTemplate.fs,
         dependencies: chosenTemplate.dependencies,
         title: 'Dynamically Generated Project',
         description: 'Created with <3 by the StackBlitz',
         template: chosenTemplate.stackBlitzTemplate,
-      },
-      {
-        height: 320,
-      }
-    )
+      })
+      this.setState({ contentLoading: false })
+    } catch (err) {
+      console.error('[createAndEmbedStackblitzProject]', { err })
+      this.setState({ contentLoading: false })
+    }
   }
 
   setTemplate = chosenTemplate => {
     this.setState({ chosenTemplate, currentStep: chosenTemplate !== null ? 1 : 0 }, () => {
-      console.log('[setTemplate]', { chosenTemplate })
+      // if chosenTemplate === null it means we're letting user choose a different template
       if (chosenTemplate) this.createAndEmbedStackblitzProject(chosenTemplate)
     })
   }
 
-  proceed = () => {
-    const project = {
-      files: {
-        'index.ts': code,
-        'index.html': html,
-      },
-      title: 'Dynamically Generated Project',
-      description: 'Created with <3 by the StackBlitz SDK!',
-      dependencies: {
-        moment: '*', // * = latest version
-      },
+  next = async () => {
+    this.setState({ contentLoading: true })
+    // returns {[file_name]: fileContent }
+    const files = await this._stackBlitzVm.getFsSnapshot()
+
+    const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
+      return {
+        ...acc,
+        [fileName]: {
+          content: fileContent,
+        },
+      }
+    }, {})
+
+    try {
+      const res = await axios.post('https://codesandbox.io/api/v1/sandboxes/define?json=1', {
+        files: sandboxFiles,
+      })
+      const sandbox_id = _.get(res, 'data.sandbox_id', null)
+      if (!sandbox_id) throw new Error('sandbox_id is falsy')
+      console.log('[next]', { sandbox_id })
+      this.setState({ sandbox_id, currentStep: 2, contentLoading: false })
+    } catch (err) {
+      console.error('[next]', err)
+      this.setState({ contentLoading: false })
     }
   }
 
   render() {
-    const { editorState, _mounted } = this.state
+    const { editorState, _mounted, contentLoading } = this.state
 
     return (
       <div>
         <Head>
           <title>Submit question</title>
         </Head>
-        <Steps current={this.state.currentStep}>
+        <StyledSteps current={this.state.currentStep}>
           {steps.map(item => (
             <Step key={item.title} title={item.title} />
           ))}
-        </Steps>{' '}
-        <StepContentWrapper>
-          {this.state.currentStep === 0 && (
+        </StyledSteps>{' '}
+        <StepContentWrapper contentLoading={contentLoading}>
+          {contentLoading && <Spin size="large" />}
+          {!contentLoading && this.state.currentStep === 0 && (
             <React.Fragment>
               {!this.state.chosenTemplate && <TemplateList setTemplate={this.setTemplate} />}
             </React.Fragment>
           )}
-          {this.state.currentStep === 1 && this.state.chosenTemplate && (
-            <React.Fragment>
-              <Alert
-                message="Please hit the save button (File -> Save) inside editor or press Ctrl + S when editor is focused before proceeding forward"
-                type="info"
-                showIcon
-              />
+
+          <SecondStepWrapper active={!contentLoading && this.state.currentStep === 1}>
+            <Alert
+              message="Please hit the save button (File -> Save) inside editor or press Ctrl + S when editor is focused before proceeding forward"
+              type="info"
+              showIcon
+            />
+            <Row>
+              <Button onClick={this.setTemplate.bind(this, null)}>Choose a different template</Button>
+              <Button type="primary" onClick={this.next}>
+                I'm done
+              </Button>
+            </Row>
+            <IFrameWrapper>
+              <div id="stackblitz-iframe" />
+            </IFrameWrapper>
+          </SecondStepWrapper>
+
+          {!contentLoading && this.state.currentStep === 2 && (
+            <Column>
+              <FormField>
+                <InputLabel text="Title" />
+                <Input
+                  placeholder="Question title"
+                  size="large"
+                  type="primary"
+                  value={this.state.titleValue}
+                  onChange={this.handleTitleInputChange}
+                />
+              </FormField>
+
+              <FormField>
+                <InputLabel text="Description" />
+                <React.Fragment>
+                  <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
+                  {_mounted && (
+                    <DraftjsEditor
+                      editorState={editorState}
+                      handleKeyCommand={this.handleKeyCommand}
+                      plugins={this.plugins}
+                      placeholder="Describe your question here. Don't insert any code."
+                      onChange={this.handleDescriptionInputChange}
+                      height={300}
+                    />
+                  )}
+                </React.Fragment>
+              </FormField>
+
+              <FormField>
+                <InputLabel text="Tags" />
+                <QuestionTagsAutocomplete
+                  dataSource={this.state.tagsAutocompleteDatasource}
+                  onSelect={this.handleTagsAutocompleteSelect}
+                  onDeselect={this.handleTagsAutocompleteDeselect}
+                />
+              </FormField>
               <Row>
-                <StyledCodeCTAButton onClick={this.setTemplate.bind(this, null)}>
-                  Choose a different template
-                </StyledCodeCTAButton>
-                <StyledCodeCTAButton type="primary" onClick={this.proceed}>
-                  I'm done
-                </StyledCodeCTAButton>
+                <Button
+                  onClick={() => {
+                    this.setState({ currentStep: 1 })
+                  }}
+                >
+                  Back
+                </Button>
+
+                <Button type="primary" onClick={this.handleSubmit}>
+                  Submit
+                </Button>
               </Row>
-              <IFrameWrapper>
-                <div id="stackblitz-iframe" />
-              </IFrameWrapper>
-              >
-            </React.Fragment>
+            </Column>
           )}
         </StepContentWrapper>
-        {/* <InputLabel text="Title" />
-        <Input
-          placeholder="Question title"
-          type="primary"
-          value={this.state.titleValue}
-          onChange={this.handleTitleInputChange}
-        />
-        <InputLabel text="Description" />
-        <React.Fragment>
-          <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
-          {_mounted && (
-            <DraftjsEditor
-              editorState={editorState}
-              handleKeyCommand={this.handleKeyCommand}
-              plugins={this.plugins}
-              placeholder="Describe your question here. Don't insert any code."
-              onChange={this.handleDescriptionInputChange}
-              height={300}
-            />
-          )}
-        </React.Fragment>
-
-        <InputLabel text="Technology stack" />
-
-        <InputLabel text="CodeSandbox url" />
-        <Input
-          placeholder="Enter codeSandbox url"
-          type="primary"
-          value={this.state.repositoryUrlValue}
-          onChange={this.handleRepositoryUrlInputChange}
-        />
-
-        <InputLabel text="Tags" />
-        <QuestionTagsAutocomplete
-          dataSource={this.state.tagsAutocompleteDatasource}
-          onInputKeyDown={this.handleTagsAutocompleteInputKeyDown}
-          onSelect={this.handleTagsAutocompleteSelect}
-          onDeselect={this.handleTagsAutocompleteDeselect}
-        />
-
-        <StyledAskQuestionButton type="primary" onClick={this.handleSubmit}>
-          {this.props.type === 'edit' ? 'Edit question' : 'Send question'}
-        </StyledAskQuestionButton> */}
       </div>
     )
   }
@@ -284,8 +279,14 @@ const steps = [
     title: 'Details',
   },
 ]
-const StyledAskQuestionButton = styled(Button)`
-  margin-top: 16px;
+
+const SecondStepWrapper = styled.div`
+  display: ${props => (props.active ? 'block' : 'none')};
+  width: 100%;
+`
+
+const StyledSteps = styled(Steps)`
+  margin-bottom: 1rem;
 `
 
 const IFrameWrapper = styled.div`
@@ -293,24 +294,31 @@ const IFrameWrapper = styled.div`
   min-height: 90vh;
   padding: 15px 0;
   #stackblitz-iframe {
+    border: none;
+    border-radius: 4px;
     min-height: 90vh;
   }
 `
 
-const StyledCodeCTAButton = styled(Button)`
-  flex: 1;
-  margin: 0 5px;
-`
-
 const StepContentWrapper = styled.div`
-  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: ${props => (!props.contentLoading ? 'flex-start' : 'center')};
+  width: 100%;
 `
 const Row = styled.div`
   width: 100%;
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.5rem;
   padding: 8px 0;
-  margin: 0 -5px;
+`
+
+const Column = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 8px 0;
 `
 
 export default AskQuestion

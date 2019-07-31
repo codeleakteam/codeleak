@@ -79,7 +79,7 @@ class InputWithButton extends Component {
 
 const Input = styled.input`
   border: 1px solid $clblue;
-  font-size: 25px;
+  font-size: 1.5625rem;
   padding: 0 16px;
   height: 100%;
   box-sizing: border-box;
@@ -94,16 +94,16 @@ const Input = styled.input`
   }
   @media screen and (max-width: 740px) {
     padding: 0 8px;
-    font-size: 16px;
+    font-size: 1rem;
   }
   &::placeholder {
-    color: $black;
-    font-size: 25px;
+    color: black;
+    font-size: 1.5625rem;
     @media screen and (max-width: 940px) {
-      font-size: 22px;
+      font-size: 1.375rem;
     }
     @media screen and (max-width: 740px) {
-      font-size: 16px;
+      font-size: 1rem;
     }
   }
   &:focus,
@@ -115,7 +115,7 @@ const Message = styled.span`
   font-weight: 700;
   display: block;
   padding: 4px 0;
-  font-size: 16px;
+  font-size: 1rem;
 `
 
 const SuccessMessage = styled(Message)`

@@ -9,10 +9,8 @@ InputLabel.propTypes = {
 }
 
 const Label = styled.span`
-  margin: 8px 0 4px;
-  display: block;
+  font-size: 1rem;
   font-weight: 800;
-  font-size: 16px;
   color: black;
 `
 

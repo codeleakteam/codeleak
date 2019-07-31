@@ -7,7 +7,11 @@ import singularCheck from '../../helpers/functions/singularCheck'
 const Activity = ({ name, points, answers, time, slug, id }) => {
   return (
     <Wrapper>
-      <div css={`margin-bottom:5px;`}>
+      <div
+        css={`
+          margin-bottom: 5px;
+        `}
+      >
         <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
           <a>
             <ActivityName>{name}</ActivityName>
@@ -35,7 +39,7 @@ Activity.propTypes = {
 }
 
 const Wrapper = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 `
 const ActivityName = styled.span`
   font-size: 1.1rem;
@@ -56,7 +60,6 @@ const AnswersCounter = styled.span`
   font-size: 0.9rem;
   line-height: 22px;
   margin-right: 8px;
-
 `
 
 const AskedTimes = styled.span`
@@ -70,7 +73,7 @@ const PointsCounter = styled.span`
   color: ${props => props.theme.darkerDarkGrey};
 `
 const PointsIcon = styled.img`
-  width:18px;
-  height:18px;
+  width: 18px;
+  height: 18px;
 `
 export default Activity

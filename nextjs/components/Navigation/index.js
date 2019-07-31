@@ -43,7 +43,7 @@ const Wrapper = styled.nav`
   position: relative;
   margin-bottom: 36px;
   @media screen and(max-width:745px) {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 `
 

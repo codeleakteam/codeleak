@@ -310,7 +310,7 @@ const RightSide = styled.div`
 `
 
 const Username = styled.p`
-  font-size: 16px;
+  font-size: 1rem;
   color: ${props => props.theme.darkerDarkGrey};
   opacity: 0.64;
   margin-bottom: 15px;
@@ -322,7 +322,7 @@ const UserFullName = styled.span`
   font-weight: bold;
 `
 const UserBio = styled.span`
-  font-size: 16px;
+  font-size: 1rem;
   color: ${props => props.theme.darkerDarkGrey};
   line-height: 22px;
   margin-bottom: 15px;

@@ -18,6 +18,7 @@ class Ask extends Component {
 const Title = styled.h3`
   font-size: 1.6rem;
   font-weight: bold;
+  margin-bottom: 1rem;
 `
 
 export default Ask

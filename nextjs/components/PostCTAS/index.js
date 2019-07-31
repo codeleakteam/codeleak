@@ -62,7 +62,7 @@ const Column = styled.div`
   width: 100%;
   display: flex;
   flex-flow: column nowrap;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   align-items: center;
   justify-content: space-between;
 `
