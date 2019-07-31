@@ -23,28 +23,34 @@ const Navigation = ({ isMenuActive, handleBurgerMenuClick, showLogo, showBurger,
   )
   return (
     <Wrapper>
-      {showLogo && <StyledLogo type="short" />}
-      {navJSX}
+      <Container>
+        {showLogo && <StyledLogo type="short" />}
+        {navJSX}
+      </Container>
     </Wrapper>
   )
 }
 
-const StyledLogo = styled(Logo)`
-  margin-right: 5px;
-`
-
 const Wrapper = styled.nav`
+  width: 100%;
+  margin-bottom: 36px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.7rem 0;
+`
+const Container = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  max-width: 1300px;
   width: 100%;
+  padding: 0 10px;
   margin: 0 auto;
   z-index: 1;
-  position: relative;
-  margin-bottom: 36px;
-  @media screen and(max-width:745px) {
-    margin-top: 1rem;
-  }
+`
+const StyledLogo = styled(Logo)`
+  margin-right: 5px;
 `
 
 Navigation.propTypes = {

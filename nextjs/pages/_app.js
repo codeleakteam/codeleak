@@ -52,15 +52,16 @@ class MyApp extends App {
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyle />
+          <Navigation
+            isMenuActive={isMenuActive}
+            handleBurgerMenuClick={this.handleBurgerMenuClick}
+            showLogo={true}
+            showBurger={true}
+            isResponsive={false}
+            isLoggedIn={isLoggedIn}
+          />
+
           <MainContentWrapper>
-            <Navigation
-              isMenuActive={isMenuActive}
-              handleBurgerMenuClick={this.handleBurgerMenuClick}
-              showLogo={true}
-              showBurger={true}
-              isResponsive={false}
-              isLoggedIn={isLoggedIn}
-            />
             <Component {...pageProps} isLoggedIn={isLoggedIn} />
           </MainContentWrapper>
           <Footer />
