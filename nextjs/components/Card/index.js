@@ -9,6 +9,7 @@ const Card = styled.div`
   margin-bottom: ${props => (!props.isComment ? '0.5rem' : '0.1875rem')};
   border-radius: 8px;
   transition: all 0.1s ease-in-out;
+  font-size: 0.8rem;
   ${props =>
     props.isHoverable &&
     css`

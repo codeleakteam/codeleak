@@ -129,18 +129,25 @@ class AskQuestion extends Component {
         description: 'Created with <3 by the StackBlitz',
         template: chosenTemplate.stackBlitzTemplate,
       })
-      this.setState({ contentLoading: false })
+      this.setState({ contentLoading: false, vmMounted: true })
     } catch (err) {
       console.error('[createAndEmbedStackblitzProject]', { err })
-      this.setState({ contentLoading: false })
+      this.setState({ contentLoading: false, vmMounted: false })
     }
   }
 
   setTemplate = chosenTemplate => {
-    this.setState({ chosenTemplate, currentStep: chosenTemplate !== null ? 1 : 0 }, () => {
-      // if chosenTemplate === null it means we're letting user choose a different template
-      if (chosenTemplate) this.createAndEmbedStackblitzProject(chosenTemplate)
-    })
+    this.setState(
+      {
+        chosenTemplate,
+        currentStep: chosenTemplate !== null ? 1 : 0,
+        vmMounted: chosenTemplate !== null ? true : false,
+      },
+      () => {
+        // if chosenTemplate === null it means we're letting user choose a different template
+        if (chosenTemplate) this.createAndEmbedStackblitzProject(chosenTemplate)
+      }
+    )
   }
 
   next = async () => {
@@ -194,15 +201,17 @@ class AskQuestion extends Component {
 
           <SecondStepWrapper active={!contentLoading && this.state.currentStep === 1}>
             <Alert
-              message="Please hit the save button (File -> Save) inside editor or press Ctrl + S when editor is focused before proceeding forward"
+              message="Please hit the save button (Cmd + S or Ctrl + S) when editor is focused before proceeding forward"
               type="info"
               showIcon
             />
             <Row>
               <Button onClick={this.setTemplate.bind(this, null)}>Choose a different template</Button>
-              <Button type="primary" onClick={this.next}>
-                I'm done
-              </Button>
+              {this.state.vmMounted && (
+                <Button type="primary" onClick={this.next}>
+                  I'm done
+                </Button>
+              )}
             </Row>
             <IFrameWrapper>
               <div id="stackblitz-iframe" />
