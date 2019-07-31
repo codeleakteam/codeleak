@@ -45,12 +45,12 @@ const Container = styled.div`
   justify-content: space-between;
   max-width: 1300px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 1rem;
   margin: 0 auto;
   z-index: 1;
 `
 const StyledLogo = styled(Logo)`
-  margin-right: 5px;
+  margin-right: 1rem;
 `
 
 Navigation.propTypes = {

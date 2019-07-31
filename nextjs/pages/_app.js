@@ -94,13 +94,15 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     height: auto;
   }
-  // reset
+  :root{
+    font-size: 18px;
+  }
   body {
     margin: 0;
     font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     height: 100%;
     min-height: 100%;
-    background: #e6e8ed;
+    background: #eff1f4;
 
     margin-bottom: -130px;
   }

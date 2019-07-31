@@ -6,6 +6,6 @@ const MainContentWrapper = styled.div`
   margin: 1rem auto;
   min-height: calc(100vh - 140px);
   height: 100%;
-  padding: 0 10px;
+  padding: 0 1rem;
 `
 export default MainContentWrapper

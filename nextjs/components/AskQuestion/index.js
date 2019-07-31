@@ -249,6 +249,7 @@ class AskQuestion extends Component {
               </FormField>
               <Row>
                 <Button
+                  size="large"
                   onClick={() => {
                     this.setState({ currentStep: 1 })
                   }}
@@ -256,7 +257,7 @@ class AskQuestion extends Component {
                   Back
                 </Button>
 
-                <Button type="primary" onClick={this.handleSubmit}>
+                <Button size="large" type="primary" onClick={this.handleSubmit}>
                   Submit
                 </Button>
               </Row>
