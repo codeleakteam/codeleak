@@ -4,15 +4,21 @@ import styled, { css } from 'styled-components'
 import Link from 'next/link'
 import { Button, Alert } from 'antd'
 import QuestionList from '../components/QuestionList'
+import { withAuthSync } from '../helpers/functions/auth'
 import Banner from '../components/Banner'
+import Navigation from '../components/Navigation'
 import PopularTags from '../components/SideWidgets/PopularTags'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
 import _ from 'lodash'
 
 class Index extends Component {
-  static async getInitialProps() {
+  state = {
+    isMenuActive: false,
+  }
+  static async getInitialProps(ctx) {
     try {
+      const { resiUser } = ctx
       const questionsRes = await apiGet.getIndex()
       // const tagsRes = await apiGet.getTags({ q: '' })
       const questions = _.get(questionsRes, 'data.results', null)
@@ -23,6 +29,7 @@ class Index extends Component {
         questions,
         // tags,
         error: false,
+        resiUser,
       }
     } catch (error) {
       console.error('[getInitialProps]', { error })
@@ -38,11 +45,11 @@ class Index extends Component {
 
   render() {
     return (
-      <Wrapper isLoggedIn={this.props.isLoggedIn}>
+      <Wrapper>
         <Head>
           <title>Codeleak</title>
         </Head>
-        {!this.props.isLoggedIn && <Banner />}
+
         {this.props.error && <Alert message="Internal server error" type="error" />}
         {!this.props.error && (
           <React.Fragment>
@@ -64,14 +71,7 @@ class Index extends Component {
 }
 
 const Wrapper = styled.div`
-  ${props =>
-    !props.isLoggedIn &&
-    css`
-      margin-top: 350px;
-      @media screen and (max-width: 740px) {
-        margin-top: 560px;
-      }
-    `}
+  width: 100%;
 `
 
 const Heading = styled.div`
@@ -92,4 +92,4 @@ const Title = styled.h2`
   margin: 0;
 `
 
-export default Index
+export default withAuthSync(Index)

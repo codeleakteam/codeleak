@@ -20,7 +20,7 @@ class TemplateList extends Component {
                 <StyledCard isHoverable={true} onClick={this.props.setTemplate.bind(this, t)}>
                   {t.icons &&
                     t.icons.map((ic, i) => (
-                      <IconWrapper>
+                      <IconWrapper key={i}>
                         <CustomIcon height="37px" width="37px" name={ic} />
                       </IconWrapper>
                     ))}

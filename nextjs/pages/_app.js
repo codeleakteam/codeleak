@@ -27,15 +27,13 @@ const theme = {
 class MyApp extends App {
   state = {
     isMenuActive: false,
-    isLoggedIn: true,
   }
-
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
-    return { pageProps }
+    return { pageProps, codeleakUser: ctx.codeleakUser }
   }
 
   componentDidMount() {
@@ -47,26 +45,25 @@ class MyApp extends App {
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
-    const { Component, pageProps } = this.props
-    const { isMenuActive, isLoggedIn } = this.state
+    const { Component, pageProps, codeleakUser } = this.props
     return (
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyle />
           <Navigation
-            isMenuActive={isMenuActive}
+            isMenuActive={this.state.isMenuActive}
             handleBurgerMenuClick={this.handleBurgerMenuClick}
             showLogo={true}
             showBurger={true}
-            isResponsive={false}
-            isLoggedIn={isLoggedIn}
+            isResponsive={true}
+            isLoggedIn={!!codeleakUser}
           />
 
           <MainContentWrapper>
-            <Component {...pageProps} isLoggedIn={isLoggedIn} />
+            <Component {...pageProps} />
           </MainContentWrapper>
           <Footer />
-          <SideMenu isMenuActive={isMenuActive}>
+          {/* <SideMenu isMenuActive={isMenuActive}>
             <Navigation
               isMenuActive={isMenuActive}
               handleBurgerMenuClick={this.handleBurgerMenuClick}
@@ -75,7 +72,7 @@ class MyApp extends App {
               isResponsive={true}
               isLoggedIn={isLoggedIn}
             />
-          </SideMenu>
+          </SideMenu> */}
         </Container>
       </ThemeProvider>
     )
