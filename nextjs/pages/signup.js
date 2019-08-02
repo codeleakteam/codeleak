@@ -1,12 +1,42 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd'
+import _ from 'lodash'
+import Head from 'next/head'
+import { Alert, Form, Icon, Input, Spin, Button } from 'antd'
 import styled from 'styled-components'
+import { apiPost } from '../api'
+import { login } from '../helpers/functions/auth'
 
 class SignUp extends Component {
+  state = {
+    errors: [],
+    loading: false,
+  }
+
+  register = async ({ fullName, email, password }) => {
+    try {
+      this.setState({ loading: true })
+      const res = await apiPost.register({ fullName, email, password })
+      const token = _.get(res, 'data.token', null)
+      const user = _.get(res, 'data.user', null)
+      login({ user, token })
+
+      console.log('[register]', res.data)
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        const errors = Object.values(err.response.data)
+        this.setState({ loading: false, errors })
+      } else {
+        this.setState({ loading: false, errors: ['Internal server error. Please try again!'] })
+      }
+      console.error('[register]', { err })
+    }
+  }
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        console.log('[handleSubmit]', { values })
+        this.register(values)
         // console.log('Received values of form: ', values)
       }
     })
@@ -14,21 +44,46 @@ class SignUp extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form
-
     return (
       <Wrapper>
+        <Head>
+          <title>Sign up</title>
+        </Head>
         <Title>codeLeak</Title>
         <Description>An online-editor based question and answer platform for front-end developers</Description>
-        <Socials>
+        {/* <Socials>
           <StyledSocialButton type="primary" icon="google">
             Google
           </StyledSocialButton>
           <StyledSocialButton type="primary" icon="twitter">
             Twitter
           </StyledSocialButton>
-        </Socials>
-
+        </Socials> */}
+        {this.state.errors.length > 0 && (
+          <React.Fragment>
+            {this.state.errors.map((err, i) => (
+              <Alert style={{ marginBottom: '8px' }} message={err[i]} key={i} type="error" showIcon />
+            ))}
+          </React.Fragment>
+        )}
+        {this.state.loading && (
+          <SpinWrapper>
+            <Spin size="large" />
+          </SpinWrapper>
+        )}
         <Form onSubmit={this.handleSubmit}>
+          <Form.Item>
+            {getFieldDecorator('fullName', {
+              rules: [{ required: true, message: 'Please input display name!' }],
+            })(
+              <Input
+                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type="text"
+                placeholder="Full name"
+              />
+            )}
+          </Form.Item>
+
           <Form.Item>
             {getFieldDecorator('email', {
               rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
@@ -69,17 +124,6 @@ class SignUp extends Component {
             )}
           </Form.Item>
           <Form.Item>
-            {getFieldDecorator('displayName', {
-              rules: [{ required: true, message: 'Please input display name!' }],
-            })(
-              <Input
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                type="text"
-                placeholder="Display name "
-              />
-            )}
-          </Form.Item>
-          <Form.Item>
             <StyledRegisterButton type="primary" htmlType="submit">
               Register
             </StyledRegisterButton>
@@ -114,6 +158,15 @@ const Description = styled.p`
   font-size: 14px;
   line-height: 22px;
   color: black;
+  margin-bottom: 16px;
+`
+
+const SpinWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
 `
 
 const StyledSocialButton = styled(Button)`

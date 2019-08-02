@@ -1,23 +1,30 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import cookie from 'js-cookie'
-import { parseCookies } from 'nookies'
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
 const protectedRoutes = ['/questions/ask']
 const guestRoutes = ['/login', '/register']
 
 // Protected routes: Routes we show only to logged in users. If not logged in, redirect to login page
 // Guest routes: Routes we show only to not logged in users. If logged in, redirect to /
-export const login = async user => {
+export const login = async ({ user, token, ctx }) => {
   console.log('[login] fired')
-  cookie.set('codeleakUser', JSON.stringify(user))
-  Router.push('/')
+  try {
+    const userJSON = JSON.stringify(user)
+    console.log('[login]', { userJSON })
+    setCookie(undefined, 'codeleakUser', userJSON)
+    setCookie(undefined, 'codeleakAuthToken', token)
+    Router.push('/')
+  } catch (err) {
+    // Ignore
+    console.error('[login]', err)
+  }
 }
 
 export const logout = () => {
   console.log('[logout] fired')
-  cookie.remove('codeleakUser')
-  cookie.remove('codeleakAuth')
+  destroyCookie(undefined, 'codeleakUser')
+  destroyCookie(undefined, 'codeleakAuthToken')
 
   // window.localStorage.setItem("logout", Date.now());
   Router.push('/')
@@ -31,7 +38,7 @@ export const withAuthSync = WrappedComponent =>
     static displayName = `withAuthSync(${getDisplayName(WrappedComponent)})`
 
     static async getInitialProps(ctx) {
-      let { codeleakAuth, codeleakUser } = auth(ctx)
+      let { codeleakAuthToken, codeleakUser } = auth(ctx)
       if (
         codeleakUser !== undefined &&
         codeleakUser !== null &&
@@ -43,7 +50,7 @@ export const withAuthSync = WrappedComponent =>
       const componentProps =
         WrappedComponent.getInitialProps && (await WrappedComponent.getInitialProps({ ...ctx, codeleakUser }))
 
-      return { ...componentProps, codeleakAuth, codeleakUser }
+      return { ...componentProps, codeleakAuthToken, codeleakUser }
     }
 
     render() {
@@ -52,11 +59,11 @@ export const withAuthSync = WrappedComponent =>
   }
 
 export const auth = ctx => {
-  const { codeleakAuth, codeleakUser } = parseCookies(ctx)
-  const isLoggedIn = !!codeleakAuth && !!codeleakUser
+  const { codeleakAuthToken, codeleakUser } = parseCookies(ctx)
+  const isLoggedIn = !!codeleakAuthToken && !!codeleakUser
   console.log('[auth] isLoggedIn ', isLoggedIn)
   console.log('[auth] codeleakUser', codeleakUser)
-  console.log('[auth] codeleakAuth', codeleakAuth)
+  console.log('[auth] codeleakAuthToken', codeleakAuthToken)
 
   // Protected routes are the ones we show only to users that are logged in
   let isProtectedRoute
@@ -90,7 +97,7 @@ export const auth = ctx => {
   }
 
   return {
-    codeleakAuth,
+    codeleakAuthToken,
     codeleakUser,
   }
 }

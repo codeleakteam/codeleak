@@ -6,6 +6,7 @@ import BurgerMenu from '../BurgerMenu'
 import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
 import Search from '../Search'
+import { logout } from '../../helpers/functions/auth'
 
 const regularPages = [
   {
@@ -36,8 +37,8 @@ const menu = (
       <Switch style={{ marginLeft: '8px' }} size="small" />
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="1">
-      <a href="http://www.taobao.com/">Log out</a>
+    <Menu.Item key="1" onClick={() => logout()}>
+      <a>Log out</a>
     </Menu.Item>
   </Menu>
 )

@@ -28,6 +28,7 @@ class MyApp extends App {
   state = {
     isMenuActive: false,
   }
+
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
     if (Component.getInitialProps) {
@@ -45,7 +46,7 @@ class MyApp extends App {
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
-    const { Component, pageProps, codeleakUser } = this.props
+    const { Component, pageProps } = this.props
     return (
       <ThemeProvider theme={theme}>
         <Container>
@@ -56,7 +57,7 @@ class MyApp extends App {
             showLogo={true}
             showBurger={true}
             isResponsive={true}
-            isLoggedIn={!!codeleakUser}
+            isLoggedIn={!!pageProps.codeleakUser}
           />
 
           <MainContentWrapper>
