@@ -21,6 +21,7 @@ const theme = {
   dirtyWhite: '#f1f1f1',
   lightBlack: '#757575',
   nextBlack: '#141617',
+  antTagGrey: '#e6e8ed',
 }
 
 class MyApp extends App {
@@ -103,7 +104,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     min-height: 100%;
     background: #eff1f4;
-
     margin-bottom: -130px;
   }
   a {

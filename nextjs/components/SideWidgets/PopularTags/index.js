@@ -1,22 +1,64 @@
 import React from 'react'
+import Link from 'next/link'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import TagWithLink from '../../TagWithLink'
+import CustomIcon from '../../../assets/icons'
 import _ from 'lodash'
 
-const PopularTags = ({ tags }) => {
-  const popularTags = _.reverse(_.sortBy(tags, 'used_times')).slice(0, 6)
+const PopularTags = ({}) => {
   return (
     <Wrapper>
       <Title>Popular tags</Title>
       <List>
-        {popularTags.map(tag => {
-          return <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" />
-        })}
+        <TagWrapper>
+          <Link href="/development">
+            <a>React</a>
+          </Link>
+          <CustomIcon width="24px" height="24px" style={{ marginRight: '8px' }} name="react" />
+        </TagWrapper>
+        <TagWrapper>
+          <Link href="/development">
+            <a>Angular</a>
+          </Link>
+
+          <CustomIcon width="24px" height="24px" style={{ marginRight: '8px' }} name="angular" />
+        </TagWrapper>
+        <TagWrapper>
+          <Link href="/development">
+            <a>Vue</a>
+          </Link>
+          <CustomIcon width="24px" height="24px" style={{ marginRight: '8px' }} name="vue" />
+        </TagWrapper>
+        <TagWrapper>
+          <Link href="/development">
+            <a>Svelte</a>
+          </Link>
+
+          <CustomIcon width="24px" height="24px" style={{ marginRight: '8px' }} name="svelte" />
+        </TagWrapper>
+        <TagWrapper>
+          <Link href="/development">
+            <a>Ember</a>
+          </Link>
+
+          <CustomIcon width="24px" height="24px" style={{ marginRight: '8px' }} name="ember" />
+        </TagWrapper>
       </List>
     </Wrapper>
   )
 }
+
+const TagWrapper = styled.div`
+  align-items: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 10px;
+  margin-bottom: 8px;
+  background: ${props => props.theme.antTagGrey};
+  border-radius: 5px;
+  /* border-bottom: 1px solid ${props => props.theme.lightGrey}; */
+`
 
 PopularTags.propTypes = {
   tags: PropTypes.arrayOf(
@@ -43,8 +85,7 @@ const Title = styled.h4`
 
 const List = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
+  flex-flow: column nowrap;
   border-radius: 4px;
   margin: -2px;
 `

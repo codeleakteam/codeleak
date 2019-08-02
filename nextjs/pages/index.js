@@ -14,14 +14,14 @@ class Index extends Component {
   static async getInitialProps() {
     try {
       const questionsRes = await apiGet.getIndex()
-      const tagsRes = await apiGet.getTags({ q: '' })
+      // const tagsRes = await apiGet.getTags({ q: '' })
       const questions = _.get(questionsRes, 'data.results', null)
-      const tags = _.get(tagsRes, 'data.tags', null)
+      // const tags = _.get(tagsRes, 'data.tags', null)
       if (!questions) throw new Error('[getInitialProps] questions not available')
-      if (!tags) throw new Error('[getInitialProps] tags not available')
+      // if (!tags) throw new Error('[getInitialProps] tags not available')
       return {
         questions,
-        tags,
+        // tags,
         error: false,
       }
     } catch (error) {
@@ -54,7 +54,7 @@ class Index extends Component {
             </Heading>
             <TwoSideLayout
               mainSectionElement={<QuestionList isLoggedIn={this.props.isLoggedIn} questions={this.props.questions} />}
-              rightSectionElement={<PopularTags tags={this.props.tags} />}
+              rightSectionElement={<PopularTags />}
             />
           </React.Fragment>
         )}
