@@ -1,26 +1,24 @@
 import React, { Component } from 'react'
+import { Alert, Form, Icon, Input, Button, Spin } from 'antd'
 import _ from 'lodash'
-import Head from 'next/head'
-import { Alert, Form, Icon, Input, Spin, Button } from 'antd'
 import styled from 'styled-components'
 import { apiPost } from '../api'
 import { login } from '../helpers/functions/auth'
 
-class SignUp extends Component {
+class SignIn extends Component {
   state = {
     errors: [],
     loading: false,
   }
-
-  register = async ({ fullName, email, password }) => {
+  login = async ({ email, password }) => {
     try {
       this.setState({ loading: true })
-      const res = await apiPost.register({ fullName, email, password })
+      const res = await apiPost.login({ email, password })
       const token = _.get(res, 'data.token', null)
       const user = _.get(res, 'data.user', null)
+      if (!token || !user) throw new Error('Token or user null or undefined')
+      console.log('[login]', res.data)
       login({ user, token })
-
-      console.log('[register]', res.data)
     } catch (err) {
       if (err.response && err.response.status === 400) {
         const errors = Object.values(err.response.data)
@@ -29,26 +27,25 @@ class SignUp extends Component {
         this.setState({ loading: false, errors: ['Internal server error. Please try again!'] })
       }
       console.error('[register]', { err })
+
+      console.error('[login]', { err })
     }
   }
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('[handleSubmit]', { values })
-        this.register(values)
-        // console.log('Received values of form: ', values)
+        console.log('Received values of form: ', values)
+        this.login(values)
       }
     })
   }
 
   render() {
     const { getFieldDecorator } = this.props.form
+
     return (
       <Wrapper>
-        <Head>
-          <title>Sign up</title>
-        </Head>
         <Title>codeLeak</Title>
         <Description>An online-editor based question and answer platform for front-end developers</Description>
         {/* <Socials>
@@ -66,25 +63,15 @@ class SignUp extends Component {
             ))}
           </React.Fragment>
         )}
+
         {this.state.loading && (
           <SpinWrapper>
             <Spin size="large" />
           </SpinWrapper>
         )}
-        {!this.state.loading && (
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Item>
-              {getFieldDecorator('fullName', {
-                rules: [{ required: true, message: 'Please input display name!' }],
-              })(
-                <Input
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="text"
-                  placeholder="Full name"
-                />
-              )}
-            </Form.Item>
 
+        {!this.state.loading && (
+          <Form onSubmit={this.handleSubmit} className="login-form">
             <Form.Item>
               {getFieldDecorator('email', {
                 rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
@@ -108,26 +95,10 @@ class SignUp extends Component {
               )}
             </Form.Item>
             <Form.Item>
-              {getFieldDecorator(
-                'repeatPassword',
-                {
-                  rules: [{ required: true, message: 'Please repeat your Password!' }],
-                },
-                {
-                  validator: this.compareToFirstPass,
-                }
-              )(
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Repeat password"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              <StyledRegisterButton type="primary" htmlType="submit">
-                Register
-              </StyledRegisterButton>
+              <StyledLoginButton type="primary" htmlType="submit">
+                Login
+              </StyledLoginButton>
+              <a href="">Forgot password</a>
             </Form.Item>
           </Form>
         )}
@@ -136,7 +107,7 @@ class SignUp extends Component {
   }
 }
 
-const WrapperSignUpForm = Form.create({ name: 'signup' })(SignUp)
+const WrapperSignInForm = Form.create({ name: 'signin' })(SignIn)
 const Wrapper = styled.div`
   max-width: 500px;
   width: 70%;
@@ -146,7 +117,15 @@ const Wrapper = styled.div`
 const Socials = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
+`
+
+const SpinWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
 `
 
 const Title = styled.h2`
@@ -160,15 +139,6 @@ const Description = styled.p`
   font-size: 14px;
   line-height: 22px;
   color: black;
-  margin-bottom: 16px;
-`
-
-const SpinWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
 `
 
 const StyledSocialButton = styled(Button)`
@@ -180,7 +150,11 @@ const StyledSocialButton = styled(Button)`
   }
 `
 
-const StyledRegisterButton = styled(Button)`
-  width: 100%;
+const StyledLoginButton = styled(Button)`
+  width: 112px;
+  margin-right: 1rem;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+  }
 `
-export default WrapperSignUpForm
+export default WrapperSignInForm

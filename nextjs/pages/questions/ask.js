@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import TwoSideLayout from '../../components/TwoSideLayout'
 import AskQuestion from '../../components/AskQuestion'
 import AskGuide from '../../components/SideWidgets/AskGuide'
+import { withAuthSync } from '../../helpers/functions/auth'
 
-class Ask extends Component {
+class AskQuestionPage extends Component {
   render() {
     return (
       <div>
@@ -21,4 +22,4 @@ const Title = styled.h3`
   margin-bottom: 1rem;
 `
 
-export default Ask
+export default withAuthSync(AskQuestionPage)

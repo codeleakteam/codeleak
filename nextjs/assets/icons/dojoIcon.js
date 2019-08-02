@@ -3,7 +3,7 @@ import React from 'react'
 const SVG = ({ height, width, className, fill }) => {
   return (
     <svg width={width} height={height} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#Dojo_Clip0)">
+      <g clipPath="url(#Dojo_Clip0)">
         <path
           d="M3.88722 19.2806C3.91241 19.3211 3.93759 19.3605 3.96387 19.3999C4.35327 19.9534 4.80765 20.4581 5.31728 20.9034C6.50419 21.876 7.99188 22.4066 9.52642 22.4046C9.62059 22.4046 9.71805 22.4046 9.8155 22.3969C10.8817 22.3111 11.9269 22.0522 12.9099 21.6304C12.4697 21.7011 12.0252 21.7417 11.5795 21.752C10.8224 21.7528 10.0735 21.5946 9.38138 21.2875C8.68929 20.9804 8.06944 20.5313 7.56201 19.9693C6.3042 19.978 5.0565 19.7442 3.88722 19.2806Z"
           fill="url(#Dojo_Paint0_Linear)"
@@ -147,8 +147,8 @@ const SVG = ({ height, width, className, fill }) => {
           y2="19.7339"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFFA8F" />
-          <stop offset="1" stop-color="#FB784B" />
+          <stop stopColor="#FFFA8F" />
+          <stop offset="1" stopColor="#FB784B" />
         </linearGradient>
         <linearGradient
           id="Dojo_Paint1_Linear"
@@ -158,8 +158,8 @@ const SVG = ({ height, width, className, fill }) => {
           y2="10.4199"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#5BCB99" />
-          <stop offset="1" stop-color="#85A8E8" />
+          <stop stopColor="#5BCB99" />
+          <stop offset="1" stopColor="#85A8E8" />
         </linearGradient>
         <linearGradient
           id="Dojo_Paint2_Linear"
@@ -169,7 +169,7 @@ const SVG = ({ height, width, className, fill }) => {
           y2="5.38076"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#34E28B" />
+          <stop stopColor="#34E28B" />
           <stop offset="1" />
         </linearGradient>
         <linearGradient
@@ -180,8 +180,8 @@ const SVG = ({ height, width, className, fill }) => {
           y2="23.354"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#C297FF" />
-          <stop offset="1" stop-color="#AE31BB" />
+          <stop stopColor="#C297FF" />
+          <stop offset="1" stopColor="#AE31BB" />
         </linearGradient>
         <linearGradient
           id="Dojo_Paint4_Linear"
@@ -192,7 +192,7 @@ const SVG = ({ height, width, className, fill }) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop />
-          <stop offset="1" stop-color="#D23DE2" />
+          <stop offset="1" stopColor="#D23DE2" />
         </linearGradient>
         <linearGradient
           id="Dojo_Paint5_Linear"
@@ -203,7 +203,7 @@ const SVG = ({ height, width, className, fill }) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop />
-          <stop offset="1" stop-opacity="0" />
+          <stop offset="1" stopOpacity="0" />
         </linearGradient>
         <linearGradient
           id="Dojo_Paint6_Linear"
@@ -213,7 +213,7 @@ const SVG = ({ height, width, className, fill }) => {
           y2="27.158"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#2DB5F9" />
+          <stop stopColor="#2DB5F9" />
           <stop offset="1" />
         </linearGradient>
         <linearGradient
@@ -225,12 +225,12 @@ const SVG = ({ height, width, className, fill }) => {
           gradientUnits="userSpaceOnUse"
         >
           <stop />
-          <stop offset="0.21" stop-color="#48080A" />
-          <stop offset="0.42" stop-color="#891014" />
-          <stop offset="0.61" stop-color="#BC151B" />
-          <stop offset="0.78" stop-color="#E01A21" />
-          <stop offset="0.91" stop-color="#F71C24" />
-          <stop offset="1" stop-color="#FF1D25" />
+          <stop offset="0.21" stopColor="#48080A" />
+          <stop offset="0.42" stopColor="#891014" />
+          <stop offset="0.61" stopColor="#BC151B" />
+          <stop offset="0.78" stopColor="#E01A21" />
+          <stop offset="0.91" stopColor="#F71C24" />
+          <stop offset="1" stopColor="#FF1D25" />
         </linearGradient>
         <clipPath id="Dojo_Clip0">
           <rect width="32" height="32" fill="white" />

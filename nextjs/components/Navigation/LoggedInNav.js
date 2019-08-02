@@ -1,27 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Avatar, Menu, Dropdown, Switch, Icon, Badge } from 'antd'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import BurgerMenu from '../BurgerMenu'
 import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
 import Search from '../Search'
+import { logout } from '../../helpers/functions/auth'
 
-const links = [
+const regularPages = [
   {
     name: 'Jobs',
     href: '/',
-    productionReady: false,
   },
   {
     name: 'Tags',
     href: '/taglist',
-    productionReady: false,
   },
   {
     name: 'Blog',
     href: '/medium/blog',
-    productionReady: true,
   },
 ]
 
@@ -39,8 +37,8 @@ const menu = (
       <Switch style={{ marginLeft: '8px' }} size="small" />
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="1">
-      <a href="http://www.taobao.com/">Log out</a>
+    <Menu.Item key="1" onClick={() => logout()}>
+      <a>Log out</a>
     </Menu.Item>
   </Menu>
 )
@@ -51,7 +49,7 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger 
       <Wrapper isResponsive={isResponsive}>
         <Search isResponsive={isResponsive} />
         <List>
-          {links.map(l => {
+          {regularPages.map(l => {
             return (
               <ListItem key={l.name}>
                 <Link href={l.href}>

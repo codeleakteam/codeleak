@@ -3,12 +3,14 @@ import App, { Container } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
+import axios from 'axios'
 import MainContentWrapper from '../components/MainContentWrapper'
 import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
+
 library.add(faAngleUp, faComment, faEye, faBan)
 
 const theme = {
@@ -24,10 +26,25 @@ const theme = {
   antTagGrey: '#e6e8ed',
 }
 
+axios.interceptors.response.use(
+  function(response) {
+    console.log('YY')
+    // Do something with response data
+    return response
+  },
+  function(err) {
+    if (err.response && err.response.status === 401) {
+      // This will happen on the client side ONLY, that's why we're using Next's Router
+      Router.push('/login')
+    }
+    // Do something with response error
+    return Promise.reject(err)
+  }
+)
+
 class MyApp extends App {
   state = {
     isMenuActive: false,
-    isLoggedIn: true,
   }
 
   static async getInitialProps({ Component, ctx }) {
@@ -35,7 +52,7 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
-    return { pageProps }
+    return { pageProps, codeleakUser: ctx.codeleakUser }
   }
 
   componentDidMount() {
@@ -48,25 +65,24 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props
-    const { isMenuActive, isLoggedIn } = this.state
     return (
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyle />
           <Navigation
-            isMenuActive={isMenuActive}
+            isMenuActive={this.state.isMenuActive}
             handleBurgerMenuClick={this.handleBurgerMenuClick}
             showLogo={true}
             showBurger={true}
-            isResponsive={false}
-            isLoggedIn={isLoggedIn}
+            isResponsive={true}
+            isLoggedIn={!!pageProps.codeleakUser}
           />
 
           <MainContentWrapper>
-            <Component {...pageProps} isLoggedIn={isLoggedIn} />
+            <Component {...pageProps} />
           </MainContentWrapper>
           <Footer />
-          <SideMenu isMenuActive={isMenuActive}>
+          {/* <SideMenu isMenuActive={isMenuActive}>
             <Navigation
               isMenuActive={isMenuActive}
               handleBurgerMenuClick={this.handleBurgerMenuClick}
@@ -75,7 +91,7 @@ class MyApp extends App {
               isResponsive={true}
               isLoggedIn={isLoggedIn}
             />
-          </SideMenu>
+          </SideMenu> */}
         </Container>
       </ThemeProvider>
     )

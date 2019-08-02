@@ -2,10 +2,27 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Link from 'next/link'
-import { Input } from 'antd'
+import { Input, Button } from 'antd'
 import BurgerMenu from '../BurgerMenu'
 import { Wrapper, ListItem, Anchor } from './shared'
 import Search from '../Search'
+
+const regularPages = [
+  {
+    name: 'Jobs',
+    href: '/',
+  },
+  {
+    name: 'Tags',
+    href: '/taglist',
+  },
+  {
+    name: 'Blog',
+    href: '/medium/blog',
+    name: 'Sign in',
+    href: '/sign_in',
+  },
+]
 
 const LoggedOutNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger }) => {
   return (
@@ -13,14 +30,21 @@ const LoggedOutNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger
       <Wrapper isResponsive={isResponsive}>
         <Search isResponsive={isResponsive} />
         <List>
-          <ListItem>
-            <Link href="/signin">
-              <Anchor>Sign in</Anchor>
-            </Link>
-          </ListItem>
+          {regularPages.map(l => {
+            return (
+              <ListItem key={l.name}>
+                <Link href={l.href}>
+                  {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
+                </Link>
+              </ListItem>
+            )
+          })}
+
           <ListItem>
             <Link href="/signup">
-              <Anchor>Register</Anchor>
+              <Button>
+                <Anchor>Register</Anchor>
+              </Button>
             </Link>
           </ListItem>
         </List>
