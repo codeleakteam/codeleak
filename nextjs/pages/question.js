@@ -73,17 +73,13 @@ class QuestionFullPage extends Component {
 
         {error && <Alert message="Internal server error" type="error" />}
         {!error && (
-          <TwoSideLayout
-            mainSectionElement={
-              <QuestionWithAnswersWrapper
-                answers={this.state.answers}
-                sendAnswerOnQuestion={this.sendAnswerOnQuestion}
-                updateQuestionScore={this.updateQuestionScore}
-                questionScore={this.state.questionScore}
-                question={question}
-                authorReputation={this.state.authorReputation}
-              />
-            }
+          <QuestionWithAnswersWrapper
+            answers={this.state.answers}
+            sendAnswerOnQuestion={this.sendAnswerOnQuestion}
+            updateQuestionScore={this.updateQuestionScore}
+            questionScore={this.state.questionScore}
+            question={question}
+            authorReputation={this.state.authorReputation}
           />
         )}
       </div>

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Avatar, Menu, Dropdown, Switch, Icon, Badge } from 'antd'
 import styled, { css } from 'styled-components'
 import BurgerMenu from '../BurgerMenu'
 import Link from 'next/link'
@@ -10,12 +11,39 @@ const links = [
   {
     name: 'Jobs',
     href: '/',
+    productionReady: false,
   },
   {
     name: 'Tags',
     href: '/taglist',
+    productionReady: false,
+  },
+  {
+    name: 'Blog',
+    href: '/medium/blog',
+    productionReady: true,
   },
 ]
+
+const menu = (
+  <Menu>
+    <Menu.Item key="0">
+      <a href="http://www.alipay.com/">My profile</a>
+    </Menu.Item>
+    <Menu.Item key="1">
+      <a href="http://www.taobao.com/">Settings</a>
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="3">
+      Night mode
+      <Switch style={{ marginLeft: '8px' }} size="small" />
+    </Menu.Item>
+    <Menu.Divider />
+    <Menu.Item key="1">
+      <a href="http://www.taobao.com/">Log out</a>
+    </Menu.Item>
+  </Menu>
+)
 
 const LoggedInNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger }) => {
   return (
@@ -32,10 +60,18 @@ const LoggedInNav = ({ isMenuActive, handleBurgerMenu, isResponsive, showBurger 
               </ListItem>
             )
           })}
+          <ListItem style={{ marginBottom: '-8px' }}>
+            <Dropdown placement="bottomCenter" overlay={menu} trigger={['click']}>
+              <Badge count={5}>
+                <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+              </Badge>
+            </Dropdown>
+          </ListItem>
           <ListItem>
-            <Link href="/profile">
-              <UserAvatar />
-            </Link>
+            <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
+              <Avatar style={{ cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}>BZ</Avatar>
+              {/* <StyledAvatar src="https://sfo2.digitaloceanspaces.com/codeleak/media/public/prop2_r4vAD1s.jpeg" /> */}
+            </Dropdown>
           </ListItem>
         </List>
       </Wrapper>
@@ -56,11 +92,7 @@ const List = styled.ul`
   }
 `
 
-const UserAvatar = styled.div`
-  border-radius: 50%;
-  background-color: $dirtyWhite;
-  width: 40px;
-  height: 40px;
+const StyledAvatar = styled(Avatar)`
   cursor: pointer;
 `
 

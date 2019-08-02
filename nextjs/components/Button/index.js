@@ -20,10 +20,10 @@ const Button = styled.button`
       color: white;
       border-color: $clblue;
       background-color: $clblue;
-      line-height: 16px;
+      line-height: 1rem;
       @media screen and (max-width: 940px) {
         width: 20%;
-        font-size: 16px;
+        font-size: 1rem;
       }
       @media screen and (max-width: 740px) {
         min-width: 100px;

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import moment from 'moment'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 
@@ -17,7 +18,7 @@ export default function UserSignature({ id, username, reputation, postedAt, avat
             </a>
           </Link>
           <DotSeparator />
-          <PostTimestamp>{postedAt}</PostTimestamp>
+          <PostTimestamp>{moment(postedAt).fromNow()}</PostTimestamp>
         </Row>
         <Row>
           <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" alt="reputation-icon" />

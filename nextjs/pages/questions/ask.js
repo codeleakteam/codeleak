@@ -5,19 +5,20 @@ import AskQuestion from '../../components/AskQuestion'
 import AskGuide from '../../components/SideWidgets/AskGuide'
 
 class Ask extends Component {
-	render() {
-		return (
-			<div>
-				<Title>Ask a question</Title>
-				<TwoSideLayout mainSectionElement={<AskQuestion />} rightSectionElement={<AskGuide />} />
-			</div>
-		)
-	}
+  render() {
+    return (
+      <div>
+        <Title>Submit question</Title>
+        <AskQuestion />
+      </div>
+    )
+  }
 }
 
 const Title = styled.h3`
-	font-size: 1.6rem;
-	font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 `
 
 export default Ask

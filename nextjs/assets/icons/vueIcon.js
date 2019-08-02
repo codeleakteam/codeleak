@@ -1,9 +1,9 @@
 import React from 'react'
 
-const SVG = ({ height, className, fill }) => {
+const SVG = ({ height, width, className, fill }) => {
   return (
     <svg
-      width={height}
+      width={width}
       height={height}
       viewBox="0 0 256 221"
       xmlns="http://www.w3.org/2000/svg"

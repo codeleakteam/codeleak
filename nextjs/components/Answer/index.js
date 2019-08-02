@@ -3,7 +3,6 @@ import _ from 'lodash'
 
 import PropTypes from 'prop-types'
 import { Menu, message } from 'antd'
-import moment from 'moment'
 import Comment from '../Comment'
 import UserSignature from '../UserSignature'
 import PostCTAS from '../PostCTAS'
@@ -135,42 +134,63 @@ class Answer extends Component {
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    const postedAt = moment(created_at).fromNow()
     //  const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
 
     return (
-      <Card>
-        <UserSignature
-          id={author.id}
-          username={author.username}
-          reputation={this.state.authorReputation}
-          postedAt={postedAt}
-        />
-        {editorState && <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
-
-        <PostCTAS
-          postType="answer"
-          updateScore={this.updateAnswerScore}
-          id={id}
-          score={score}
-          updatedScore={this.state.answerScore}
-          submitComment={this.submitComment}
-        />
-        {commentSummary.map(c => (
-          <Comment
-            key={c.id}
-            id={c.id}
-            authorName={c.author.username}
-            content={c.content}
-            score={c.score}
-            upvoteComment={() => this.upvoteComment(1, c.id)}
-            reportComment={() => this.reportComment(1, c.id)}
+      <React.Fragment>
+        <Card>
+          <UserSignature
+            id={author.id}
+            username={author.username}
+            avatar={author.avatar}
+            reputation={this.state.authorReputation}
+            postedAt={created_at}
           />
+          {editorState && (
+            <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />
+          )}
+
+          <iframe
+            src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
+            style={{
+              width: '100%',
+              height: '90vh',
+              border: 0,
+              'border-radius': '4px',
+              overflow: 'hidden',
+            }}
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+          />
+
+          <PostCTAS
+            postType="answer"
+            updateScore={this.updateAnswerScore}
+            id={id}
+            score={score}
+            updatedScore={this.state.answerScore}
+            submitComment={this.submitComment}
+          />
+        </Card>
+        {commentSummary.map((c, i) => (
+          <Card isComment={true} key={i}>
+            <Comment
+              key={c.id}
+              id={c.id}
+              created_at={c.created_at}
+              username={c.author.username}
+              avatar={c.author.avatar}
+              reputation={c.author.reputation}
+              content={c.content}
+              score={c.score}
+              upvoteComment={() => this.upvoteComment(1, c.id)}
+              reportComment={() => this.reportComment(1, c.id)}
+            />
+            {this.state.comments.length > 3 && (
+              <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
+            )}
+          </Card>
         ))}
-        {this.state.comments.length > 3 && (
-          <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
-        )}
-      </Card>
+      </React.Fragment>
     )
   }
 }

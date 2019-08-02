@@ -117,7 +117,7 @@ const Description = styled.p`
 `
 
 const StyledSocialButton = styled(Button)`
-  margin-right: 16px;
+  margin-right: 1rem;
   max-width: 112px;
   margin-bottom: 8px;
   &:last-of-type {

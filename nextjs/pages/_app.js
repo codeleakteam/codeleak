@@ -21,6 +21,7 @@ const theme = {
   dirtyWhite: '#f1f1f1',
   lightBlack: '#757575',
   nextBlack: '#141617',
+  antTagGrey: '#e6e8ed',
 }
 
 class MyApp extends App {
@@ -52,15 +53,16 @@ class MyApp extends App {
       <ThemeProvider theme={theme}>
         <Container>
           <GlobalStyle />
+          <Navigation
+            isMenuActive={isMenuActive}
+            handleBurgerMenuClick={this.handleBurgerMenuClick}
+            showLogo={true}
+            showBurger={true}
+            isResponsive={false}
+            isLoggedIn={isLoggedIn}
+          />
+
           <MainContentWrapper>
-            <Navigation
-              isMenuActive={isMenuActive}
-              handleBurgerMenuClick={this.handleBurgerMenuClick}
-              showLogo={true}
-              showBurger={true}
-              isResponsive={false}
-              isLoggedIn={isLoggedIn}
-            />
             <Component {...pageProps} isLoggedIn={isLoggedIn} />
           </MainContentWrapper>
           <Footer />
@@ -82,7 +84,7 @@ class MyApp extends App {
 
 const GlobalStyle = createGlobalStyle`
   * {
-    font-family: 'Karla', sans-serif;
+    font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -93,14 +95,15 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100%;
     height: auto;
   }
-  // reset
+  :root{
+    font-size: 18px;
+  }
   body {
     margin: 0;
-    font-family: 'Karla', sans-serif;
+    font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
     height: 100%;
     min-height: 100%;
-    background: #e6e8ed;
-
+    background: #eff1f4;
     margin-bottom: -130px;
   }
   a {

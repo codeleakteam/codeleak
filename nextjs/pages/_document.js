@@ -49,8 +49,6 @@ class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          {/* google font */}
-          <link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet" />
           {/* antd */}
           <link href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.11.2/antd.css" rel="stylesheet" />
           {/* icons */}

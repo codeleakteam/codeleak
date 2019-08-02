@@ -14,14 +14,14 @@ class Index extends Component {
   static async getInitialProps() {
     try {
       const questionsRes = await apiGet.getIndex()
-      const tagsRes = await apiGet.getTags({ q: '' })
+      // const tagsRes = await apiGet.getTags({ q: '' })
       const questions = _.get(questionsRes, 'data.results', null)
-      const tags = _.get(tagsRes, 'data.tags', null)
+      // const tags = _.get(tagsRes, 'data.tags', null)
       if (!questions) throw new Error('[getInitialProps] questions not available')
-      if (!tags) throw new Error('[getInitialProps] tags not available')
+      // if (!tags) throw new Error('[getInitialProps] tags not available')
       return {
         questions,
-        tags,
+        // tags,
         error: false,
       }
     } catch (error) {
@@ -49,12 +49,12 @@ class Index extends Component {
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button type="primary">Ask a question</Button>
+                <Button type="primary">Submit question</Button>
               </Link>
             </Heading>
             <TwoSideLayout
               mainSectionElement={<QuestionList isLoggedIn={this.props.isLoggedIn} questions={this.props.questions} />}
-              rightSectionElement={<PopularTags tags={this.props.tags} />}
+              rightSectionElement={<PopularTags />}
             />
           </React.Fragment>
         )}
@@ -79,7 +79,7 @@ const Heading = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 75%;
-  margin: 16px 0;
+  margin: 1rem 0;
   align-items: center;
   @media screen and (max-width: 740px) {
     width: 100%;

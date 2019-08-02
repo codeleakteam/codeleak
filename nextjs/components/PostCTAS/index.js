@@ -32,9 +32,12 @@ export default class PostCTAS extends React.Component {
               <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
             </VoteButton>
           </div>
-          <StyledCloseButton default onClick={this.toggleCommentVisibility}>
-            {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
-          </StyledCloseButton>
+          <RightSide>
+            <Button type="primary">Answer with code</Button>
+            <StyledToggleQuickCommentButton default onClick={this.toggleCommentVisibility}>
+              {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
+            </StyledToggleQuickCommentButton>
+          </RightSide>
         </Row>
         {this.state.isCommentVisible && (
           <Column>
@@ -59,7 +62,7 @@ const Column = styled.div`
   width: 100%;
   display: flex;
   flex-flow: column nowrap;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   align-items: center;
   justify-content: space-between;
 `
@@ -92,13 +95,16 @@ const DownvoteIcon = styled(VoteIcon)`
   transform: rotate(180deg);
   margin: 0;
 `
+const RightSide = styled.div`
+  margin-right: -5px;
+`
 
 const StyledTextArea = styled(TextArea)`
   margin-bottom: 8px;
 `
 
-const StyledCloseButton = styled(Button)`
-  margin: 8px 0;
+const StyledToggleQuickCommentButton = styled(Button)`
+  margin: 8px 5px;
 `
 
 const StyledSendAnswerButton = styled(Button)`

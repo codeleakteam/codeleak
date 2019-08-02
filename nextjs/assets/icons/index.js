@@ -13,6 +13,19 @@ import GithubIcon from './githubIcon'
 import EmailIcon from './emailIcon'
 import LocationIcon from './locationIcon'
 import JobIcon from './jobIcon'
+import HtmlIcon from './htmlIcon'
+import SassIcon from './sassIcon'
+import JQueryIcon from './jqueryIcon'
+import GatsbyIcon from './gatsbyIcon'
+import NextjsIcon from './nextjsIcon'
+import TypescriptIcon from './typescriptIcon'
+import NuxtjsIcon from './nuxtjsIcon'
+import EmberIcon from './emberIcon'
+import PreactIcon from './preactIcon'
+import SvelteIcon from './svelteIcon'
+import CxjsIcon from './cxjsIcon'
+import ReasonmlIcon from './reasonmlIcon'
+import DojoIcon from './dojoIcon'
 
 const Icon = props => {
   switch (props.name) {
@@ -42,6 +55,32 @@ const Icon = props => {
       return <LocationIcon {...props} />
     case 'job':
       return <JobIcon {...props} />
+    case 'html':
+      return <HtmlIcon {...props} />
+    case 'sass':
+      return <SassIcon {...props} />
+    case 'jquery':
+      return <JQueryIcon {...props} />
+    case 'gatsby':
+      return <GatsbyIcon {...props} />
+    case 'nextjs':
+      return <NextjsIcon {...props} />
+    case 'typescript':
+      return <TypescriptIcon {...props} />
+    case 'nuxtjs':
+      return <NuxtjsIcon {...props} />
+    case 'ember':
+      return <EmberIcon {...props} />
+    case 'preact':
+      return <PreactIcon {...props} />
+    case 'svelte':
+      return <SvelteIcon {...props} />
+    case 'cxjs':
+      return <CxjsIcon {...props} />
+    case 'reasonml':
+      return <ReasonmlIcon {...props} />
+    case 'dojo':
+      return <DojoIcon {...props} />
     default:
       return
   }
