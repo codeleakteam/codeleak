@@ -3,12 +3,14 @@ import App, { Container } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
+import axios from 'axios'
 import MainContentWrapper from '../components/MainContentWrapper'
 import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
+
 library.add(faAngleUp, faComment, faEye, faBan)
 
 const theme = {
@@ -23,6 +25,22 @@ const theme = {
   nextBlack: '#141617',
   antTagGrey: '#e6e8ed',
 }
+
+axios.interceptors.response.use(
+  function(response) {
+    console.log('YY')
+    // Do something with response data
+    return response
+  },
+  function(err) {
+    if (err.response && err.response.status === 401) {
+      // This will happen on the client side ONLY, that's why we're using Next's Router
+      Router.push('/login')
+    }
+    // Do something with response error
+    return Promise.reject(err)
+  }
+)
 
 class MyApp extends App {
   state = {
