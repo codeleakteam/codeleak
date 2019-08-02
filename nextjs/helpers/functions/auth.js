@@ -7,7 +7,7 @@ const guestRoutes = ['/login', '/register']
 
 // Protected routes: Routes we show only to logged in users. If not logged in, redirect to login page
 // Guest routes: Routes we show only to not logged in users. If logged in, redirect to /
-export const login = async ({ user, token, ctx }) => {
+export const login = async ({ user, token }) => {
   console.log('[login] fired')
   try {
     const userJSON = JSON.stringify(user)

@@ -33,6 +33,12 @@ export const apiPost = {
       password2: password,
     })
   },
+  login: ({ email, password }) => {
+    return axios.post(`${BASE_URL}/rest-auth/login/`, {
+      email,
+      password,
+    })
+  },
   subscribeMail: value => {
     return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
   },
