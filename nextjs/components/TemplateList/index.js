@@ -57,7 +57,7 @@ const IconWrapper = styled.div`
 
 const templates = [
   {
-    name: 'HTML + SASS(CSS) + jQuery OK',
+    name: 'HTML + SASS(CSS) + jQuery',
     color: 'black',
     url: 'https://codesandbox.io/s/github/codesandbox-app/static-template',
     icons: ['jquery'],
@@ -66,6 +66,7 @@ const templates = [
       jquery: '^3.4.1',
     },
     fs: {
+      'src/ddd.js': `nesto`,
       'index.html': `<div id="app"></div>`,
       'index.js': `
 // Import stylesheets
@@ -87,7 +88,7 @@ h1, h2 {
     },
   },
   {
-    name: 'Vanilla TypeScript OK',
+    name: 'Vanilla TypeScript',
     color: '#007ACC',
     url: 'https://codesandbox.io/s/new',
     icons: ['typescript'],
@@ -113,7 +114,7 @@ h1, h2 {
     },
   },
   {
-    name: 'React OK',
+    name: 'React',
     color: '#61dafb',
     url: 'https://codesandbox.io/s/new',
     icons: ['react'],
@@ -187,13 +188,13 @@ ReactDOM.render(<App />, rootElement);
       'zone.js': '^0.9.1',
     },
     fs: {
-      'index.html': `<my-app>loading</my-app>`,
-      'main.ts': `import './polyfills';
+      'src/index.html': `<my-app>loading</my-app>`,
+      'src/main.ts': `import './polyfills';
 
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 platformBrowserDynamic().bootstrapModule(AppModule).then(ref => {
   // Ensure Angular destroys itself on hot reloads.
@@ -206,7 +207,7 @@ platformBrowserDynamic().bootstrapModule(AppModule).then(ref => {
 }).catch(err => console.error(err));
 
       `,
-      'polyfills.ts': `
+      'src/polyfills.ts': `
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -275,7 +276,7 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  */
 // import 'intl';  // Run \`npm install --save intl\`.`,
 
-      'app.module.ts': `
+      'src/app/app.module.ts': `
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -293,7 +294,7 @@ import { HelloComponent } from './hello.component';
 export class AppModule { }
 
     `,
-      'app.component.ts': `import { Component } from '@angular/core';
+      'src/app/app.component.ts': `import { Component } from '@angular/core';
 
 @Component({
   selector: 'my-app',
@@ -305,15 +306,15 @@ export class AppComponent  {
 }
 
     `,
-      'app.component.html': `<p>
+      'src/app/app.component.html': `<p>
   Start editing to see some magic happen :)
 </p>
     `,
-      'app.component.css': `p {
+      'src/app/app.component.css': `p {
   font-family: Lato;
 }
     `,
-      'hello.component.ts': `import { Component, Input } from '@angular/core';
+      'src/app/hello.component.ts': `import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'hello',
