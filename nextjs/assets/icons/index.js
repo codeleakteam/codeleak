@@ -36,7 +36,7 @@ const Icon = props => {
     case 'upvote':
       return <UpVote {...props} />
     case 'react':
-      return <ReactIcon {...props} />
+      return <ReactIcon {...props} fill="white" />
     case 'angular':
       return <AngularIcon {...props} />
     case 'vue':

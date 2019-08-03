@@ -75,7 +75,7 @@ export const auth = ctx => {
     isGuestRoute = guestRoutes.filter(r => r === ctx.req.url)[0] ? true : false
 
     if (isProtectedRoute && !isLoggedIn) {
-      ctx.res.writeHead(302, { location: '/login' })
+      ctx.res.writeHead(302, { location: '/sign_in' })
       ctx.res.end()
       return
     }
@@ -90,7 +90,7 @@ export const auth = ctx => {
     isGuestRoute = guestRoutes.filter(r => r === ctx.pathname)[0] ? true : false
 
     if (isProtectedRoute && !isLoggedIn) {
-      Router.push('/login')
+      Router.push('/sign_in')
     }
 
     // Implement redirect when logged in user tries to access guest routes
