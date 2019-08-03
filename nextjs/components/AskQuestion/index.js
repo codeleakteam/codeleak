@@ -122,13 +122,19 @@ class AskQuestion extends Component {
     console.log('chosenTemplate', chosenTemplate)
     try {
       this.setState({ contentLoading: true })
-      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', {
-        files: chosenTemplate.fs,
-        dependencies: chosenTemplate.dependencies,
-        title: 'Dynamically Generated Project',
-        description: 'Created with <3 by the StackBlitz',
-        template: chosenTemplate.stackBlitzTemplate,
-      })
+      this._stackBlitzVm = await stackBlitzSdk.embedProject(
+        'stackblitz-iframe',
+        {
+          files: chosenTemplate.fs,
+          dependencies: chosenTemplate.dependencies,
+          title: 'Dynamically Generated Project',
+          description: 'Created with <3 by the StackBlitz',
+          template: chosenTemplate.stackBlitzTemplate,
+        },
+        {
+          forceEmbedLayout: true,
+        }
+      )
       this.setState({ contentLoading: false, vmMounted: true })
     } catch (err) {
       console.error('[createAndEmbedStackblitzProject]', { err })
