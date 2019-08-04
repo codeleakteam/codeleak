@@ -98,16 +98,11 @@ const TargetPostTitle = styled.p`
   color: black;
 `
 
-const NotificationsFooter = styled.div`
-  width: 100%;
-  padding: 1rem;
-  border-top: 1px solid #e0e0e0;
-`
-
 class LoggedInNav extends React.Component {
   state = {
     contentLoading: true,
     notifications: null,
+    unreadNotificationsCount: 0,
     err: null,
   }
 
@@ -148,8 +143,8 @@ class LoggedInNav extends React.Component {
       case 'ADD_COMMENT':
         return 'commented on your question!'
       default:
-        console.log('lei', verb)
-        return 'kita'
+        console.log('[translateVerb] DEFAULT', { verb })
+        return 'DEFAULT'
     }
   }
 

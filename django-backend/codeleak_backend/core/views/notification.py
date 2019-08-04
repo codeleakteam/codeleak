@@ -69,11 +69,18 @@ class GetUnreadNotifications(ListAPIView):
             'notifications': serializer.data
         }, status=status.HTTP_200_OK)
 
-class GetAllNotifications(ListAPIView):
+class MarkAllAsRead(UpdateAPIView):
     permission_classes = (IsMe, )
-    def get(self, request, user_id):
-        notifications = request.user.notifications.all()
-        serializer = NotificationSerializer(notifications, many=True)
+    def put(self, request, user_id):
+        notifications = request.user.notifications.unread().mark_all_as_read()
         return Response({
-            'notifications': serializer.data
+            'message': 'Success'
+        }, status=status.HTTP_200_OK)
+
+class MarkAllAsUnread(UpdateAPIView):
+    permission_classes = (IsMe, )
+    def put(self, request, user_id):
+        notifications = request.user.notifications.read().mark_all_as_unread()
+        return Response({
+            'message': 'Success'
         }, status=status.HTTP_200_OK)

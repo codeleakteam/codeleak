@@ -42,7 +42,9 @@ from core.views import (
     GithubLoginView,
     VerifyEmailViewCustom,
     GetUnreadNotifications,
-    GetAllNotifications
+    # GetAllNotifications,
+    MarkAllAsRead,
+    MarkAllAsUnread 
 )
 import notifications.urls
 
@@ -74,6 +76,8 @@ urlpatterns = [
     url(r'^api/tags/(?P<tag_id>[0-9]+)$', GetTagView.as_view()),
     path('api/search', user_question_tag_search),
     url(r'^api/notifications/(?P<user_id>[0-9]+)/unread$', GetUnreadNotifications.as_view()),
-    url(r'^api/notifications/(?P<user_id>[0-9]+)/all$', GetAllNotifications.as_view()),
+    # url(r'^api/notifications/(?P<user_id>[0-9]+)/all$', GetAllNotifications.as_view()),
+    url(r'^api/notifications/(?P<user_id>[0-9]+)/mark_all_as_read$', MarkAllAsRead.as_view()),
+    url(r'^api/notifications/(?P<user_id>[0-9]+)/mark_all_as_unread$', MarkAllAsUnread.as_view()),
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
 ]

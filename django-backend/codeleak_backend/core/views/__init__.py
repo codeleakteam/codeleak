@@ -14,7 +14,9 @@ from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommen
 from .auth import GithubLoginView, LoginViewCustom, VerifyEmailViewCustom
 from .notification import (
     GetUnreadNotifications,
-    GetAllNotifications,
+    # GetAllNotifications,
+    MarkAllAsRead,
+    MarkAllAsUnread,
 ) 
 
 __all__ = [
@@ -41,5 +43,7 @@ __all__ = [
     'VerifyEmailViewCustom',
     'GithubLoginView',
     'GetUnreadNotifications',
-    'GetAllNotifications'
+    # 'GetAllNotifications',
+    'MarkAllAsRead',
+    'MarkAllAsUnread',
 ]
