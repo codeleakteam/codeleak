@@ -1,15 +1,18 @@
 import React from 'react'
+import _ from 'lodash'
 import App, { Container } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
-import axios from 'axios'
+// import axios from 'axios'
 import MainContentWrapper from '../components/MainContentWrapper'
 import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
+import { parseCookies } from 'nookies'
+import axios from '../axios'
 
 library.add(faAngleUp, faComment, faEye, faBan)
 
@@ -26,22 +29,6 @@ const theme = {
   antTagGrey: '#e6e8ed',
 }
 
-axios.interceptors.response.use(
-  function(response) {
-    console.log('YY')
-    // Do something with response data
-    return response
-  },
-  function(err) {
-    if (err.response && err.response.status === 401) {
-      // This will happen on the client side ONLY, that's why we're using Next's Router
-      Router.push('/login')
-    }
-    // Do something with response error
-    return Promise.reject(err)
-  }
-)
-
 class MyApp extends App {
   state = {
     isMenuActive: false,
@@ -52,7 +39,8 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
-    return { pageProps, codeleakUser: ctx.codeleakUser }
+    const { codeleakAuthToken } = parseCookies(ctx)
+    return { pageProps, codeleakAuthToken, codeleakUser: ctx.codeleakUser }
   }
 
   componentDidMount() {
@@ -61,10 +49,25 @@ class MyApp extends App {
     }
   }
 
+  setRequestInterceptor = () => {
+    const { codeleakAuthToken } = this.props
+    axios.interceptors.request.use(
+      config => {
+        config.headers.Authorization = `JWT ${codeleakAuthToken}`
+        return config
+      },
+      err => {
+        return Promise.reject(err)
+      }
+    )
+  }
+
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
     const { Component, pageProps } = this.props
+
+    if (this.props.codeleakAuthToken) this.setRequestInterceptor()
     return (
       <ThemeProvider theme={theme}>
         <Container>
@@ -76,6 +79,8 @@ class MyApp extends App {
             showBurger={true}
             isResponsive={true}
             isLoggedIn={!!pageProps.codeleakUser}
+            userId={_.get(pageProps, 'codeleakUser.pk', undefined)}
+            authToken={this.props.codeleakAuthToken}
           />
 
           <MainContentWrapper>
