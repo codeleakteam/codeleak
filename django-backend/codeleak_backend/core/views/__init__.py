@@ -17,7 +17,7 @@ from .auth import (
 )
 from .notification import (
     GetUnreadNotifications,
-    # GetAllNotifications,
+    GetAllNotifications,
     MarkAllAsRead,
     MarkAllAsUnread,
 ) 
@@ -45,7 +45,7 @@ __all__ = [
     'VerifyEmailViewCustom',
     'GithubLoginView',
     'GetUnreadNotifications',
-    # 'GetAllNotifications',
+    'GetAllNotifications',
     'MarkAllAsRead',
-    'MarkAllAsUnread',
+    'MarkAllAsUnread'
 ]

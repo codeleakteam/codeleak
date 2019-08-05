@@ -117,6 +117,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar', 
     'core',
     'rest_framework',
     'rest_framework.authtoken',
@@ -138,6 +139,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -301,3 +303,10 @@ DJANGO_NOTIFICATIONS_CONFIG = {
     'SOFT_DELETE': True,
     'USE_JSONFIELD': True
 }
+
+# Clients whitelisted by django-toolbar
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]

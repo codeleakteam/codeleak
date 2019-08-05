@@ -59,7 +59,16 @@ class IsMe(permissions.BasePermission):
     def has_permission(self, request, view):
         user_id = int(view.kwargs.get('user_id', None))
         return user_id == request.user.id
-        
+
+class GetAllNotifications(ListAPIView):
+    permission_classes = (IsMe, )
+    def get(self, request, user_id):
+        notifications = request.user.notifications.order_by('-timestamp', 'unread').all()[:5]
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response({
+            'notifications': serializer.data
+        }, status=status.HTTP_200_OK)
+       
 class GetUnreadNotifications(ListAPIView):
     permission_classes = (IsMe, )
     def get(self, request, user_id):

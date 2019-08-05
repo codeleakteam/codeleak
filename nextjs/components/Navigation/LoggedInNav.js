@@ -19,9 +19,8 @@ class LoggedInNav extends React.Component {
     showBurger: PropTypes.bool.isRequired,
     isResponsive: PropTypes.bool.isRequired,
     user: PropTypes.shape({
-      pk: PropTypes.number.isRequired,
-      email: PropTypes.string.isRequired,
-      full_name: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+      full_name: PropTypes.string,
     }),
   }
 
@@ -34,7 +33,7 @@ class LoggedInNav extends React.Component {
   }
 
   componentDidMount() {
-    this.getUnreadNotifications()
+    this.getNotifications()
     this.getUserProfile()
   }
 
@@ -48,7 +47,7 @@ class LoggedInNav extends React.Component {
 
   getUserProfile = async () => {
     try {
-      const res = await apiGet.getUserProfile(this.props.user.pk)
+      const res = await apiGet.getUserProfile(this.props.user.id)
       const user = _.get(res, 'data.user', null)
       if (!user) throw new Error('User null or undefined')
       this.setState({ user }, () => {
@@ -60,17 +59,18 @@ class LoggedInNav extends React.Component {
     }
   }
 
-  getUnreadNotifications = async () => {
+  getNotifications = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.getUnreadNotifications(this.props.user.pk)
+      const res = await apiGet.getNotifications(this.props.user.id)
       const notifications = _.get(res, 'data.notifications', null)
       if (!notifications) throw new Error('Notifications null or undefined')
-      this.setState({ notifications, contentLoading: false, unreadNotificationsCount: notifications.length }, () => {
-        console.log('[getUnreadNotifications] state changed', this.state)
+      const unreadNotificationsCount = notifications.filter(n => n.unread).length
+      this.setState({ notifications, contentLoading: false, unreadNotificationsCount }, () => {
+        console.log('[getNotifications] state changed', this.state)
       })
     } catch (err) {
-      console.error('[getUnreadnotifictions]', { err })
+      console.error('[getNotifications]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })
     }
   }
@@ -78,8 +78,8 @@ class LoggedInNav extends React.Component {
   markAllAsRead = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.markAllUnreadAsRead(this.props.user.pk)
-      this.setState({ notifications, contentLoading: false, unreadNotificationsCount: 0 }, () => {
+      const res = await apiGet.markAllAsRead(this.props.user.id)
+      this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
         console.log('[markAllAsRead] state changed', this.state)
       })
     } catch (err) {
