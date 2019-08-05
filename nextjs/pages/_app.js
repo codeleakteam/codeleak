@@ -66,7 +66,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props
-
+    console.log('codeleakUser', pageProps.codeleakUser)
     if (this.props.codeleakAuthToken) this.setRequestInterceptor()
     return (
       <ThemeProvider theme={theme}>
@@ -79,7 +79,7 @@ class MyApp extends App {
             showBurger={true}
             isResponsive={true}
             isLoggedIn={!!pageProps.codeleakUser}
-            userId={_.get(pageProps, 'codeleakUser.pk', undefined)}
+            user={_.get(pageProps, 'codeleakUser', undefined)}
             authToken={this.props.codeleakAuthToken}
           />
 

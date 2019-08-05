@@ -6,7 +6,7 @@ import LoggedInNav from './LoggedInNav'
 import LoggedOutNav from './LoggedOutNav'
 
 const Navigation = ({
-  userId,
+  user,
   isMenuActive,
   handleBurgerMenuClick,
   showLogo,
@@ -22,7 +22,7 @@ const Navigation = ({
       authToken={authToken}
       isResponsive={isResponsive}
       showBurger={showBurger}
-      userId={userId}
+      user={user}
     />
   ) : (
     <LoggedOutNav
@@ -70,7 +70,11 @@ Navigation.propTypes = {
   showLogo: PropTypes.bool.isRequired,
   showBurger: PropTypes.bool.isRequired,
   isResponsive: PropTypes.bool.isRequired,
-  userId: PropTypes.number.isRequired,
+  user: PropTypes.shape({
+    pk: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired,
+    full_name: PropTypes.string.isRequired,
+  }),
   isLoggedIn: PropTypes.bool.isRequired,
 }
 

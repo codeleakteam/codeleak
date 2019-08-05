@@ -38,19 +38,17 @@ from core.views import (
     UpdateCommentScoreView,
     ReportCommentView,
     CreateAnswerView,
-    LoginViewCustom,
     GithubLoginView,
     VerifyEmailViewCustom,
     GetUnreadNotifications,
     # GetAllNotifications,
     MarkAllAsRead,
-    MarkAllAsUnread 
+    MarkAllAsUnread,
 )
 import notifications.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^rest-auth/login', LoginViewCustom.as_view(), name='rest_login'),
     url(r'^rest-auth/refresh', refresh_jwt_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^rest-auth/verify-email/$', csrf_exempt(VerifyEmailViewCustom.as_view()), name='rest_verify'),

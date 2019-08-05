@@ -18,7 +18,13 @@ class LoggedInNav extends React.Component {
     handleBurgerMenu: PropTypes.func.isRequired,
     showBurger: PropTypes.bool.isRequired,
     isResponsive: PropTypes.bool.isRequired,
+    user: PropTypes.shape({
+      pk: PropTypes.number.isRequired,
+      email: PropTypes.string.isRequired,
+      full_name: PropTypes.string.isRequired,
+    }),
   }
+
   state = {
     contentLoading: true,
     notifications: null,
@@ -29,21 +35,35 @@ class LoggedInNav extends React.Component {
 
   componentDidMount() {
     this.getUnreadNotifications()
+    this.getUserProfile()
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { hasSeenUnreadNotifications } = this.state
 
     if (prevState.hasSeenUnreadNotifications !== this.state.hasSeenUnreadNotifications && hasSeenUnreadNotifications) {
-      console.log('FIRING IT UP')
       this.markAllAsRead()
+    }
+  }
+
+  getUserProfile = async () => {
+    try {
+      const res = await apiGet.getUserProfile(this.props.user.pk)
+      const user = _.get(res, 'data.user', null)
+      if (!user) throw new Error('User null or undefined')
+      this.setState({ user }, () => {
+        console.log('[getUserProfile] state changed', this.state)
+      })
+    } catch (err) {
+      console.error('[getUserProfile]', { err })
+      this.setState({ err: 'Internal server error' })
     }
   }
 
   getUnreadNotifications = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.getUnreadNotifications(this.props.userId)
+      const res = await apiGet.getUnreadNotifications(this.props.user.pk)
       const notifications = _.get(res, 'data.notifications', null)
       if (!notifications) throw new Error('Notifications null or undefined')
       this.setState({ notifications, contentLoading: false, unreadNotificationsCount: notifications.length }, () => {
@@ -58,7 +78,7 @@ class LoggedInNav extends React.Component {
   markAllAsRead = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.markAllUnreadAsRead(this.props.userId)
+      const res = await apiGet.markAllUnreadAsRead(this.props.user.pk)
       this.setState({ notifications, contentLoading: false, unreadNotificationsCount: 0 }, () => {
         console.log('[markAllAsRead] state changed', this.state)
       })
@@ -112,6 +132,16 @@ class LoggedInNav extends React.Component {
       default:
         return 'DEFAULT'
     }
+  }
+
+  getAvatarLetter = user => {
+    let letter
+    if (!!user.full_name) {
+      letter = user.full_name.charAt(0)
+    } else {
+      letter = user.username.charAt(0)
+    }
+    return letter.toUpperCase()
   }
 
   renderNotifications = () => {
@@ -170,6 +200,8 @@ class LoggedInNav extends React.Component {
       notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
     }
 
+    const user = this.state.user ? this.state.user : this.props.user
+
     return (
       <React.Fragment>
         <Wrapper isResponsive={isResponsive}>
@@ -202,8 +234,13 @@ class LoggedInNav extends React.Component {
             </ListItem>
             <ListItem>
               <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
-                <Avatar style={{ cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}>BZ</Avatar>
-                {/* <StyledAvatar src="https://sfo2.digitaloceanspaces.com/codeleak/media/public/prop2_r4vAD1s.jpeg" /> */}
+                {user.avatar ? (
+                  <StyledAvatar src={user.avatar} />
+                ) : (
+                  <Avatar style={{ cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                    {this.getAvatarLetter(user)}
+                  </Avatar>
+                )}
               </Dropdown>
             </ListItem>
           </List>

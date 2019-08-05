@@ -245,6 +245,10 @@ STATICFILES_DIRS = [
 
 REST_USE_JWT = True
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'core.serializers.UserSerializerMinimal'
+}
+
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
     'rest_framework_jwt.utils.jwt_encode_handler',
