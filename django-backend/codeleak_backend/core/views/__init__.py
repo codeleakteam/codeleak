@@ -11,10 +11,13 @@ from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
 from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView
-from .auth import GithubLoginView, LoginViewCustom, VerifyEmailViewCustom
+from .auth import (
+    GithubLoginView,
+    VerifyEmailViewCustom,
+)
 from .notification import (
     GetUnreadNotifications,
-    # GetAllNotifications,
+    GetAllNotifications,
     MarkAllAsRead,
     MarkAllAsUnread,
 ) 
@@ -39,11 +42,10 @@ __all__ = [
     'ListCreateCommentView',
     'UpdateCommentScoreView',
     'ReportCommentView',
-    'LoginViewCustom',
     'VerifyEmailViewCustom',
     'GithubLoginView',
     'GetUnreadNotifications',
-    # 'GetAllNotifications',
+    'GetAllNotifications',
     'MarkAllAsRead',
-    'MarkAllAsUnread',
+    'MarkAllAsUnread'
 ]

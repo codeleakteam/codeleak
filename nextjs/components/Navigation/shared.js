@@ -18,14 +18,16 @@ export const Wrapper = styled.div`
 `
 
 export const Anchor = styled.a`
-  color: ${props => (props.isActive ? props.theme.antBlue : 'grey')};
+  color: ${props => (!props.isActive ? 'black' : props.theme.antBlue)};
+  font-weight: 500;
 `
 
 export const ListItem = styled.li`
   display: inline-block;
   padding: 0 1rem;
-  font-size: 1rem;
+  font-size: 0.75rem;
   vertical-align: middle;
+  text-transform: uppercase;
   @media screen and (max-width: 745px) {
     margin-bottom: 1rem;
     padding: 0;

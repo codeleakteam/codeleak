@@ -18,7 +18,12 @@ class LoggedInNav extends React.Component {
     handleBurgerMenu: PropTypes.func.isRequired,
     showBurger: PropTypes.bool.isRequired,
     isResponsive: PropTypes.bool.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      full_name: PropTypes.string,
+    }),
   }
+
   state = {
     contentLoading: true,
     notifications: null,
@@ -28,29 +33,44 @@ class LoggedInNav extends React.Component {
   }
 
   componentDidMount() {
-    this.getUnreadNotifications()
+    this.getNotifications()
+    this.getUserProfile()
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { hasSeenUnreadNotifications } = this.state
 
     if (prevState.hasSeenUnreadNotifications !== this.state.hasSeenUnreadNotifications && hasSeenUnreadNotifications) {
-      console.log('FIRING IT UP')
       this.markAllAsRead()
     }
   }
 
-  getUnreadNotifications = async () => {
+  getUserProfile = async () => {
     try {
-      this.setState({ contentLoading: true })
-      const res = await apiGet.getUnreadNotifications(this.props.userId)
-      const notifications = _.get(res, 'data.notifications', null)
-      if (!notifications) throw new Error('Notifications null or undefined')
-      this.setState({ notifications, contentLoading: false, unreadNotificationsCount: notifications.length }, () => {
-        console.log('[getUnreadNotifications] state changed', this.state)
+      const res = await apiGet.getUserProfile(this.props.user.id)
+      const user = _.get(res, 'data.user', null)
+      if (!user) throw new Error('User null or undefined')
+      this.setState({ user }, () => {
+        console.log('[getUserProfile] state changed', this.state)
       })
     } catch (err) {
-      console.error('[getUnreadnotifictions]', { err })
+      console.error('[getUserProfile]', { err })
+      this.setState({ err: 'Internal server error' })
+    }
+  }
+
+  getNotifications = async () => {
+    try {
+      this.setState({ contentLoading: true })
+      const res = await apiGet.getNotifications(this.props.user.id)
+      const notifications = _.get(res, 'data.notifications', null)
+      if (!notifications) throw new Error('Notifications null or undefined')
+      const unreadNotificationsCount = notifications.filter(n => n.unread).length
+      this.setState({ notifications, contentLoading: false, unreadNotificationsCount }, () => {
+        console.log('[getNotifications] state changed', this.state)
+      })
+    } catch (err) {
+      console.error('[getNotifications]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })
     }
   }
@@ -58,8 +78,8 @@ class LoggedInNav extends React.Component {
   markAllAsRead = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.markAllUnreadAsRead(this.props.userId)
-      this.setState({ notifications, contentLoading: false, unreadNotificationsCount: 0 }, () => {
+      const res = await apiGet.markAllAsRead(this.props.user.id)
+      this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
         console.log('[markAllAsRead] state changed', this.state)
       })
     } catch (err) {
@@ -114,6 +134,16 @@ class LoggedInNav extends React.Component {
     }
   }
 
+  getAvatarLetter = user => {
+    let letter
+    if (!!user.full_name) {
+      letter = user.full_name.charAt(0)
+    } else {
+      letter = user.username.charAt(0)
+    }
+    return letter.toUpperCase()
+  }
+
   renderNotifications = () => {
     return (
       <Menu style={{ width: '500px', background: '#eff1f4', padding: '8px' }}>
@@ -154,37 +184,49 @@ class LoggedInNav extends React.Component {
     if (!this.state.contentLoading && !this.state.err) {
       notificationsBellJSX = (
         <Badge count={this.state.unreadNotificationsCount}>
-          <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+          <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
         </Badge>
       )
     }
     if (this.state.contentLoading) {
       notificationsBellJSX = (
         <Badge count={<Icon type="clock-circle" style={{ color: '#f5222d' }} />}>
-          <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+          <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
         </Badge>
       )
     }
 
     if (this.state.err) {
-      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
     }
+
+    const user = this.state.user ? this.state.user : this.props.user
 
     return (
       <React.Fragment>
         <Wrapper isResponsive={isResponsive}>
-          <Search isResponsive={isResponsive} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Search isResponsive={isResponsive} />
+            <List>
+              {regularPages.map(l => {
+                return (
+                  <ListItem key={l.name}>
+                    <Link href={l.href}>
+                      {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
+                    </Link>
+                  </ListItem>
+                )
+              })}
+            </List>
+          </div>
+
           <List>
-            {regularPages.map(l => {
-              return (
-                <ListItem key={l.name}>
-                  <Link href={l.href}>
-                    {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
-                  </Link>
-                </ListItem>
-              )
-            })}
-            <ListItem style={{ marginBottom: '-8px' }}>
+            <ListItem style={{ marginBottom: '-4px' }}>
               <Dropdown
                 placement="bottomRight"
                 overlay={this.renderNotifications()}
@@ -202,8 +244,15 @@ class LoggedInNav extends React.Component {
             </ListItem>
             <ListItem>
               <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
-                <Avatar style={{ cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}>BZ</Avatar>
-                {/* <StyledAvatar src="https://sfo2.digitaloceanspaces.com/codeleak/media/public/prop2_r4vAD1s.jpeg" /> */}
+                {user.avatar ? (
+                  <StyledAvatar src={user.avatar} />
+                ) : (
+                  <Avatar
+                    style={{ verticalAlign: 'middle', cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}
+                  >
+                    {this.getAvatarLetter(user)}
+                  </Avatar>
+                )}
               </Dropdown>
             </ListItem>
           </List>

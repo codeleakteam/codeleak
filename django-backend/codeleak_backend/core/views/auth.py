@@ -4,9 +4,6 @@ from rest_auth.registration.views import SocialLoginView
 from rest_framework.authentication import TokenAuthentication
 from rest_auth.registration.views import LoginView, VerifyEmailView
 
-class LoginViewCustom(LoginView):
-    pass 
-
 class VerifyEmailViewCustom(VerifyEmailView):
     authentication_classes = (TokenAuthentication,)
 
