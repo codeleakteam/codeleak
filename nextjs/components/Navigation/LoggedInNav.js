@@ -184,20 +184,20 @@ class LoggedInNav extends React.Component {
     if (!this.state.contentLoading && !this.state.err) {
       notificationsBellJSX = (
         <Badge count={this.state.unreadNotificationsCount}>
-          <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+          <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
         </Badge>
       )
     }
     if (this.state.contentLoading) {
       notificationsBellJSX = (
         <Badge count={<Icon type="clock-circle" style={{ color: '#f5222d' }} />}>
-          <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+          <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
         </Badge>
       )
     }
 
     if (this.state.err) {
-      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
+      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
     }
 
     const user = this.state.user ? this.state.user : this.props.user
@@ -205,18 +205,28 @@ class LoggedInNav extends React.Component {
     return (
       <React.Fragment>
         <Wrapper isResponsive={isResponsive}>
-          <Search isResponsive={isResponsive} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Search isResponsive={isResponsive} />
+            <List>
+              {regularPages.map(l => {
+                return (
+                  <ListItem key={l.name}>
+                    <Link href={l.href}>
+                      {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
+                    </Link>
+                  </ListItem>
+                )
+              })}
+            </List>
+          </div>
+
           <List>
-            {regularPages.map(l => {
-              return (
-                <ListItem key={l.name}>
-                  <Link href={l.href}>
-                    {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
-                  </Link>
-                </ListItem>
-              )
-            })}
-            <ListItem style={{ marginBottom: '-8px' }}>
+            <ListItem style={{ marginBottom: '-4px' }}>
               <Dropdown
                 placement="bottomRight"
                 overlay={this.renderNotifications()}
@@ -237,7 +247,9 @@ class LoggedInNav extends React.Component {
                 {user.avatar ? (
                   <StyledAvatar src={user.avatar} />
                 ) : (
-                  <Avatar style={{ cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                  <Avatar
+                    style={{ verticalAlign: 'middle', cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}
+                  >
                     {this.getAvatarLetter(user)}
                   </Avatar>
                 )}
