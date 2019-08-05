@@ -12,6 +12,12 @@ from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
 from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView
 from .auth import GithubLoginView, LoginViewCustom, VerifyEmailViewCustom
+from .notification import (
+    GetUnreadNotifications,
+    # GetAllNotifications,
+    MarkAllAsRead,
+    MarkAllAsUnread,
+) 
 
 __all__ = [
     'HomeView',
@@ -36,4 +42,8 @@ __all__ = [
     'LoginViewCustom',
     'VerifyEmailViewCustom',
     'GithubLoginView',
+    'GetUnreadNotifications',
+    # 'GetAllNotifications',
+    'MarkAllAsRead',
+    'MarkAllAsUnread',
 ]

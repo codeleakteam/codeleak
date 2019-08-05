@@ -1,4 +1,5 @@
-import axios from 'axios'
+// import axios from 'axios'
+import axios from './axios'
 import getConfig from 'next/config'
 
 const { publicRuntimeConfig } = getConfig()
@@ -15,6 +16,8 @@ export const apiGet = {
     return axios.get(`${BASE_URL}/api/tags?q=${q}`)
   },
   getUserProfile: id => axios.get(`${BASE_URL}/api/users/${id}`),
+  getUnreadNotifications: userId => axios.get(`${BASE_URL}/api/notifications/${userId}/unread`),
+  markAllUnreadAsRead: userId => axios.put(`${BASE_URL}/api/notifications/${userId}/mark_all_as_read`),
   searchQuery: q =>
     axios.get(`${BASE_URL}/api/search`, {
       params: {

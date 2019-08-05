@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import Router from 'next/router'
+import axios from '../../axios'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
 const protectedRoutes = ['/questions/ask']
@@ -14,6 +15,18 @@ export const login = async ({ user, token }) => {
     console.log('[login]', { userJSON })
     setCookie(undefined, 'codeleakUser', userJSON)
     setCookie(undefined, 'codeleakAuthToken', token)
+    if (token) {
+      axios.interceptors.request.use(
+        config => {
+          config.headers.Authorization = `JWT ${token}`
+          return config
+        },
+        err => {
+          return Promise.reject(err)
+        }
+      )
+    }
+
     Router.push('/')
   } catch (err) {
     // Ignore

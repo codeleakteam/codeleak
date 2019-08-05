@@ -39,6 +39,6 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.full_name is not None:
-            return 'Mica: ' + self.full_name
+            return self.full_name
         else:
-            return 'Mica: ' + self.username
+            return self.username
