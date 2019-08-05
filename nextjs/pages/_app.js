@@ -11,7 +11,7 @@ import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
-import { parseCookies } from 'nookies'
+import { parseCookies, destroyCookie } from 'nookies'
 import axios from '../axios'
 
 library.add(faAngleUp, faComment, faEye, faBan)
@@ -51,12 +51,27 @@ class MyApp extends App {
 
   setRequestInterceptor = () => {
     const { codeleakAuthToken } = this.props
-    axios.interceptors.request.use(
+    this.requestInterceptor = axios.interceptors.request.use(
       config => {
         config.headers.Authorization = `JWT ${codeleakAuthToken}`
         return config
       },
       err => {
+        return Promise.reject(err)
+      }
+    )
+  }
+
+  setResponseInterceptor = () => {
+    axios.interceptors.response.use(
+      response => response,
+      err => {
+        if (err.response && err.response.status === 401) {
+          destroyCookie(undefined, 'codeleakUser')
+          destroyCookie(undefined, 'codeleakAuthToken')
+          axios.interceptors.request.eject(this.requestInterceptor)
+          Router.push('/sign_in')
+        }
         return Promise.reject(err)
       }
     )
@@ -68,6 +83,7 @@ class MyApp extends App {
     const { Component, pageProps } = this.props
     console.log('codeleakUser', pageProps.codeleakUser)
     if (this.props.codeleakAuthToken) this.setRequestInterceptor()
+    this.setResponseInterceptor()
     return (
       <ThemeProvider theme={theme}>
         <Container>

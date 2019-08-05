@@ -18,6 +18,7 @@ export const login = async ({ user, token }) => {
     if (token) {
       axios.interceptors.request.use(
         config => {
+          console.log('[login] setting new token')
           config.headers.Authorization = `JWT ${token}`
           return config
         },

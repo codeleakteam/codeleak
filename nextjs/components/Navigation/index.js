@@ -71,7 +71,7 @@ Navigation.propTypes = {
   showBurger: PropTypes.bool.isRequired,
   isResponsive: PropTypes.bool.isRequired,
   user: PropTypes.shape({
-    pk: PropTypes.number.isRequired,
+    id: PropTypes.number.isRequired,
     email: PropTypes.string.isRequired,
     full_name: PropTypes.string.isRequired,
   }),

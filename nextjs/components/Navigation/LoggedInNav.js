@@ -30,6 +30,7 @@ class LoggedInNav extends React.Component {
     unreadNotificationsCount: 0,
     hasSeenUnreadNotifications: false,
     err: null,
+    user: this.props.user,
   }
 
   componentDidMount() {
@@ -47,7 +48,7 @@ class LoggedInNav extends React.Component {
 
   getUserProfile = async () => {
     try {
-      const res = await apiGet.getUserProfile(this.props.user.id)
+      const res = await apiGet.getUserProfile(this.state.user.id)
       const user = _.get(res, 'data.user', null)
       if (!user) throw new Error('User null or undefined')
       this.setState({ user }, () => {
@@ -62,7 +63,7 @@ class LoggedInNav extends React.Component {
   getNotifications = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.getNotifications(this.props.user.id)
+      const res = await apiGet.getNotifications(this.state.user.id)
       const notifications = _.get(res, 'data.notifications', null)
       if (!notifications) throw new Error('Notifications null or undefined')
       const unreadNotificationsCount = notifications.filter(n => n.unread).length
@@ -78,7 +79,7 @@ class LoggedInNav extends React.Component {
   markAllAsRead = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.markAllAsRead(this.props.user.id)
+      const res = await apiGet.markAllAsRead(this.state.user.id)
       this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
         console.log('[markAllAsRead] state changed', this.state)
       })
@@ -178,6 +179,7 @@ class LoggedInNav extends React.Component {
   }
   render() {
     const { isMenuActive, handleBurgerMenu, isResponsive, showBurger } = this.props
+    const { user } = this.state
 
     let notificationsBellJSX
 
@@ -199,8 +201,6 @@ class LoggedInNav extends React.Component {
     if (this.state.err) {
       notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
     }
-
-    const user = this.state.user ? this.state.user : this.props.user
 
     return (
       <React.Fragment>
