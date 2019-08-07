@@ -16,6 +16,7 @@ import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
 import { apiGet, apiPost } from '../../api'
 import Router from 'next/router'
 // const { TextArea } = Input
+import Quill from '../Quill'
 
 const { Step } = Steps
 
@@ -239,7 +240,7 @@ class AskQuestion extends Component {
 
               <FormField>
                 <InputLabel text="Description" />
-                <React.Fragment>
+                {/* <React.Fragment>
                   <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
                   {_mounted && (
                     <DraftjsEditor
@@ -251,7 +252,8 @@ class AskQuestion extends Component {
                       height={300}
                     />
                   )}
-                </React.Fragment>
+                </React.Fragment> */}
+                <Quill />
               </FormField>
 
               <FormField>
