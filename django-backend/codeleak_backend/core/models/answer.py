@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 from .question import Question
@@ -20,6 +21,7 @@ class Answer(models.Model):
         'Editor',
         on_delete=models.CASCADE,
     )
+    fs = JSONField(null=True)
     # Required
     description = models.TextField(blank=False, null=False)
     # Optional

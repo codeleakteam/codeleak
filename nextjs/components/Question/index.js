@@ -158,7 +158,7 @@ class Question extends Component {
           <Description>
             {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
           </Description>
-          <iframe
+          {/* <iframe
             src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
             style={{
               width: '100%',
@@ -168,7 +168,7 @@ class Question extends Component {
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          />
+          /> */}
 
           <PostCTAS
             postType="question"

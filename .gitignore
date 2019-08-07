@@ -89,7 +89,7 @@ __pycache__/
 local_settings.py
 
 .env
-migrations
+# migrations
 venv
 statics
 *.sqlite3
