@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 from .tag import Tag
@@ -7,6 +8,7 @@ class Question(models.Model):
     title = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
     slug = models.SlugField(blank=True, null=False)
+    fs = JSONField(null=True)
     # Optional
     repository_url = models.CharField(max_length=255, blank=False, null=False)
     # FKs

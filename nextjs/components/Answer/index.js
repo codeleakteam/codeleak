@@ -150,7 +150,7 @@ class Answer extends Component {
             <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />
           )}
 
-          <iframe
+          {/* <iframe
             src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
             style={{
               width: '100%',
@@ -160,7 +160,7 @@ class Answer extends Component {
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          />
+          /> */}
 
           <PostCTAS
             postType="answer"
