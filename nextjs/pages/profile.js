@@ -5,6 +5,7 @@ import Profile from '../components/Profile'
 import { apiGet, apiPut } from '../api'
 import _ from 'lodash'
 import { Alert, message } from 'antd'
+import { withAuthSync } from '../helpers/functions/auth'
 
 class ProfilePage extends Component {
   static async getInitialProps({ query }) {
@@ -28,20 +29,6 @@ class ProfilePage extends Component {
   state = {
     activeTab: 'answers',
     editMode: false,
-    user: {
-      username: this.props.user.username,
-      avatar: this.props.user.avatar,
-      reputation: this.props.user.reputation,
-      answers: this.props.user.answers,
-      questions: this.props.user.questions,
-      biography: this.props.user.biography,
-      full_name: this.props.user.full_name,
-      location: this.props.user.location,
-      looking_for_job: this.props.user.looking_for_job,
-      website_url: this.props.user.website_url,
-      twitter_username: this.props.user.twitter_username,
-      github_username: this.props.user.github_username,
-    },
   }
 
   changeTab = e => {
@@ -82,7 +69,7 @@ class ProfilePage extends Component {
     return (
       <React.Fragment>
         <Head>
-          <title>{!this.props.error ? this.props.user.full_name : 'Internal server error'}</title>
+          <title>{!this.props.error ? this.props.codeleakUser.username : 'Internal server error'}</title>
         </Head>
         {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (
@@ -94,7 +81,7 @@ class ProfilePage extends Component {
                 editMode={this.state.editMode}
                 enableEditMode={this.enableEditMode}
                 saveChanges={this.saveChanges}
-                userData={this.state.user}
+                userData={this.props.user}
                 editProfileFields={this.editProfileFields}
               />
             }
@@ -105,4 +92,4 @@ class ProfilePage extends Component {
   }
 }
 
-export default ProfilePage
+export default withAuthSync(ProfilePage)

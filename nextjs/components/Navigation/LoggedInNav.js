@@ -181,6 +181,26 @@ class LoggedInNav extends React.Component {
     const { isMenuActive, handleBurgerMenu, isResponsive, showBurger } = this.props
     const { user } = this.state
 
+    const menu = (
+      <Menu style={{ width: '300px' }}>
+        <Menu.Item key="0">
+          <a href={`/profile/${this.props.user.id}/${this.props.user.username}`}>My profile</a>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <a href="/">Settings</a>
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="2">
+          Night mode
+          <Switch style={{ marginLeft: '8px' }} size="small" />
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item key="3" onClick={() => logout()}>
+          <a>Log out</a>
+        </Menu.Item>
+      </Menu>
+    )
+
     let notificationsBellJSX
 
     if (!this.state.contentLoading && !this.state.err) {
@@ -334,26 +354,6 @@ const UpvoteIcon = styled.img`
 const DownvoteIcon = styled(UpvoteIcon)`
   transform: rotate(180deg);
 `
-
-const menu = (
-  <Menu style={{ width: '300px' }}>
-    <Menu.Item key="0">
-      <a href="http://www.alipay.com/">My profile</a>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <a href="http://www.taobao.com/">Settings</a>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="3">
-      Night mode
-      <Switch style={{ marginLeft: '8px' }} size="small" />
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="1" onClick={() => logout()}>
-      <a>Log out</a>
-    </Menu.Item>
-  </Menu>
-)
 
 const AnswerCommentIcon = styled(CustomIcon)`
   margin-left: 2px;
