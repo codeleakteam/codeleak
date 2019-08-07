@@ -2,6 +2,7 @@ import { Component } from 'react'
 import Router from 'next/router'
 import axios from '../../axios'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import { message } from 'antd'
 
 const protectedRoutes = ['/questions/ask']
 const guestRoutes = ['/login', '/register']
@@ -42,6 +43,7 @@ export const logout = () => {
 
   // window.localStorage.setItem("logout", Date.now());
   Router.push('/')
+  message.success('Successfully logged out!')
 }
 
 // Gets the display name of a JSX component for dev tools
