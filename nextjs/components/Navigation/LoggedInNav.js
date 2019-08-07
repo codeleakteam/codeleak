@@ -20,7 +20,7 @@ class LoggedInNav extends React.Component {
     isResponsive: PropTypes.bool.isRequired,
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      full_name: PropTypes.string,
+      username: PropTypes.string,
     }),
   }
 
@@ -137,8 +137,8 @@ class LoggedInNav extends React.Component {
 
   getAvatarLetter = user => {
     let letter
-    if (!!user.full_name) {
-      letter = user.full_name.charAt(0)
+    if (!!user.username) {
+      letter = user.username.charAt(0)
     } else {
       letter = user.username.charAt(0)
     }
@@ -160,7 +160,7 @@ class LoggedInNav extends React.Component {
 
                   <div>
                     <NotificationTitle>
-                      <NotificationActor>{n.actor.full_name}</NotificationActor>
+                      <NotificationActor>{n.actor.username}</NotificationActor>
                       &nbsp;
                       {this.translateVerb(n.verb)}
                     </NotificationTitle>

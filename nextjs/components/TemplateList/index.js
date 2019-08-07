@@ -66,7 +66,6 @@ const templates = [
       jquery: '^3.4.1',
     },
     fs: {
-      'src/ddd.js': `nesto`,
       'index.html': `<div id="app"></div>`,
       'index.js': `
 // Import stylesheets
@@ -121,14 +120,14 @@ h1, h2 {
     stackBlitzTemplate: 'create-react-app',
     dependencies: {},
     fs: {
-      'index.js': `import React from "react";
+      'src/index.js': `import React from "react";
 import ReactDOM from "react-dom";
-import "./styles.css";
+import "./../styles.css";
 
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to react!</h1>
+      <h1>Lets do some react!</h1>
     </div>
   );
 }
@@ -137,10 +136,10 @@ const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
     
       `,
-      'index.html': `<div id="root"></div>`,
+      'public/index.html': `<div id="root"></div>`,
       'styles.css': `
 .App {
-  font-style: italic;
+  font-style: bold;
 }
       `,
     },
