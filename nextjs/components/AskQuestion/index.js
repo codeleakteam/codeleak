@@ -71,10 +71,12 @@ class AskQuestion extends Component {
     this.setState({ repositoryUrlValue: e.target.value })
   }
 
-  handleTagsAutocompleteSelect = tagTitle => {
+  handleTagsAutocompleteSelect = (value, id) => {
+    // console.log(value, id)s
+
     this.setState(prevState => ({
       ...prevState,
-      selectedTags: [...prevState.selectedTags, tag.id],
+      selectedTags: [...prevState.selectedTags, id.key],
     }))
   }
 
@@ -120,7 +122,7 @@ class AskQuestion extends Component {
   }
 
   createAndEmbedStackblitzProject = async chosenTemplate => {
-    console.log('chosenTemplate', chosenTemplate)
+    // console.log('chosenTemplate', chosenTemplate)
     try {
       this.setState({ contentLoading: true })
       this._stackBlitzVm = await stackBlitzSdk.embedProject(
@@ -177,7 +179,7 @@ class AskQuestion extends Component {
       })
       const sandbox_id = _.get(res, 'data.sandbox_id', null)
       if (!sandbox_id) throw new Error('sandbox_id is falsy')
-      console.log('[next]', { sandbox_id })
+      // console.log('[next]', { sandbox_id })
       this.setState({ sandbox_id, currentStep: 2, contentLoading: false })
     } catch (err) {
       console.error('[next]', err)
