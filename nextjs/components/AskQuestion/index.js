@@ -121,28 +121,25 @@ class AskQuestion extends Component {
     )
   }
 
-  createAndEmbedStackblitzProject = async chosenTemplate => {
-    // console.log('chosenTemplate', chosenTemplate)
-    try {
-      this.setState({ contentLoading: true })
-      this._stackBlitzVm = await stackBlitzSdk.embedProject(
-        'stackblitz-iframe',
-        {
-          files: chosenTemplate.fs,
-          dependencies: chosenTemplate.dependencies,
-          title: 'Dynamically Generated Project',
-          description: 'Created with <3 by the StackBlitz',
-          template: chosenTemplate.stackBlitzTemplate,
-        },
-        {
-          forceEmbedLayout: true,
-        }
-      )
-      this.setState({ contentLoading: false, vmMounted: true })
-    } catch (err) {
-      console.error('[createAndEmbedStackblitzProject]', { err })
-      this.setState({ contentLoading: false, vmMounted: false })
+  createAndEmbedStackblitzProject = chosenTemplate => {
+    let project = {
+      files: chosenTemplate.fs,
+      dependencies: chosenTemplate.dependencies,
+      title: 'Dynamically Generated Project',
+      description: 'Created with <3 by the StackBlitz',
+      template: chosenTemplate.stackBlitzTemplate,
     }
+    // try {
+    this.setState({ contentLoading: true })
+    this._stackBlitzVm = stackBlitzSdk.embedProject('stackblitz-iframe', project, {
+      view: 'both',
+      height: 300,
+    })
+    this.setState({ contentLoading: false, vmMounted: true })
+    // } catch (err) {
+    //   console.error('[createAndEmbedStackblitzProject]', { err })
+    //   this.setState({ contentLoading: false, vmMounted: false })
+    // }
   }
 
   setTemplate = chosenTemplate => {
