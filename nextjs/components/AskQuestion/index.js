@@ -16,6 +16,7 @@ import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
 import { apiGet, apiPost } from '../../api'
 import Router from 'next/router'
 // const { TextArea } = Input
+import Quill from '../Quill'
 
 const { Step } = Steps
 
@@ -70,10 +71,12 @@ class AskQuestion extends Component {
     this.setState({ repositoryUrlValue: e.target.value })
   }
 
-  handleTagsAutocompleteSelect = tagTitle => {
+  handleTagsAutocompleteSelect = (value, id) => {
+    // console.log(value, id)s
+
     this.setState(prevState => ({
       ...prevState,
-      selectedTags: [...prevState.selectedTags, tag.id],
+      selectedTags: [...prevState.selectedTags, id.key],
     }))
   }
 
@@ -118,28 +121,25 @@ class AskQuestion extends Component {
     )
   }
 
-  createAndEmbedStackblitzProject = async chosenTemplate => {
-    console.log('chosenTemplate', chosenTemplate)
-    try {
-      this.setState({ contentLoading: true })
-      this._stackBlitzVm = await stackBlitzSdk.embedProject(
-        'stackblitz-iframe',
-        {
-          files: chosenTemplate.fs,
-          dependencies: chosenTemplate.dependencies,
-          title: 'Dynamically Generated Project',
-          description: 'Created with <3 by the StackBlitz',
-          template: chosenTemplate.stackBlitzTemplate,
-        },
-        {
-          forceEmbedLayout: true,
-        }
-      )
-      this.setState({ contentLoading: false, vmMounted: true })
-    } catch (err) {
-      console.error('[createAndEmbedStackblitzProject]', { err })
-      this.setState({ contentLoading: false, vmMounted: false })
+  createAndEmbedStackblitzProject = chosenTemplate => {
+    let project = {
+      files: chosenTemplate.fs,
+      dependencies: chosenTemplate.dependencies,
+      title: 'Dynamically Generated Project',
+      description: 'Created with <3 by the StackBlitz',
+      template: chosenTemplate.stackBlitzTemplate,
     }
+    // try {
+    this.setState({ contentLoading: true })
+    this._stackBlitzVm = stackBlitzSdk.embedProject('stackblitz-iframe', project, {
+      view: 'both',
+      height: 300,
+    })
+    this.setState({ contentLoading: false, vmMounted: true })
+    // } catch (err) {
+    //   console.error('[createAndEmbedStackblitzProject]', { err })
+    //   this.setState({ contentLoading: false, vmMounted: false })
+    // }
   }
 
   setTemplate = chosenTemplate => {
@@ -176,7 +176,7 @@ class AskQuestion extends Component {
       })
       const sandbox_id = _.get(res, 'data.sandbox_id', null)
       if (!sandbox_id) throw new Error('sandbox_id is falsy')
-      console.log('[next]', { sandbox_id })
+      // console.log('[next]', { sandbox_id })
       this.setState({ sandbox_id, currentStep: 2, contentLoading: false })
     } catch (err) {
       console.error('[next]', err)
@@ -239,7 +239,7 @@ class AskQuestion extends Component {
 
               <FormField>
                 <InputLabel text="Description" />
-                <React.Fragment>
+                {/* <React.Fragment>
                   <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
                   {_mounted && (
                     <DraftjsEditor
@@ -251,7 +251,8 @@ class AskQuestion extends Component {
                       height={300}
                     />
                   )}
-                </React.Fragment>
+                </React.Fragment> */}
+                <Quill />
               </FormField>
 
               <FormField>

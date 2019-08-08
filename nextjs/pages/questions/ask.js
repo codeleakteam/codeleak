@@ -4,14 +4,20 @@ import TwoSideLayout from '../../components/TwoSideLayout'
 import AskQuestion from '../../components/AskQuestion'
 import AskGuide from '../../components/SideWidgets/AskGuide'
 import { withAuthSync } from '../../helpers/functions/auth'
+import Head from 'next/head'
 
 class AskQuestionPage extends Component {
   render() {
     return (
-      <div>
-        <Title>Submit question</Title>
-        <AskQuestion />
-      </div>
+      <React.Fragment>
+        {/* <Head>
+          <link rel="stylesheet" href="//cdn.quilljs.com/1.2.6/quill.snow.css" />
+        </Head> */}
+        <div>
+          <Title>Submit question</Title>
+          <AskQuestion />
+        </div>
+      </React.Fragment>
     )
   }
 }

@@ -25,7 +25,7 @@ class QuestionTagsAutocomplete extends React.Component {
       if (!dataSource) throw new Error('Internal server error')
       this.setState({ fetching: false, dataSource })
     } catch (err) {
-      console.error('rr', err)
+      // console.error('rr', err)
       message.error('Internal server error')
       this.setState({ fetching: false })
     }
@@ -48,14 +48,14 @@ class QuestionTagsAutocomplete extends React.Component {
 
     const filteredOptions = dataSource.filter(o => !selectedItems.includes(o.title))
 
-    console.log('datasrc', filteredOptions)
+    // console.log('datasrc', filteredOptions)
     return (
       <div>
         <Select
           mode="multiple"
           size="large"
           onInputKeyDown={this.handleKeydown}
-          onSelect={onSelect}
+          onSelect={(value, id) => onSelect(value, id)}
           onDeselect={onDeselect}
           style={{ width: '100%' }}
           placeholder="Select tags"
@@ -75,7 +75,6 @@ class QuestionTagsAutocomplete extends React.Component {
 }
 
 QuestionTagsAutocomplete.propTypes = {
-  onInputKeyDown: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   dataSource: PropTypes.arrayOf(
     PropTypes.shape({
