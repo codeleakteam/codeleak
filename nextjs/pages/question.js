@@ -7,19 +7,21 @@ import Question from '../components/Question'
 import AnswerList from '../components/AnswerList'
 import AddAnswer from '../components/AddAnswer'
 import { apiGet, apiPut, apiPost } from '../api'
+import { withAuthSync } from '../helpers/functions/auth'
 
 class QuestionFullPage extends Component {
   static async getInitialProps({ query }) {
     try {
       const res = await apiGet.getQuestion(query.id)
       const question = _.get(res, 'data.question', null)
-      // console.log('[getInitialProps]', { question })
+      console.log('[getInitialProps]', { question })
       if (!question) throw new Error('No question object available')
       return {
         question,
         error: false,
       }
-    } catch (error) {
+    } catch (err) {
+      console.log('[getInitialProps]', { err })
       return {
         error: true,
       }
@@ -115,4 +117,4 @@ function QuestionWithAnswersWrapper({
   )
 }
 
-export default QuestionFullPage
+export default withAuthSync(QuestionFullPage)
