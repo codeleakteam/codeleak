@@ -64,7 +64,6 @@ class QuestionFullPage extends Component {
 
   render() {
     const { question, error } = this.props
-
     return (
       <div>
         <Head>
@@ -112,7 +111,6 @@ function QuestionWithAnswersWrapper({
         authorReputation={authorReputation}
       />
       <AnswerList answers={answers} />
-      <AddAnswer questionId={question.id} sendAnswer={sendAnswerOnQuestion} />
     </React.Fragment>
   )
 }

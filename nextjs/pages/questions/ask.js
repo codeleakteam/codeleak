@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import TwoSideLayout from '../../components/TwoSideLayout'
 import AskQuestion from '../../components/AskQuestion'
@@ -7,6 +8,14 @@ import { withAuthSync } from '../../helpers/functions/auth'
 import Head from 'next/head'
 
 class AskQuestionPage extends Component {
+  static propTypes = {
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
+  }
   render() {
     return (
       <React.Fragment>
@@ -15,7 +24,7 @@ class AskQuestionPage extends Component {
         </Head> */}
         <div>
           <Title>Submit question</Title>
-          <AskQuestion />
+          <AskQuestion user={this.props.codeleakUser} />
         </div>
       </React.Fragment>
     )

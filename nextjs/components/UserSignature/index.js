@@ -1,14 +1,30 @@
 import React from 'react'
+import { Avatar } from 'antd'
 import styled from 'styled-components'
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 
-export default function UserSignature({ id, username, reputation, postedAt, avatar }) {
+export default function UserSignature({ id, username, full_name, reputation, postedAt, avatar }) {
   return (
     <Wrapper>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
-        <AuthorAvatar src={avatar} alt={username} />
+        {avatar ? (
+          <AuthorAvatar src={avatar} alt={username} />
+        ) : (
+          <Avatar
+            size={40}
+            style={{
+              marginRight: '16px',
+              verticalAlign: 'middle',
+              cursor: 'pointer',
+              color: '#f56a00',
+              backgroundColor: '#fde3cf',
+            }}
+          >
+            {getAvatarLetter(username, full_name)}
+          </Avatar>
+        )}
       </Link>
       <Column>
         <Row>
@@ -27,6 +43,14 @@ export default function UserSignature({ id, username, reputation, postedAt, avat
       </Column>
     </Wrapper>
   )
+}
+
+const getAvatarLetter = (username, full_name) => {
+  if (!!full_name) {
+    return full_name.charAt(0).toUpperCase()
+  } else if (!!username) {
+    return username.charAt(0).toUpperCase()
+  } else return
 }
 
 UserSignature.propTypes = {
@@ -56,7 +80,7 @@ const AuthorAvatar = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 100%;
-  margin-right: 10px;
+  margin-right: 16px;
   cursor: pointer;
 `
 

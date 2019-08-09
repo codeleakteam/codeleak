@@ -1,29 +1,26 @@
 import React, { Component } from 'react'
-// import ReactQuill from 'react-quill'
+import PropTypes from 'prop-types'
 
 class Quill extends Component {
+  static propTypes = {
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string.isRequired,
+  }
+
   constructor(props) {
     super(props)
-    this.state = {
-      text: '',
-    }
     if (document) {
       this.quill = require('react-quill')
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
-  handleChange(value) {
-    this.setState({ text: value })
-  }
   render() {
     const Quill = this.quill
     if (Quill) {
       return (
         <Quill
-          onChange={this.handleChange}
-          value={this.state.text}
+          onChange={this.props.onChange}
+          value={this.props.value}
           style={{ height: 500, marginBottom: 40, background: 'white' }}
         />
       )

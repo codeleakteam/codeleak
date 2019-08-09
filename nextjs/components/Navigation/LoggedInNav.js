@@ -136,13 +136,11 @@ class LoggedInNav extends React.Component {
   }
 
   getAvatarLetter = user => {
-    let letter
-    if (!!user.username) {
-      letter = user.username.charAt(0)
-    } else {
-      letter = user.username.charAt(0)
-    }
-    return letter.toUpperCase()
+    if (!!user.full_name) {
+      return user.full_name.charAt(0)
+    } else if(!!user.username) {
+      return user.username.charAt(0).toUpperCase()
+    }else return
   }
 
   renderNotifications = () => {

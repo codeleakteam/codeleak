@@ -16,6 +16,7 @@ const QuestionList = ({ questions }) => {
             createdAt={question.created_at}
             tags={question.tags}
             authorUsername={question.author.username}
+            authorFullName={question.author.full_name}
             authorId={question.author.id}
             questionId={question.id}
             slug={question.slug}
