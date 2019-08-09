@@ -111,7 +111,6 @@ function QuestionWithAnswersWrapper({
         authorReputation={authorReputation}
       />
       <AnswerList answers={answers} />
-      <AddAnswer questionId={question.id} sendAnswer={sendAnswerOnQuestion} />
     </React.Fragment>
   )
 }
