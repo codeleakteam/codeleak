@@ -63,14 +63,16 @@ export const apiPost = {
       content: content,
     })
   },
-  sendQuestion: (title, description, tags, author, editor, repoUrl) => {
+  sendQuestion: ({ author, title, description, tags, editor, repoUrl, fs }) => {
+    console.log('AAA', { repoUrl })
     return axios.post(`${BASE_URL}/api/questions`, {
       title: title,
+      author: author,
       description: description,
       tags: tags,
-      author: author,
       editor: editor,
       repository_url: repoUrl,
+      fs,
     })
   },
   reportComment: (userId, type, commentId) => {

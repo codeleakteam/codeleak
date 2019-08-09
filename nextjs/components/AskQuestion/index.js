@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Head from 'next/head'
 import axios from 'axios'
 import styled, { css } from 'styled-components'
@@ -9,13 +10,9 @@ import FormField from '../FormField'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
 import { EditorState, RichUtils, convertToRaw } from 'draft-js'
-// import addLinkPlugin from '../draftjs/addLinkPlugin'
-import InlineStyleControls from '../draftjs/InlineStyleControls'
-import DraftjsEditor from '../draftjs'
 import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
 import { apiGet, apiPost } from '../../api'
 import Router from 'next/router'
-// const { TextArea } = Input
 import Quill from '../Quill'
 
 const { Step } = Steps
@@ -27,53 +24,30 @@ class AskQuestion extends Component {
     contentLoading: false,
     chosenTemplate: null,
 
-    sandbox_id: null,
-
     // Form data
-    titleValue: '',
-    repositoryUrlValue: '',
+    title: '',
+    description: '',
+    sandboxID: null,
     selectedTags: [], // Array of tag ids
-
-    // Draftjs editor state
-    editorState: EditorState.createEmpty(),
-
-    // Set to true when this component mounts
-    _mounted: false,
   }
 
-  componentDidMount() {
-    // DraftJS editor depends on this
-    this.setState({ _mounted: true })
+  static propTypes = {
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
   }
 
-  // draftjs handler
-  handleKeyCommand = command => {
-    const editorState = RichUtils.handleKeyCommand(this.state.editorState, command)
-    this.setState({ editorState })
-    return true
-  }
+  handleTitleInputChange = e => this.setState({ title: e.target.value })
 
-  // draftjs handler
-  toggleInlineStyle = inlineStyle => {
-    const editorState = RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
-    this.setState({ editorState })
-  }
-
-  handleTitleInputChange = e => {
-    this.setState({ titleValue: e.target.value })
-  }
-
-  handleDescriptionInputChange = editorState => {
-    this.setState({ editorState })
-  }
-
-  handleRepositoryUrlInputChange = e => {
-    this.setState({ repositoryUrlValue: e.target.value })
+  handleDescriptionInputChange = value => {
+    console.log('[handleDescriptionInputChange]', { value })
+    this.setState({ description: value })
   }
 
   handleTagsAutocompleteSelect = (value, id) => {
-    // console.log(value, id)s
-
     this.setState(prevState => ({
       ...prevState,
       selectedTags: [...prevState.selectedTags, id.key],
@@ -87,9 +61,17 @@ class AskQuestion extends Component {
     this.setState({ selectedTags })
   }
 
-  sendQuestion = async (title, description, tags, author, editor, repoUrl) => {
+  sendQuestion = async () => {
     try {
-      const res = await apiPost.sendQuestion(title, description, tags, author, editor, repoUrl)
+      const res = await apiPost.sendQuestion({
+        author: this.props.user.id,
+        title: this.state.title,
+        description: this.state.description,
+        tags: this.state.selectedTags,
+        repoUrl: `https://codesandbox.io/embed/${this.state.sandboxID}`,
+        editor: 1,
+        fs: this.state.sandboxFiles,
+      })
       const question = _.get(res, 'data.question', null)
       const questionId = _.get(res, 'data.question.id', null)
       const questionSlug = _.get(res, 'data.question.slug', null)
@@ -101,25 +83,7 @@ class AskQuestion extends Component {
     }
   }
 
-  getDescription = () => {
-    try {
-      const description = JSON.stringify(convertToRaw(this.state.editorState.getCurrentContent()))
-      return description
-    } catch (err) {
-      console.error("[getDescription] Can't stringify editor state", err)
-      return null
-    }
-  }
-  handleSubmit = () => {
-    this.sendQuestion(
-      this.state.titleValue,
-      this.getDescription(),
-      this.state.selectedTags,
-      3,
-      1,
-      this.state.repositoryUrlValue
-    )
-  }
+  handleSubmit = () => this.sendQuestion()
 
   createAndEmbedStackblitzProject = async chosenTemplate => {
     let project = {
@@ -174,10 +138,12 @@ class AskQuestion extends Component {
       const res = await axios.post('https://codesandbox.io/api/v1/sandboxes/define?json=1', {
         files: sandboxFiles,
       })
-      const sandbox_id = _.get(res, 'data.sandbox_id', null)
-      if (!sandbox_id) throw new Error('sandbox_id is falsy')
-      // console.log('[next]', { sandbox_id })
-      this.setState({ sandbox_id, currentStep: 2, contentLoading: false })
+      const sandboxID = _.get(res, 'data.sandbox_id', null)
+      if (!sandboxID) throw new Error('sandbox_id is falsy')
+
+      // since we can't afford to re-render stackblitz editor we have keep it inside dom
+      // IFrameWrapper depends on  isVmMounted prop to show/hide editor, but never remove it from the dom
+      this.setState({ vmMounted: false, sandboxID, currentStep: 2, contentLoading: false, sandboxFiles })
     } catch (err) {
       console.error('[next]', err)
       this.setState({ contentLoading: false })
@@ -233,27 +199,14 @@ class AskQuestion extends Component {
                 placeholder="Question title"
                 size="large"
                 type="primary"
-                value={this.state.titleValue}
+                value={this.state.title}
                 onChange={this.handleTitleInputChange}
               />
             </FormField>
 
             <FormField>
               <InputLabel text="Description" />
-              {/* <React.Fragment>
-                  <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
-                  {_mounted && (
-                    <DraftjsEditor
-                      editorState={editorState}
-                      handleKeyCommand={this.handleKeyCommand}
-                      plugins={this.plugins}
-                      placeholder="Describe your question here. Don't insert any code."
-                      onChange={this.handleDescriptionInputChange}
-                      height={300}
-                    />
-                  )}
-                </React.Fragment> */}
-              <Quill />
+              <Quill onChange={this.handleDescriptionInputChange} value={this.state.description} />
             </FormField>
 
             <FormField>
@@ -268,7 +221,7 @@ class AskQuestion extends Component {
               <Button
                 size="large"
                 onClick={() => {
-                  this.setState({ currentStep: 1 })
+                  this.setState({ currentStep: 1, vmMounted: true })
                 }}
               >
                 Back
