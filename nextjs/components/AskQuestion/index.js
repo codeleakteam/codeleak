@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
 import axios from 'axios'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import _ from 'lodash'
 import stackBlitzSdk from '@stackblitz/sdk'
 import { Input, Steps, Spin, Alert, Button, message } from 'antd'
@@ -121,7 +121,7 @@ class AskQuestion extends Component {
     )
   }
 
-  createAndEmbedStackblitzProject = chosenTemplate => {
+  createAndEmbedStackblitzProject = async chosenTemplate => {
     let project = {
       files: chosenTemplate.fs,
       dependencies: chosenTemplate.dependencies,
@@ -129,17 +129,16 @@ class AskQuestion extends Component {
       description: 'Created with <3 by the StackBlitz',
       template: chosenTemplate.stackBlitzTemplate,
     }
-    // try {
-    this.setState({ contentLoading: true })
-    this._stackBlitzVm = stackBlitzSdk.embedProject('stackblitz-iframe', project, {
-      view: 'both',
-      height: 300,
-    })
-    this.setState({ contentLoading: false, vmMounted: true })
-    // } catch (err) {
-    //   console.error('[createAndEmbedStackblitzProject]', { err })
-    //   this.setState({ contentLoading: false, vmMounted: false })
-    // }
+    try {
+      this.setState({ contentLoading: true })
+      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', project, {
+        view: 'both',
+      })
+      this.setState({ contentLoading: false, vmMounted: true })
+    } catch (err) {
+      console.error('[createAndEmbedStackblitzProject]', { err })
+      this.setState({ contentLoading: false, vmMounted: false })
+    }
   }
 
   setTemplate = chosenTemplate => {
@@ -159,6 +158,7 @@ class AskQuestion extends Component {
   next = async () => {
     this.setState({ contentLoading: true })
     // returns {[file_name]: fileContent }
+    console.log('vm', this._stackBlitzVm)
     const files = await this._stackBlitzVm.getFsSnapshot()
 
     const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
@@ -197,49 +197,50 @@ class AskQuestion extends Component {
             <Step key={item.title} title={item.title} />
           ))}
         </StyledSteps>{' '}
-        <StepContentWrapper contentLoading={contentLoading}>
-          {contentLoading && <Spin size="large" />}
-          {!contentLoading && this.state.currentStep === 0 && (
-            <React.Fragment>
-              {!this.state.chosenTemplate && <TemplateList setTemplate={this.setTemplate} />}
-            </React.Fragment>
-          )}
+        {contentLoading && (
+          <SpinWrapper>
+            <Spin size="large" />,
+          </SpinWrapper>
+        )}
+        {!contentLoading && this.state.currentStep === 0 && (
+          <React.Fragment>
+            {!this.state.chosenTemplate && <TemplateList setTemplate={this.setTemplate} />}
+          </React.Fragment>
+        )}
+        <SecondStepWrapper active={!contentLoading && this.state.currentStep === 1}>
+          <Alert
+            message="Please hit the save button (Cmd + S or Ctrl + S) when editor is focused before proceeding forward"
+            type="info"
+            showIcon
+          />
+          <Row>
+            <Button onClick={this.setTemplate.bind(this, null)}>Choose a different template</Button>
+            {this.state.vmMounted && (
+              <Button type="primary" onClick={this.next}>
+                I'm done
+              </Button>
+            )}
+          </Row>
+        </SecondStepWrapper>
+        <IFrameWrapper isVmMounted={this.state.vmMounted}>
+          <div id="stackblitz-iframe" />
+        </IFrameWrapper>
+        {!contentLoading && this.state.currentStep === 2 && (
+          <Column>
+            <FormField>
+              <InputLabel text="Title" />
+              <Input
+                placeholder="Question title"
+                size="large"
+                type="primary"
+                value={this.state.titleValue}
+                onChange={this.handleTitleInputChange}
+              />
+            </FormField>
 
-          <SecondStepWrapper active={!contentLoading && this.state.currentStep === 1}>
-            <Alert
-              message="Please hit the save button (Cmd + S or Ctrl + S) when editor is focused before proceeding forward"
-              type="info"
-              showIcon
-            />
-            <Row>
-              <Button onClick={this.setTemplate.bind(this, null)}>Choose a different template</Button>
-              {this.state.vmMounted && (
-                <Button type="primary" onClick={this.next}>
-                  I'm done
-                </Button>
-              )}
-            </Row>
-            <IFrameWrapper>
-              <div id="stackblitz-iframe" />
-            </IFrameWrapper>
-          </SecondStepWrapper>
-
-          {!contentLoading && this.state.currentStep === 2 && (
-            <Column>
-              <FormField>
-                <InputLabel text="Title" />
-                <Input
-                  placeholder="Question title"
-                  size="large"
-                  type="primary"
-                  value={this.state.titleValue}
-                  onChange={this.handleTitleInputChange}
-                />
-              </FormField>
-
-              <FormField>
-                <InputLabel text="Description" />
-                {/* <React.Fragment>
+            <FormField>
+              <InputLabel text="Description" />
+              {/* <React.Fragment>
                   <InlineStyleControls editorState={editorState} onToggle={this.toggleInlineStyle} />
                   {_mounted && (
                     <DraftjsEditor
@@ -252,34 +253,33 @@ class AskQuestion extends Component {
                     />
                   )}
                 </React.Fragment> */}
-                <Quill />
-              </FormField>
+              <Quill />
+            </FormField>
 
-              <FormField>
-                <InputLabel text="Tags" />
-                <QuestionTagsAutocomplete
-                  dataSource={this.state.tagsAutocompleteDatasource}
-                  onSelect={this.handleTagsAutocompleteSelect}
-                  onDeselect={this.handleTagsAutocompleteDeselect}
-                />
-              </FormField>
-              <Row>
-                <Button
-                  size="large"
-                  onClick={() => {
-                    this.setState({ currentStep: 1 })
-                  }}
-                >
-                  Back
-                </Button>
+            <FormField>
+              <InputLabel text="Tags" />
+              <QuestionTagsAutocomplete
+                dataSource={this.state.tagsAutocompleteDatasource}
+                onSelect={this.handleTagsAutocompleteSelect}
+                onDeselect={this.handleTagsAutocompleteDeselect}
+              />
+            </FormField>
+            <Row>
+              <Button
+                size="large"
+                onClick={() => {
+                  this.setState({ currentStep: 1 })
+                }}
+              >
+                Back
+              </Button>
 
-                <Button size="large" type="primary" onClick={this.handleSubmit}>
-                  Submit
-                </Button>
-              </Row>
-            </Column>
-          )}
-        </StepContentWrapper>
+              <Button size="large" type="primary" onClick={this.handleSubmit}>
+                Submit
+              </Button>
+            </Row>
+          </Column>
+        )}
       </div>
     )
   }
@@ -307,8 +307,13 @@ const StyledSteps = styled(Steps)`
 `
 
 const IFrameWrapper = styled.div`
-  width: 100%;
-  min-height: 90vh;
+  width: ${props => (props.isVmMounted ? '100%' : 0)};
+  min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+  ${props =>
+    !props.isVmMounted &&
+    css`
+      height: 0;
+    `}
   padding: 15px 0;
   #stackblitz-iframe {
     border: none;
@@ -321,6 +326,12 @@ const StepContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: ${props => (!props.contentLoading ? 'flex-start' : 'center')};
+  width: 100%;
+`
+
+const SpinWrapper = styled.div`
+  display: flex;
+  justify-content: center;
   width: 100%;
 `
 const Row = styled.div`
