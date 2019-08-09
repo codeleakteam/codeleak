@@ -8,8 +8,6 @@ import Comment from '../Comment'
 import UserSignature from '../UserSignature'
 import PostCTAS from '../PostCTAS'
 import { apiPost, apiPut } from '../../api'
-import { convertFromRaw, EditorState, ContentState } from 'draft-js'
-import { stateToHTML } from 'draft-js-export-html'
 import _ from 'lodash'
 
 class Question extends Component {
@@ -35,41 +33,21 @@ class Question extends Component {
   }
   componentDidMount() {
     const { comments, description, author } = this.props
-    const editorState = this.getDescription(description)
     this.setState({
-      editorState: editorState,
       comments,
-      commentsReversed: comments.reverse(),
     })
-  }
-
-  createAnswerFromHtml = () => {
-    return {
-      __html: stateToHTML(this.state.editorState.getCurrentContent()),
-    }
-  }
-
-  getDescription = description => {
-    try {
-      const richTextJson = JSON.parse(description)
-      return EditorState.createWithContent(convertFromRaw(richTextJson))
-    } catch (err) {
-      return EditorState.createWithContent(ContentState.createFromText(description))
-    }
   }
 
   submitComment = async (question_id, author_id, content) => {
     try {
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
-      const comment = _.get(res, 'data', null)
-      // console.log('[submitComment]', { comment })
-      if (comment) {
-        this.setState(state => ({
-          comments: [...state.comments, comment.comment],
-          commentsReversed: [...state.commentsReversed, comment.comment].reverse(),
-        }))
-        message.success('Comment is successfully submited!')
-      }
+      const comment = _.get(res, 'data.comment', null)
+      console.log('[submitComment]', { data: res.data, comment })
+      if (!comment) throw new Error('Comment null or undefined')
+      this.setState(state => ({
+        comments: [...state.comments, comment],
+      }))
+      message.success('Comment is successfully submited!')
     } catch (error) {
       console.error('[submitComment]', { error })
       message.error('Internal server error')
@@ -95,10 +73,9 @@ class Question extends Component {
         this.setState({ comments: newArr, commentsReversed: newArrReversed })
         message.success('Comment score is successfully updated!')
       }
-    } catch (error) {
-      // console.log(error.response.message)
-
-      message.error('Could not upvote comment!')
+    } catch (err) {
+      console.error('[upvoteCommeent]', { err })
+      message.error('Internal server error')
     }
   }
 
@@ -127,10 +104,6 @@ class Question extends Component {
     } = this.props
     console.log(authorReputation)
 
-    let reverseeed =
-      this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
-    const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
     return (
       <Wrapper>
         <Card>
@@ -156,10 +129,10 @@ class Question extends Component {
             })}
           </TagsList>
           <Description>
-            {this.state.editorState && <div dangerouslySetInnerHTML={this.createAnswerFromHtml()} />}
+            <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
           </Description>
-          {/* <iframe
-            src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
+          <iframe
+            src={repository_url}
             style={{
               width: '100%',
               height: '90vh',
@@ -168,7 +141,7 @@ class Question extends Component {
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          /> */}
+          />
 
           <PostCTAS
             postType="question"
@@ -179,7 +152,7 @@ class Question extends Component {
             updatedScore={updatedQuestionScore}
           />
         </Card>
-        {commentSummary.map((c, i) => (
+        {this.state.comments.map((c, i) => (
           <Card hoverable={true} isComment={true} key={i}>
             <Comment
               key={c.id}
@@ -193,11 +166,11 @@ class Question extends Component {
               upvoteComment={() => this.upvoteComment(1, c.id)}
               reportComment={() => this.reportComment(1, c.id)}
             />
-            {this.state.comments.length > 3 && (
+            {/* {this.state.comments.length > 3 && (
               <ToggleAllComments onClick={this.handleCommentSummary}>
                 {this.state.commentSummary ? 'view all' : 'hide'}
               </ToggleAllComments>
-            )}
+            )} */}
           </Card>
         ))}
       </Wrapper>
