@@ -16,6 +16,7 @@ class Question extends Component {
     comments: [],
     commentsReversed: [],
     commentSummary: true,
+    updatedScore: '',
   }
   static propTypes = {
     id: PropTypes.number.isRequired,
@@ -45,7 +46,7 @@ class Question extends Component {
       console.log('[submitComment]', { data: res.data, comment })
       if (!comment) throw new Error('Comment null or undefined')
       this.setState(state => ({
-        comments: [...state.comments, comment],
+        comments: [comment, ...state.comments],
       }))
       message.success('Comment is successfully submited!')
     } catch (error) {
@@ -62,15 +63,10 @@ class Question extends Component {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId)
       let comment = _.get(res, 'data', null)
+      console.log('upvoteComment', comment)
+
       if (comment) {
-        let index = _.findIndex(this.state.comments, { id: comment.comment.id })
-        let newArr = this.state.comments
-        let newArrReversed = this.state.commentsReversed
-
-        newArr.splice(index, 1, comment.comment)
-        newArrReversed.splice(index, 1, comment.comment)
-
-        this.setState({ comments: newArr, commentsReversed: newArrReversed })
+        this.setState({ updatedScore: comment.comment.score })
         message.success('Comment score is successfully updated!')
       }
     } catch (err) {
@@ -137,7 +133,7 @@ class Question extends Component {
               width: '100%',
               height: '90vh',
               border: 0,
-              'border-radius': '4px',
+              borderRadius: 4,
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
@@ -152,27 +148,48 @@ class Question extends Component {
             updatedScore={updatedQuestionScore}
           />
         </Card>
-        {this.state.comments.map((c, i) => (
-          <Card hoverable={true} isComment={true} key={i}>
-            <Comment
-              key={c.id}
-              id={c.id}
-              created_at={c.created_at}
-              username={c.author.username}
-              avatar={c.author.avatar}
-              reputation={c.author.reputation}
-              content={c.content}
-              score={c.score}
-              upvoteComment={() => this.upvoteComment(1, c.id)}
-              reportComment={() => this.reportComment(1, c.id)}
-            />
-            {/* {this.state.comments.length > 3 && (
-              <ToggleAllComments onClick={this.handleCommentSummary}>
-                {this.state.commentSummary ? 'view all' : 'hide'}
-              </ToggleAllComments>
-            )} */}
-          </Card>
-        ))}
+        {this.state.commentSummary &&
+          this.state.comments.slice(0, 3).map((c, i) => (
+            <Card hoverable={true} isComment={true} key={i}>
+              <Comment
+                key={c.id}
+                id={c.id}
+                created_at={c.created_at}
+                username={c.author.username}
+                avatar={c.author.avatar}
+                reputation={c.author.reputation}
+                content={c.content}
+                score={c.score}
+                updatedScore={this.state.updatedScore}
+                upvoteComment={() => this.upvoteComment(1, c.id)}
+                reportComment={() => this.reportComment(1, c.id)}
+              />
+            </Card>
+          ))}
+        {!this.state.commentSummary &&
+          this.state.comments.map((c, i) => (
+            <Card hoverable={true} isComment={true} key={i}>
+              <Comment
+                key={c.id}
+                id={c.id}
+                created_at={c.created_at}
+                username={c.author.username}
+                avatar={c.author.avatar}
+                reputation={c.author.reputation}
+                content={c.content}
+                score={c.score}
+                updatedScore={this.state.updatedScore}
+                upvoteComment={() => this.upvoteComment(1, c.id)}
+                reportComment={() => this.reportComment(1, c.id)}
+              />
+            </Card>
+          ))}
+
+        {this.state.comments.length > 3 && (
+          <ToggleAllComments onClick={this.handleCommentSummary}>
+            {this.state.commentSummary ? 'view all' : 'hide'}
+          </ToggleAllComments>
+        )}
       </Wrapper>
     )
   }

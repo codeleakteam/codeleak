@@ -5,7 +5,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 
-export default function UserSignature({ id, username, full_name, reputation, postedAt, avatar }) {
+export default function UserSignature({ id, username, full_name, reputation, postedAt, avatar, upvoteComment }) {
   return (
     <Wrapper>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
