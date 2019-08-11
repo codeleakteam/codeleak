@@ -108,7 +108,7 @@ class Answer extends Component {
     const { id, score, author, repository_url, created_at, description } = this.props
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
-    const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
+    const comments = this.state.commentSummary ? reverseeed : this.state.comments
 
     return (
       <React.Fragment>
@@ -121,9 +121,7 @@ class Answer extends Component {
             postedAt={created_at}
           />
 
-          <Description>
-            <div dangerouslySetInnerHTML={{ __html: description }} />
-          </Description>
+          <Description dangerouslySetInnerHTML={{ __html: description }} />
 
           <iframe
             src={repository_url}
@@ -147,7 +145,8 @@ class Answer extends Component {
             disableAnswerWithCode={true}
           />
         </Card>
-        {commentSummary.map((c, i) => (
+
+        {comments.map((c, i) => (
           <Card isComment={true} key={i}>
             <Comment
               key={c.id}

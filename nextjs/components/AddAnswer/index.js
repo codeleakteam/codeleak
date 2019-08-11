@@ -78,8 +78,6 @@ class AddAnswer extends React.Component {
       this.setState({ contentLoading: true, vmMounted: false })
 
       const files = await this._stackBlitzVm.getFsSnapshot()
-      console.log('WHAT ARE THOOOOOSE??', { files })
-      return
       const dependencies = await this._stackBlitzVm.getDependencies()
       console.log('[next]', { dependencies })
 
@@ -112,7 +110,7 @@ class AddAnswer extends React.Component {
       message.success('Answer successfully submitted!')
       Router.push(`/question/${this.props.question.id}/${this.props.question.slug}`)
 
-      console.log('[postAnswer]', res2.data)
+      console.log('[postAnswer]', { answer: res2.data })
     } catch (err) {
       console.error('[postAnswer]', { err })
     }
