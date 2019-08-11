@@ -20,6 +20,7 @@ class Question extends Component {
   }
   static propTypes = {
     id: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
@@ -88,6 +89,7 @@ class Question extends Component {
   render() {
     const {
       id,
+      slug,
       created_at,
       author,
       score,
@@ -141,6 +143,10 @@ class Question extends Component {
 
           <PostCTAS
             postType="question"
+            object={{
+              id,
+              slug,
+            }}
             submitComment={this.submitComment}
             updateScore={updateQuestionScore}
             id={id}
@@ -211,7 +217,7 @@ const Wrapper = styled.div`
 `
 
 const Description = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 `
 const ToggleAllComments = styled.span`
   display: block;

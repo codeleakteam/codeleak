@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Menu, message } from 'antd'
 import Comment from '../Comment'
 import UserSignature from '../UserSignature'
 import PostCTAS from '../PostCTAS'
 import Card from '../Card'
-import { convertFromRaw, EditorState, ContentState } from 'draft-js'
-import { stateToHTML } from 'draft-js-export-html'
 import { apiPost, apiPut } from '../../api'
 
 class Answer extends Component {
@@ -41,33 +39,11 @@ class Answer extends Component {
   }
 
   componentDidMount() {
-    // console.log('propovi', this.props)
-
-    const description = this.getDescription(this.props.description)
     this.setState({
       comments: this.props.comments,
       commentsReversed: this.props.comments.reverse(),
       questionScore: this.props.score,
-      editorState: description,
-      // authorReputation: this.props.author.reputation,
     })
-  }
-
-  getDescription = description => {
-    try {
-      const richTextJson = JSON.parse(description)
-      return EditorState.createWithContent(convertFromRaw(richTextJson))
-    } catch (err) {
-      return EditorState.createWithContent(ContentState.createFromText(description))
-    }
-  }
-
-  createAnswerFromHtml = () => {
-    let editorState = this.state.editorState
-    let html = stateToHTML(editorState.getCurrentContent())
-    return {
-      __html: html,
-    }
   }
 
   submitComment = async (answer_id, author_id, content) => {
@@ -129,12 +105,12 @@ class Answer extends Component {
   }
 
   render() {
-    const { id, score, question, author, repository_url, created_at } = this.props
-    const { editorState } = this.state
+    const { id, score, question, author, repository_url, created_at, description } = this.props
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-    //  const testLink = repository_url ? repository_url.replace('/s/', '/embed/') : null
+
+    console.log('PROPINE', this.props)
 
     return (
       <React.Fragment>
@@ -146,9 +122,10 @@ class Answer extends Component {
             reputation={this.state.authorReputation}
             postedAt={created_at}
           />
-          {editorState && (
-            <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={this.createAnswerFromHtml()} />
-          )}
+
+          <Description>
+            <div dangerouslySetInnerHTML={{ __html: description }} />
+          </Description>
 
           {/* <iframe
             src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
@@ -169,6 +146,7 @@ class Answer extends Component {
             score={score}
             updatedScore={this.state.answerScore}
             submitComment={this.submitComment}
+            disableAnswerWithCode={true}
           />
         </Card>
         {commentSummary.map((c, i) => (
@@ -195,4 +173,7 @@ class Answer extends Component {
   }
 }
 
+const Description = styled.div`
+  margin-bottom: 16px;
+`
 export default Answer

@@ -21,7 +21,9 @@ class Answer(models.Model):
         'Editor',
         on_delete=models.CASCADE,
     )
+    stackblitz_template = models.CharField(max_length=100, blank=False, null=False)
     fs = JSONField(null=True)
+    dependencies = JSONField(null=True)
     # Required
     description = models.TextField(blank=False, null=False)
     # Optional

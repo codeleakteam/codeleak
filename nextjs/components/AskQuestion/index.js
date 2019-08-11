@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Head from 'next/head'
 import axios from 'axios'
 import styled, { css } from 'styled-components'
 import _ from 'lodash'
@@ -9,9 +8,8 @@ import { Input, Steps, Spin, Alert, Button, message } from 'antd'
 import FormField from '../FormField'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
-import { EditorState, RichUtils, convertToRaw } from 'draft-js'
 import QuestionTagsAutocomplete from '../QuestionTagsAutocomplete'
-import { apiGet, apiPost } from '../../api'
+import { apiPost } from '../../api'
 import Router from 'next/router'
 import Quill from '../Quill'
 
@@ -23,11 +21,13 @@ class AskQuestion extends Component {
 
     contentLoading: false,
     chosenTemplate: null,
+    sandboxID: null,
 
-    // Form data
+    // Data
     title: '',
     description: '',
-    sandboxID: null,
+    files: null,
+
     selectedTags: [], // Array of tag ids
   }
 
@@ -63,6 +63,7 @@ class AskQuestion extends Component {
 
   sendQuestion = async () => {
     try {
+      console.log(this.state.chosenTemplate)
       const res = await apiPost.sendQuestion({
         author: this.props.user.id,
         title: this.state.title,
@@ -70,13 +71,15 @@ class AskQuestion extends Component {
         tags: this.state.selectedTags,
         repoUrl: `https://codesandbox.io/embed/${this.state.sandboxID}`,
         editor: 1,
-        fs: this.state.sandboxFiles,
+        stackBlitzTemplate: this.state.chosenTemplate.stackBlitzTemplate,
+        fs: this.state.files,
+        dependencies: this.state.dependencies,
       })
       const question = _.get(res, 'data.question', null)
       const questionId = _.get(res, 'data.question.id', null)
       const questionSlug = _.get(res, 'data.question.slug', null)
       if (!question) throw new Error('Internal server error')
-      message.success('Successfully sent question!')
+      message.success('Question successfully submitted!')
       Router.push(`/question/${questionId}/${questionSlug}`)
     } catch (error) {
       message.error('Internal server error')
@@ -124,6 +127,8 @@ class AskQuestion extends Component {
     // returns {[file_name]: fileContent }
     console.log('vm', this._stackBlitzVm)
     const files = await this._stackBlitzVm.getFsSnapshot()
+    const dependencies = await this._stackBlitzVm.getDependencies()
+    console.log('[next]', { dependencies })
 
     const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
       return {
@@ -139,11 +144,11 @@ class AskQuestion extends Component {
         files: sandboxFiles,
       })
       const sandboxID = _.get(res, 'data.sandbox_id', null)
-      if (!sandboxID) throw new Error('sandbox_id is falsy')
+      if (!sandboxID) throw new Error('sandbox_id is null or undefined')
 
       // since we can't afford to re-render stackblitz editor we have keep it inside dom
       // IFrameWrapper depends on  isVmMounted prop to show/hide editor, but never remove it from the dom
-      this.setState({ vmMounted: false, sandboxID, currentStep: 2, contentLoading: false, sandboxFiles })
+      this.setState({ vmMounted: false, sandboxID, currentStep: 2, contentLoading: false, files, dependencies })
     } catch (err) {
       console.error('[next]', err)
       this.setState({ contentLoading: false })
@@ -155,9 +160,6 @@ class AskQuestion extends Component {
 
     return (
       <div>
-        <Head>
-          <title>Submit question</title>
-        </Head>
         <StyledSteps current={this.state.currentStep}>
           {steps.map(item => (
             <Step key={item.title} title={item.title} />
@@ -206,7 +208,11 @@ class AskQuestion extends Component {
 
             <FormField>
               <InputLabel text="Description" />
-              <Quill onChange={this.handleDescriptionInputChange} value={this.state.description} />
+              <Quill
+                onChange={this.handleDescriptionInputChange}
+                value={this.state.description}
+                style={{ height: '500px' }}
+              />
             </FormField>
 
             <FormField>

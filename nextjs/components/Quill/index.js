@@ -9,7 +9,7 @@ class Quill extends Component {
 
   constructor(props) {
     super(props)
-    if (document) {
+    if (typeof document !== 'undefined') {
       this.quill = require('react-quill')
     }
   }
@@ -17,13 +17,7 @@ class Quill extends Component {
   render() {
     const Quill = this.quill
     if (Quill) {
-      return (
-        <Quill
-          onChange={this.props.onChange}
-          value={this.props.value}
-          style={{ height: 500, marginBottom: 40, background: 'white' }}
-        />
-      )
+      return <Quill onChange={this.props.onChange} style={{ background: 'white', ...this.props.style }} />
     } else {
       return null
     }

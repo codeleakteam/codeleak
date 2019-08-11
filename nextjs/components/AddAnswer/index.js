@@ -1,134 +1,193 @@
 import React from 'react'
+import axios from 'axios'
+import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
-import { EditorState, RichUtils, convertToRaw } from 'draft-js'
-import { Button } from 'antd'
-import DraftjsEditor from '../draftjs'
-import addLinkPlugin from '../draftjs/addLinkPlugin'
-import InlineStyleControls from '../draftjs/InlineStyleControls'
-import UrlTab from '../draftjs/UrlTab'
+import Router from 'next/router'
+import { Spin, Alert, Button, message } from 'antd'
+import stackBlitzSdk from '@stackblitz/sdk'
+import Quill from '../Quill'
+import { apiPost } from '../../api'
 
 class AddAnswer extends React.Component {
+  _stackBlitzVm = null
+
   state = {
-    editorState: EditorState.createEmpty(),
-    editor: false,
-    addUrlOpen: false,
-    urlValue: '',
+    contentLoading: true,
+    vmMounted: false,
+    sandboxID: null,
+
+    // Data
+    description: '',
   }
 
   static propTypes = {
-    sendAnswer: PropTypes.func.isRequired,
-    questionId: PropTypes.number.isRequired,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
+    question: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      score: PropTypes.number.isRequired,
+      repository_url: PropTypes.string.isRequired,
+      created_at: PropTypes.string.isRequired,
+      comments: PropTypes.array.isRequired,
+      tags: PropTypes.array.isRequired,
+      author: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        username: PropTypes.string.isRequired,
+      }),
+      fs: PropTypes.object.isRequired,
+      dependencies: PropTypes.object.isRequired,
+    }),
   }
-  // draftjs bug fix
   componentDidMount() {
-    this.setState({ editor: true })
+    this.forkOriginalStackblitzProject()
   }
-  // draftjs plugins
-  plugins = [addLinkPlugin]
 
-  onAddLink = () => {
-    const editorState = this.state.editorState
-    const selection = editorState.getSelection()
-    // const link = window.prompt('Paste the link')
-    const link = this.state.urlValue
-
-    if (!link) {
-      this.onChange(RichUtils.toggleLink(editorState, selection, null))
-      return 'handled'
+  forkOriginalStackblitzProject = async () => {
+    let project = {
+      files: this.props.question.fs,
+      dependencies: this.props.question.dependencies,
+      title: this.props.question.title,
+      description: this.props.question.title,
+      template: this.props.question.stackblitz_template,
     }
-
-    const content = editorState.getCurrentContent()
-    const contentWithEntity = content.createEntity('LINK', 'MUTABLE', { url: link })
-    const newEditorState = EditorState.push(editorState, contentWithEntity, 'create-entity')
-    const entityKey = contentWithEntity.getLastCreatedEntityKey()
-    this.onChange(RichUtils.toggleLink(newEditorState, selection, entityKey))
-  }
-  // draftjs handler
-  onChange = editorState => {
-    this.setState({ editorState })
-  }
-  // draftjs handler
-  handleKeyCommand = command => {
-    const { editorState } = this.state
-    const newState = RichUtils.handleKeyCommand(editorState, command)
-    if (newState) {
-      this.onChange(newState)
-      return true
+    console.log('[forkOriginalStackblitzProject]', { project })
+    try {
+      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', project, {
+        view: 'both',
+      })
+      this.setState({ contentLoading: false, vmMounted: true })
+    } catch (err) {
+      console.error('[createAndEmbedStackblitzProject]', { err })
+      this.setState({ contentLoading: false, vmMounted: false })
     }
-    // handleKeyCommand
-    return false
-  }
-  // draftjs handler
-  toggleInlineStyle = inlineStyle => {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle))
-  }
-  // clear state after submit
-  cleanStateAfterSubmit = () => {
-    this.setState({ editorState: EditorState.createEmpty(), addUrlOpen: false, urlValue: '' })
   }
 
-  handleUrlTab = () => {
-    this.setState(state => {
-      return {
-        addUrlOpen: !state.addUrlOpen,
-      }
-    })
+  handleDescriptionChange = description => {
+    console.log('[handleDescriptionChange]', { description })
+    this.setState({ description })
   }
 
-  handleUrlChange = e => {
-    this.setState({ urlValue: e.target.value })
+  postAnswer = async () => {
+    try {
+      this.setState({ contentLoading: true, vmMounted: false })
+
+      const files = await this._stackBlitzVm.getFsSnapshot()
+      const dependencies = await this._stackBlitzVm.getDependencies()
+      console.log('[next]', { dependencies })
+
+      const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
+        return {
+          ...acc,
+          [fileName]: {
+            content: fileContent,
+          },
+        }
+      }, {})
+
+      const res = await axios.post('https://codesandbox.io/api/v1/sandboxes/define?json=1', {
+        files: sandboxFiles,
+      })
+      const sandboxID = _.get(res, 'data.sandbox_id', null)
+      if (!sandboxID) throw new Error('sandbox_id is null or undefined')
+
+      const res2 = await apiPost.sendAnswer({
+        authorId: this.props.user.id,
+        questionId: this.props.question.id,
+        title: this.props.question.title,
+        description: this.props.question.description,
+        stackBlitzTemplate: this.props.question.stackblitz_template,
+        fs: files,
+        dependencies: dependencies,
+        editor: 1,
+        repoUrl: `https://codesandbox.io/embed/${sandboxID}`,
+      })
+      message.success('Answer successfully submitted!')
+      Router.push(`/question/${this.props.question.id}/${this.props.question.slug}`)
+
+      console.log('[postAnswer]', res2.data)
+    } catch (err) {
+      console.error('[postAnswer]', { err })
+    }
   }
 
   render() {
-    const { editorState, addUrlOpen, editor, urlValue } = this.state
-    const { sendAnswer, questionId } = this.props
+    console.log('[render]', this.props)
     return (
-      <Wrapper>
-        {editor && (
-          <React.Fragment>
-            <h2>Add answer</h2>
-            <InlineStyleControls
-              editorState={editorState}
-              onToggle={this.toggleInlineStyle}
-              openUrlTab={this.handleUrlTab}
-              addUrlOpen={addUrlOpen}
-            />
-            {addUrlOpen && <UrlTab url={urlValue} handleUrlChange={this.handleUrlChange} onAddLink={this.onAddLink} />}
-            <DraftjsEditor
-              editorState={editorState}
-              handleKeyCommand={this.handleKeyCommand}
-              plugins={this.plugins}
-              placeholder="Add answer"
-              onChange={this.onChange}
-            />
-            <Button
-              type="primary"
-              onClick={() => {
-                sendAnswer(
-                  1,
-                  questionId,
-                  1,
-                  JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-                  'repositoryurl'
-                )
-                this.cleanStateAfterSubmit()
-              }}
-            >
-              Send
-            </Button>
-          </React.Fragment>
+      <div>
+        {this.state.contentLoading && (
+          <SpinWrapper>
+            <Spin size="large" />
+          </SpinWrapper>
         )}
-      </Wrapper>
+
+        <IFrameWrapper isVmMounted={this.state.vmMounted}>
+          <h3
+            css={`
+              display: ${this.state.vmMounted ? 'block' : 'none'};
+            `}
+          >
+            1. Code
+          </h3>
+          <Alert
+            message="Please hit the save button (Cmd + S or Ctrl + S) when editor is focused before proceeding forward"
+            type="info"
+            showIcon
+            css={`
+              display: ${this.state.vmMounted ? 'block' : 'none'};
+              margin-bottom: 8px;
+            `}
+          />
+
+          <div id="stackblitz-iframe" />
+        </IFrameWrapper>
+
+        <StepsWrapper active={!this.state.contentLoading}>
+          <h3>2. Explanation</h3>
+          {!this.state.contentLoading && (
+            <Quill style={{ height: '200px' }} value={this.state.description} onChange={this.handleDescriptionChange} />
+          )}
+          {this.state.vmMounted && (
+            <Button type="primary" size="large" onClick={this.postAnswer} style={{ marginTop: '50px' }}>
+              I'm done
+            </Button>
+          )}
+        </StepsWrapper>
+      </div>
     )
   }
 }
 
-const Wrapper = styled.div`
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 0.9rem;
-  margin-bottom: 16px;
-  background: white;
+const IFrameWrapper = styled.div`
+  width: ${props => (props.isVmMounted ? '100%' : 0)};
+  min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+  ${props =>
+    !props.isVmMounted &&
+    css`
+      height: 0;
+    `}
+  padding: 15px 0;
+  #stackblitz-iframe {
+    border: none;
+    border-radius: 4px;
+    min-height: 90vh;
+  }
 `
+
+const StepsWrapper = styled.div`
+  display: ${props => (props.active ? 'block' : 'none')};
+  width: 100%;
+`
+
+const SpinWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`
+
 export default AddAnswer
