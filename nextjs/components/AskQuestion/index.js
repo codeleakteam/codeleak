@@ -206,7 +206,11 @@ class AskQuestion extends Component {
               />
             </FormField>
 
-            <FormField>
+            <FormField
+              css={`
+                margin-bottom: 50px;
+              `}
+            >
               <InputLabel text="Description" />
               <Quill
                 onChange={this.handleDescriptionInputChange}
@@ -262,7 +266,7 @@ const SecondStepWrapper = styled.div`
 `
 
 const StyledSteps = styled(Steps)`
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 `
 
 const IFrameWrapper = styled.div`

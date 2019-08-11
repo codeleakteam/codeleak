@@ -66,7 +66,7 @@ class AddAnswerPage extends Component {
 const Title = styled.h3`
   font-size: 1.6rem;
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 `
 
 export default withAuthSync(AddAnswerPage)

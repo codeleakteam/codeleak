@@ -154,7 +154,7 @@ class AddAnswer extends React.Component {
           )}
           {this.state.vmMounted && (
             <Button type="primary" size="large" onClick={this.postAnswer} style={{ marginTop: '50px' }}>
-              I'm done
+              Submit
             </Button>
           )}
         </StepsWrapper>
@@ -163,15 +163,16 @@ class AddAnswer extends React.Component {
   }
 }
 
+// Margin-bottom 15px instead of 16px because we can't get iframe inside iframewrapper to be 100% height
 const IFrameWrapper = styled.div`
   width: ${props => (props.isVmMounted ? '100%' : 0)};
   min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+  margin-bottom: 15px;
   ${props =>
     !props.isVmMounted &&
     css`
       height: 0;
     `}
-  padding: 15px 0;
   #stackblitz-iframe {
     border: none;
     border-radius: 4px;
