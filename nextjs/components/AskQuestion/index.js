@@ -272,24 +272,18 @@ const StyledSteps = styled(Steps)`
 const IFrameWrapper = styled.div`
   width: ${props => (props.isVmMounted ? '100%' : 0)};
   min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+  padding: 15px 0;
   ${props =>
     !props.isVmMounted &&
     css`
       height: 0;
+      padding: 0;
     `}
-  padding: 15px 0;
   #stackblitz-iframe {
     border: none;
     border-radius: 4px;
     min-height: 90vh;
   }
-`
-
-const StepContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: ${props => (!props.contentLoading ? 'flex-start' : 'center')};
-  width: 100%;
 `
 
 const SpinWrapper = styled.div`

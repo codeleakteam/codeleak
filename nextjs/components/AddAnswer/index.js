@@ -78,6 +78,8 @@ class AddAnswer extends React.Component {
       this.setState({ contentLoading: true, vmMounted: false })
 
       const files = await this._stackBlitzVm.getFsSnapshot()
+      console.log('WHAT ARE THOOOOOSE??', { files })
+      return
       const dependencies = await this._stackBlitzVm.getDependencies()
       console.log('[next]', { dependencies })
 

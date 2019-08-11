@@ -46,7 +46,7 @@ export const apiPost = {
   subscribeMail: value => {
     return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
   },
-  sendAnswer: ({ authorId, questionId, editor, description, repoUrl, stackBlitzTemplate, fs }) => {
+  sendAnswer: ({ authorId, questionId, editor, description, repoUrl, stackBlitzTemplate, fs, dependencies }) => {
     return axios.post(`${BASE_URL}/api/answers`, {
       author: authorId,
       question: questionId,
@@ -55,6 +55,7 @@ export const apiPost = {
       repository_url: repoUrl,
       stackblitz_template: stackBlitzTemplate,
       fs,
+      dependencies,
     })
   },
   sendComment: (type, object_id, authorId, content) => {

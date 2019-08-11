@@ -105,12 +105,10 @@ class Answer extends Component {
   }
 
   render() {
-    const { id, score, question, author, repository_url, created_at, description } = this.props
+    const { id, score, author, repository_url, created_at, description } = this.props
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const commentSummary = this.state.commentSummary ? reverseeed : this.state.comments
-
-    console.log('PROPINE', this.props)
 
     return (
       <React.Fragment>
@@ -127,8 +125,8 @@ class Answer extends Component {
             <div dangerouslySetInnerHTML={{ __html: description }} />
           </Description>
 
-          {/* <iframe
-            src="https://codesandbox.io/embed/vigilant-dubinsky-eph8k"
+          <iframe
+            src={repository_url}
             style={{
               width: '100%',
               height: '90vh',
@@ -137,7 +135,7 @@ class Answer extends Component {
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          /> */}
+          />
 
           <PostCTAS
             postType="answer"

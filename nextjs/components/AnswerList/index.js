@@ -13,11 +13,6 @@ const AnswerList = ({ answers }) => {
   )
 }
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
-`
-
 AnswerList.propTypes = {
   answers: PropTypes.arrayOf(
     PropTypes.shape({
@@ -40,5 +35,10 @@ AnswerList.propTypes = {
     })
   ),
 }
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+`
 
 export default AnswerList
