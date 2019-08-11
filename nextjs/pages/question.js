@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import Head from 'next/head'
 import { Alert, message } from 'antd'
-import TwoSideLayout from '../components/TwoSideLayout'
 import Question from '../components/Question'
 import AnswerList from '../components/AnswerList'
-import AddAnswer from '../components/AddAnswer'
 import { apiGet, apiPut, apiPost } from '../api'
 import { withAuthSync } from '../helpers/functions/auth'
 
@@ -48,22 +46,6 @@ class QuestionFullPage extends Component {
     }
   }
 
-  sendAnswerOnQuestion = async (authorId, questionId, editor, description, repository) => {
-    try {
-      const res = await apiPost.sendAnswer(authorId, questionId, editor, description, repository)
-      let answer = _.get(res, 'data', null)
-      if (answer) {
-        this.setState({
-          answers: [...this.state.answers, answer],
-        })
-      } else {
-        message.error('Could not send answer')
-      }
-    } catch (error) {
-      message.error('Could not send answer')
-    }
-  }
-
   render() {
     const { question, error } = this.props
     return (
@@ -76,7 +58,6 @@ class QuestionFullPage extends Component {
         {!error && (
           <QuestionWithAnswersWrapper
             answers={this.state.answers}
-            sendAnswerOnQuestion={this.sendAnswerOnQuestion}
             updateQuestionScore={this.updateQuestionScore}
             questionScore={this.state.questionScore}
             question={question}
@@ -88,18 +69,12 @@ class QuestionFullPage extends Component {
   }
 }
 
-function QuestionWithAnswersWrapper({
-  question,
-  questionScore,
-  updateQuestionScore,
-  sendAnswerOnQuestion,
-  answers,
-  authorReputation,
-}) {
+function QuestionWithAnswersWrapper({ question, questionScore, updateQuestionScore, answers, authorReputation }) {
   return (
     <React.Fragment>
       <Question
         id={question.id}
+        slug={question.slug}
         title={question.title}
         description={question.description}
         score={question.score}

@@ -24,6 +24,12 @@ app
       app.render(req, res, actualPage, queryParams)
     })
 
+    server.get('/question/:id/:slug/answer', (req, res) => {
+      const actualPage = '/add_answer'
+      const queryParams = { id: req.params.id, slug: req.params.slug }
+      app.render(req, res, actualPage, queryParams)
+    })
+
     server.get('*', (req, res) => {
       return handle(req, res)
     })

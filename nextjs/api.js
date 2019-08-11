@@ -46,13 +46,16 @@ export const apiPost = {
   subscribeMail: value => {
     return axios.post(`${BASE_URL}/api/subscribe`, { email: value })
   },
-  sendAnswer: (authorId, questionId, editor, description, repository) => {
+  sendAnswer: ({ authorId, questionId, editor, description, repoUrl, stackBlitzTemplate, fs, dependencies }) => {
     return axios.post(`${BASE_URL}/api/answers`, {
       author: authorId,
       question: questionId,
       editor: editor,
       description: description,
-      repository_url: repository,
+      repository_url: repoUrl,
+      stackblitz_template: stackBlitzTemplate,
+      fs,
+      dependencies,
     })
   },
   sendComment: (type, object_id, authorId, content) => {
@@ -63,8 +66,8 @@ export const apiPost = {
       content: content,
     })
   },
-  sendQuestion: ({ author, title, description, tags, editor, repoUrl, fs }) => {
-    console.log('AAA', { repoUrl })
+  sendQuestion: ({ author, title, description, tags, editor, repoUrl, fs, dependencies, stackBlitzTemplate }) => {
+    console.log('[sendQuestion]', { stackBlitzTemplate })
     return axios.post(`${BASE_URL}/api/questions`, {
       title: title,
       author: author,
@@ -72,7 +75,9 @@ export const apiPost = {
       tags: tags,
       editor: editor,
       repository_url: repoUrl,
+      stackblitz_template: stackBlitzTemplate,
       fs,
+      dependencies,
     })
   },
   reportComment: (userId, type, commentId) => {

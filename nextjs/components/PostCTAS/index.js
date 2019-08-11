@@ -2,10 +2,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Input } from 'antd'
+import Link from 'next/link'
 
 const { TextArea } = Input
 
 export default class PostCTAS extends React.Component {
+  static propTypes = {
+    // Not used yet
+    postType: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    score: PropTypes.number.isRequired,
+    updateScore: PropTypes.func.isRequired,
+    updatedScore: PropTypes.number,
+    disableAnswerWithCode: PropTypes.bool.isRequired,
+    object: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      slug: PropTypes.string,
+    }),
+  }
+
+  static defaultProps = {
+    disableAnswerWithCode: false,
+  }
+
   state = {
     isCommentVisible: false,
     commentValue: '',
@@ -19,7 +38,7 @@ export default class PostCTAS extends React.Component {
   handleCommentInputChange = e => this.setState({ commentValue: e.target.value })
 
   render() {
-    const { postType, id, score, updatedScore } = this.props
+    const { id, score, updatedScore, object } = this.props
     return (
       <Column>
         <Row>
@@ -33,7 +52,11 @@ export default class PostCTAS extends React.Component {
             </VoteButton>
           </div>
           <RightSide>
-            <Button type="primary">Answer with code</Button>
+            {!this.props.disableAnswerWithCode && (
+              <Link href={`/question/${object.id}/${object.slug}/answer`}>
+                <Button type="primary">Answer with code</Button>
+              </Link>
+            )}
             <StyledToggleQuickCommentButton default onClick={this.toggleCommentVisibility}>
               {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
             </StyledToggleQuickCommentButton>
@@ -110,13 +133,3 @@ const StyledToggleQuickCommentButton = styled(Button)`
 const StyledSendAnswerButton = styled(Button)`
   width: 100%;
 `
-
-PostCTAS.propTypes = {
-  postType: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-  score: PropTypes.number.isRequired,
-  updateScore: PropTypes.func.isRequired,
-  updatedScore: PropTypes.number,
-
-  // submitComment: PropTypes.func.isRequired,
-}

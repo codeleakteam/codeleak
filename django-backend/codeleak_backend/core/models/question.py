@@ -8,7 +8,9 @@ class Question(models.Model):
     title = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
     slug = models.SlugField(blank=True, null=False)
+    stackblitz_template = models.CharField(max_length=100, blank=False, null=False)
     fs = JSONField(null=True)
+    dependencies = JSONField(null=True)
     # Optional
     repository_url = models.CharField(max_length=255, blank=False, null=False)
     # FKs

@@ -75,7 +75,7 @@ class Search extends Component {
           size="large"
           style={{ width: '100%' }}
           dataSource={options}
-          placeholder="Search..."
+          placeholder="Search questions, users or tags"
           optionLabelProp="value"
           onChange={this.handleChange}
         />

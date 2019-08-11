@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import TwoSideLayout from '../../components/TwoSideLayout'
-import AskQuestion from '../../components/AskQuestion'
-import AskGuide from '../../components/SideWidgets/AskGuide'
-import { withAuthSync } from '../../helpers/functions/auth'
 import Head from 'next/head'
+import AskQuestion from '../../components/AskQuestion'
+import { withAuthSync } from '../../helpers/functions/auth'
 
 class AskQuestionPage extends Component {
   static propTypes = {
@@ -19,9 +17,10 @@ class AskQuestionPage extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* <Head>
-          <link rel="stylesheet" href="//cdn.quilljs.com/1.2.6/quill.snow.css" />
-        </Head> */}
+        <Head>
+          <title>Submit question</title>
+        </Head>
+
         <div>
           <Title>Submit question</Title>
           <AskQuestion user={this.props.codeleakUser} />
