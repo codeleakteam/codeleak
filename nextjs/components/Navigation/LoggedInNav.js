@@ -148,12 +148,27 @@ class LoggedInNav extends React.Component {
     return (
       <Menu style={{ width: '500px', background: '#eff1f4', padding: '8px' }}>
         {(this.state.notifications || []).map((n, i) => {
+          console.log('accc', n.actor)
           if (i < 3) {
             return (
               <Menu.Item style={{ padding: '0', whiteSpace: 'normal' }} key="0">
                 <StyledCard>
                   <RecipientAvatarWrapper>
-                    <StyledAvatar size="large" src={n.actor.avatar} />
+                    {n.actor.avatar ? (
+                      <StyledAvatar size="large" src={n.actor.avatar} />
+                    ) : (
+                      <Avatar
+                        size={40}
+                        style={{
+                          verticalAlign: 'middle',
+                          cursor: 'pointer',
+                          color: '#f56a00',
+                          backgroundColor: '#fde3cf',
+                        }}
+                      >
+                        {getAvatarLetter(n.actor.username, n.actor.full_name)}
+                      </Avatar>
+                    )}
                     <RecipientAvatarIconWrapper>{this.getAvatarIcon(n.verb)}</RecipientAvatarIconWrapper>
                   </RecipientAvatarWrapper>
 
@@ -442,6 +457,7 @@ const StyledLogo = styled(Logo)`
 `
 const DownvoteIcon = styled(UpvoteIcon)`
   transform: rotate(180deg);
+  margin-top: 4px;
 `
 
 const AnswerCommentIcon = styled(CustomIcon)`
@@ -464,5 +480,13 @@ const StyledSearch = styled(Search)`
       `}
   }
 `
+
+const getAvatarLetter = (username, full_name) => {
+  if (!!full_name) {
+    return full_name.charAt(0).toUpperCase()
+  } else if (!!username) {
+    return username.charAt(0).toUpperCase()
+  } else return
+}
 
 export default LoggedInNav
