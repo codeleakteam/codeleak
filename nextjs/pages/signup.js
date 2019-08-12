@@ -19,8 +19,6 @@ class SignUp extends Component {
       const token = _.get(res, 'data.token', null)
       const user = _.get(res, 'data.user', null)
       login({ user, token })
-
-      console.log('[register]', res.data)
     } catch (err) {
       if (err.response && err.response.status === 400) {
         const errors = Object.values(err.response.data)
@@ -28,16 +26,13 @@ class SignUp extends Component {
       } else {
         this.setState({ loading: false, errors: ['Internal server error. Please try again!'] })
       }
-      console.error('[register]', { err })
     }
   }
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('[handleSubmit]', { values })
         this.register(values)
-        // console.log('Received values of form: ', values)
       }
     })
   }

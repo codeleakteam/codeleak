@@ -12,14 +12,13 @@ class QuestionFullPage extends Component {
     try {
       const res = await apiGet.getQuestion(query.id)
       const question = _.get(res, 'data.question', null)
-      console.log('[getInitialProps]', { question })
+
       if (!question) throw new Error('No question object available')
       return {
         question,
         error: false,
       }
     } catch (err) {
-      console.log('[getInitialProps]', { err })
       return {
         error: true,
       }

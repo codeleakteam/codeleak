@@ -18,7 +18,6 @@ class AddAnswerPage extends Component {
         error: false,
       }
     } catch (err) {
-      console.log('[getInitialProps]', { err })
       return {
         error: true,
       }
@@ -49,7 +48,6 @@ class AddAnswerPage extends Component {
     }),
   }
   render() {
-    console.log('[render]', { props: this.props })
     return (
       <div>
         <Head>

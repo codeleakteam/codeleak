@@ -65,7 +65,6 @@ Navigation.propTypes = {
   isResponsive: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
   }),
   isLoggedIn: PropTypes.bool.isRequired,
