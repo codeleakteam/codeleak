@@ -81,8 +81,7 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props
-    console.log('codeleakUser', pageProps.codeleakUser)
-    console.log('pageProps', pageProps)
+
     if (this.props.codeleakAuthToken) this.setRequestInterceptor()
     this.setResponseInterceptor()
     return (

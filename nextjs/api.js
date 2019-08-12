@@ -67,7 +67,6 @@ export const apiPost = {
     })
   },
   sendQuestion: ({ author, title, description, tags, editor, repoUrl, fs, dependencies, stackBlitzTemplate }) => {
-    console.log('[sendQuestion]', { stackBlitzTemplate })
     return axios.post(`${BASE_URL}/api/questions`, {
       title: title,
       author: author,

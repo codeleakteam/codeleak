@@ -44,7 +44,7 @@ class Question extends Component {
     try {
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
       const comment = _.get(res, 'data.comment', null)
-      console.log('[submitComment]', { data: res.data, comment })
+      // console.log('[submitComment]', { data: res.data, comment })
       if (!comment) throw new Error('Comment null or undefined')
       this.setState(state => ({
         comments: [comment, ...state.comments],
@@ -64,7 +64,7 @@ class Question extends Component {
     try {
       const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId)
       let comment = _.get(res, 'data', null)
-      console.log('upvoteComment', comment)
+      
 
       if (comment) {
         this.setState({ updatedScore: comment.comment.score })
@@ -100,7 +100,7 @@ class Question extends Component {
       updatedQuestionScore,
       authorReputation,
     } = this.props
-    console.log(authorReputation)
+    
 
     return (
       <Wrapper>

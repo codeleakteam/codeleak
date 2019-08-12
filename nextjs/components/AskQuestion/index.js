@@ -42,10 +42,7 @@ class AskQuestion extends Component {
 
   handleTitleInputChange = e => this.setState({ title: e.target.value })
 
-  handleDescriptionInputChange = value => {
-    console.log('[handleDescriptionInputChange]', { value })
-    this.setState({ description: value })
-  }
+  handleDescriptionInputChange = value => this.setState({ description: value })
 
   handleTagsAutocompleteSelect = (value, id) => {
     this.setState(prevState => ({
@@ -63,7 +60,6 @@ class AskQuestion extends Component {
 
   sendQuestion = async () => {
     try {
-      console.log(this.state.chosenTemplate)
       const res = await apiPost.sendQuestion({
         author: this.props.user.id,
         title: this.state.title,
@@ -96,6 +92,7 @@ class AskQuestion extends Component {
       description: 'Created with <3 by the StackBlitz',
       template: chosenTemplate.stackBlitzTemplate,
     }
+
     try {
       this.setState({ contentLoading: true })
       this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', project, {
@@ -125,11 +122,8 @@ class AskQuestion extends Component {
   next = async () => {
     this.setState({ contentLoading: true })
     // returns {[file_name]: fileContent }
-    console.log('vm', this._stackBlitzVm)
     const files = await this._stackBlitzVm.getFsSnapshot()
     const dependencies = await this._stackBlitzVm.getDependencies()
-    console.log('[next]', { dependencies })
-
     const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
       return {
         ...acc,

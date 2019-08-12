@@ -52,9 +52,7 @@ class LoggedInNav extends React.Component {
       const res = await apiGet.getUserProfile(this.state.user.id)
       const user = _.get(res, 'data.user', null)
       if (!user) throw new Error('User null or undefined')
-      this.setState({ user }, () => {
-        console.log('[getUserProfile] state changed', this.state)
-      })
+      this.setState({ user })
     } catch (err) {
       console.error('[getUserProfile]', { err })
       this.setState({ err: 'Internal server error' })
@@ -68,9 +66,7 @@ class LoggedInNav extends React.Component {
       const notifications = _.get(res, 'data.notifications', null)
       if (!notifications) throw new Error('Notifications null or undefined')
       const unreadNotificationsCount = notifications.filter(n => n.unread).length
-      this.setState({ notifications, contentLoading: false, unreadNotificationsCount }, () => {
-        console.log('[getNotifications] state changed', this.state)
-      })
+      this.setState({ notifications, contentLoading: false, unreadNotificationsCount })
     } catch (err) {
       console.error('[getNotifications]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })
@@ -81,9 +77,7 @@ class LoggedInNav extends React.Component {
     try {
       this.setState({ contentLoading: true })
       const res = await apiGet.markAllAsRead(this.state.user.id)
-      this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
-        console.log('[markAllAsRead] state changed', this.state)
-      })
+      this.setState({ contentLoading: false, unreadNotificationsCount: 0 })
     } catch (err) {
       console.error('[markAllAsRead]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })
@@ -148,7 +142,6 @@ class LoggedInNav extends React.Component {
     return (
       <Menu style={{ width: '500px', background: '#eff1f4', padding: '8px' }}>
         {(this.state.notifications || []).map((n, i) => {
-          console.log('accc', n.actor)
           if (i < 3) {
             return (
               <Menu.Item style={{ padding: '0', whiteSpace: 'normal' }} key="0">

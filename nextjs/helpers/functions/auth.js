@@ -10,16 +10,14 @@ const guestRoutes = ['/login', '/register']
 // Protected routes: Routes we show only to logged in users. If not logged in, redirect to login page
 // Guest routes: Routes we show only to not logged in users. If logged in, redirect to /
 export const login = async ({ user, token }) => {
-  console.log('[login] fired')
   try {
     const userJSON = JSON.stringify(user)
-    console.log('[login]', { userJSON })
+
     setCookie(undefined, 'codeleakUser', userJSON)
     setCookie(undefined, 'codeleakAuthToken', token)
     if (token) {
       axios.interceptors.request.use(
         config => {
-          console.log('[login] setting new token')
           config.headers.Authorization = `JWT ${token}`
           return config
         },
@@ -37,7 +35,6 @@ export const login = async ({ user, token }) => {
 }
 
 export const logout = () => {
-  console.log('[logout] fired')
   destroyCookie(undefined, 'codeleakUser')
   destroyCookie(undefined, 'codeleakAuthToken')
 
@@ -77,9 +74,9 @@ export const withAuthSync = WrappedComponent =>
 export const auth = ctx => {
   const { codeleakAuthToken, codeleakUser } = parseCookies(ctx)
   const isLoggedIn = !!codeleakAuthToken && !!codeleakUser
-  console.log('[auth] isLoggedIn ', isLoggedIn)
-  console.log('[auth] codeleakUser', codeleakUser)
-  console.log('[auth] codeleakAuthToken', codeleakAuthToken)
+  // console.log('[auth] isLoggedIn ', isLoggedIn)
+  // console.log('[auth] codeleakUser', codeleakUser)
+  // console.log('[auth] codeleakAuthToken', codeleakAuthToken)
 
   // Protected routes are the ones we show only to users that are logged in
   let isProtectedRoute

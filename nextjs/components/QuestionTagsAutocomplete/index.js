@@ -31,13 +31,11 @@ class QuestionTagsAutocomplete extends React.Component {
     }
   }
   handleChange = selectedItems => {
-    this.setState({ selectedItems }, () => {
-      console.log('[handleCHange]', { selectedItems })
-    })
+    this.setState({ selectedItems })
   }
 
   handleKeydown = e => {
-    console.log('[handleKeydown]', e.target.value)
+    // console.log('[handleKeydown]', e.target.value)
     this.setState({ fetching: true })
     this.debouncedGetTags(e.target.value)
   }

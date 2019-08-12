@@ -36,10 +36,8 @@ app
 
     server.listen(3000, err => {
       if (err) throw err
-      console.log(`ready on port: ${PORT}`)
     })
   })
   .catch(ex => {
-    console.log(ex.stack)
     process.exit(1)
   })

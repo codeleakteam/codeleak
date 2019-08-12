@@ -17,7 +17,7 @@ class SignIn extends Component {
       const token = _.get(res, 'data.token', null)
       const user = _.get(res, 'data.user', null)
       if (!token || !user) throw new Error('Token or user null or undefined')
-      console.log('[login]', res.data)
+
       login({ user, token })
     } catch (err) {
       if (err.response && err.response.status === 400) {
@@ -35,7 +35,6 @@ class SignIn extends Component {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values)
         this.login(values)
       }
     })

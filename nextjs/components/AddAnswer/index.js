@@ -9,13 +9,11 @@ import Quill from '../Quill'
 import { apiPost } from '../../api'
 
 class AddAnswer extends React.Component {
-  _stackBlitzVm = null
+  // _stackBlitzVm = null
 
   state = {
-    contentLoading: true,
-    vmMounted: false,
+    contentLoading: false,
     sandboxID: null,
-
     // Data
     description: '',
   }
@@ -56,11 +54,10 @@ class AddAnswer extends React.Component {
       description: this.props.question.title,
       template: this.props.question.stackblitz_template,
     }
-    console.log('[forkOriginalStackblitzProject]', { project })
+
     try {
-      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframe', project, {
-        view: 'both',
-      })
+      this.setState({ contentLoading: true })
+      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframemile', project, { view: 'both' })
       this.setState({ contentLoading: false, vmMounted: true })
     } catch (err) {
       console.error('[createAndEmbedStackblitzProject]', { err })
@@ -68,18 +65,12 @@ class AddAnswer extends React.Component {
     }
   }
 
-  handleDescriptionChange = description => {
-    console.log('[handleDescriptionChange]', { description })
-    this.setState({ description })
-  }
+  handleDescriptionChange = description => this.setState({ description })
 
   postAnswer = async () => {
     try {
-      this.setState({ contentLoading: true, vmMounted: false })
-
       const files = await this._stackBlitzVm.getFsSnapshot()
       const dependencies = await this._stackBlitzVm.getDependencies()
-      console.log('[next]', { dependencies })
 
       const sandboxFiles = Object.entries(files).reduce((acc, [fileName, fileContent]) => {
         return {
@@ -100,24 +91,23 @@ class AddAnswer extends React.Component {
         authorId: this.props.user.id,
         questionId: this.props.question.id,
         title: this.props.question.title,
-        description: this.props.question.description,
+        description: this.state.description,
         stackBlitzTemplate: this.props.question.stackblitz_template,
         fs: files,
         dependencies: dependencies,
         editor: 1,
         repoUrl: `https://codesandbox.io/embed/${sandboxID}`,
       })
+      this.setState({ contentLoading: true, vmMounted: false })
+
       message.success('Answer successfully submitted!')
       Router.push(`/question/${this.props.question.id}/${this.props.question.slug}`)
-
-      console.log('[postAnswer]', { answer: res2.data })
     } catch (err) {
-      console.error('[postAnswer]', { err })
+      message.error('Could not send answer!')
     }
   }
 
   render() {
-    console.log('[render]', this.props)
     return (
       <div>
         {this.state.contentLoading && (
@@ -144,7 +134,7 @@ class AddAnswer extends React.Component {
             `}
           />
 
-          <div id="stackblitz-iframe" />
+          <div id="stackblitz-iframemile" />
         </IFrameWrapper>
 
         <StepsWrapper active={!this.state.contentLoading}>
@@ -173,7 +163,7 @@ const IFrameWrapper = styled.div`
     css`
       height: 0;
     `}
-  #stackblitz-iframe {
+  #stackblitz-iframemile {
     border: none;
     border-radius: 4px;
     min-height: 90vh;
