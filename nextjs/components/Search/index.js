@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { AutoComplete, message } from 'antd'
 import { apiGet } from '../../api'
 import Link from 'next/link'
@@ -7,6 +8,9 @@ import styled from 'styled-components'
 const { Option, OptGroup } = AutoComplete
 
 class Search extends Component {
+  static propTypes = {
+    className: PropTypes.string,
+  }
   state = {
     results: [],
   }
@@ -66,7 +70,7 @@ class Search extends Component {
     })
 
     return (
-      <SearchWrapper>
+      <SearchWrapper className={this.props.className}>
         <AutoComplete
           className="certain-category-search"
           dropdownClassName="certain-category-search-dropdown"
@@ -91,7 +95,7 @@ const dropdown = {
 const SearchWrapper = styled.div`
   width: 364px;
   @media screen and (max-width: 750px) {
-    max-width: 96%;
+    width: 100%;
     margin: 4px 0;
   }
 `

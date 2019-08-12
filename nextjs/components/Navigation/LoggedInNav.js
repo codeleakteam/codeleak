@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Avatar, Menu, Dropdown, Switch, Icon, Badge } from 'antd'
-import styled from 'styled-components'
+import { Avatar, Popover, Menu, Dropdown, Switch, Icon, Badge } from 'antd'
+import styled, { css } from 'styled-components'
 import moment from 'moment'
-import BurgerMenu from '../BurgerMenu'
+import Logo from '../Logo'
 import Card from '../Card'
 import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
@@ -25,6 +25,7 @@ class LoggedInNav extends React.Component {
   }
 
   state = {
+    mobileSearchShown: false,
     contentLoading: true,
     notifications: null,
     unreadNotificationsCount: 0,
@@ -138,9 +139,9 @@ class LoggedInNav extends React.Component {
   getAvatarLetter = user => {
     if (!!user.full_name) {
       return user.full_name.charAt(0)
-    } else if(!!user.username) {
+    } else if (!!user.username) {
       return user.username.charAt(0).toUpperCase()
-    }else return
+    } else return
   }
 
   renderNotifications = () => {
@@ -175,8 +176,9 @@ class LoggedInNav extends React.Component {
       </Menu>
     )
   }
+
   render() {
-    const { isMenuActive, handleBurgerMenu, isResponsive, showBurger } = this.props
+    const { handleBurgerMenu, isResponsive, showBurger } = this.props
     const { user } = this.state
 
     const menu = (
@@ -217,80 +219,167 @@ class LoggedInNav extends React.Component {
     }
 
     if (this.state.err) {
-      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1.2rem' }} type="bell" />
+      notificationsBellJSX = <Icon style={{ cursor: 'pointer', fontSize: '1rem' }} type="bell" />
     }
 
     return (
       <React.Fragment>
         <Wrapper isResponsive={isResponsive}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Search isResponsive={isResponsive} />
-            <List>
-              {regularPages.map(l => {
-                return (
-                  <ListItem key={l.name}>
-                    <Link href={l.href}>
-                      {isResponsive ? <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor> : <Anchor>{l.name}</Anchor>}
-                    </Link>
-                  </ListItem>
-                )
-              })}
-            </List>
-          </div>
-
           <List>
-            <ListItem style={{ marginBottom: '-4px' }}>
-              <Dropdown
-                placement="bottomRight"
-                overlay={this.renderNotifications()}
-                onVisibleChange={() => {
-                  if (!this.state.hasSeenUnreadNotifications) {
-                    this.setState({
-                      hasSeenUnreadNotifications: true,
-                    })
+            {showBurger && (
+              <ListItem
+                css={`
+                  display: none;
+                  @media screen and (max-width: 768px) {
+                    display: block;
+                    margin: 0 16px 0 0;
                   }
-                }}
-                trigger={!this.state.contentLoading ? ['click'] : []}
+                `}
               >
-                {notificationsBellJSX}
-              </Dropdown>
-            </ListItem>
-            <ListItem>
-              <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
-                {user.avatar ? (
-                  <StyledAvatar src={user.avatar} />
+                <Popover
+                  placement="bottomLeft"
+                  content={
+                    <Menu onClick={this.handleClick} style={{ width: 256 }} mode="inline">
+                      <Menu.Item key="1">Home</Menu.Item>
+                      <Menu.Item key="2">Tags</Menu.Item>
+                      <Menu.Item key="3">Blog</Menu.Item>
+                    </Menu>
+                  }
+                  trigger="click"
+                >
+                  <Icon
+                    type="menu"
+                    css={`
+                      font-size: 1.2rem;
+                      margin: 0;
+                    `}
+                  />
+                </Popover>
+              </ListItem>
+            )}
+
+            <div
+              css={`
+                display: flex;
+                @media screen and (max-width: 768px) {
+                  width: ${this.state.mobileSearchShown ? '100%' : 'auto'};
+                }
+              `}
+            >
+              <StyledSearch shown={this.state.mobileSearchShown} isResponsive={isResponsive} />
+              <List type="regularPages">
+                {regularPages.map(l => {
+                  return (
+                    <ListItem key={l.name}>
+                      <Link href={l.href}>
+                        {isResponsive ? (
+                          <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
+                        ) : (
+                          <Anchor>{l.name}</Anchor>
+                        )}
+                      </Link>
+                    </ListItem>
+                  )
+                })}
+              </List>
+            </div>
+
+            <div>
+              <ListItem
+                css={`
+                  margin-bottom: -4px;
+                  display: none;
+                  @media screen and (max-width: 768px) {
+                    display: inline-block;
+                  }
+                `}
+                onClick={() =>
+                  this.setState(prevState => ({ ...prevState, mobileSearchShown: !prevState.mobileSearchShown }))
+                }
+              >
+                {!this.state.mobileSearchShown ? (
+                  <Icon
+                    type="search"
+                    css={`
+                      font-size: 1.2rem;
+                    `}
+                  />
                 ) : (
-                  <Avatar
-                    style={{ verticalAlign: 'middle', cursor: 'pointer', color: '#f56a00', backgroundColor: '#fde3cf' }}
-                  >
-                    {this.getAvatarLetter(user)}
-                  </Avatar>
+                  <Icon
+                    type="close"
+                    css={`
+                      font-size: 1.2rem;
+                    `}
+                  />
                 )}
-              </Dropdown>
-            </ListItem>
+              </ListItem>
+
+              <ListItem
+                css={`
+                  display: ${this.state.mobileSearchShown ? 'none' : 'inline-block'};
+                  margin-bottom: -4px;
+                `}
+              >
+                <Dropdown
+                  placement="bottomRight"
+                  overlay={this.renderNotifications()}
+                  onVisibleChange={() => {
+                    if (!this.state.hasSeenUnreadNotifications) {
+                      this.setState({
+                        hasSeenUnreadNotifications: true,
+                      })
+                    }
+                  }}
+                  trigger={!this.state.contentLoading ? ['click'] : []}
+                >
+                  {notificationsBellJSX}
+                </Dropdown>
+              </ListItem>
+
+              <ListItem
+                css={`
+                  display: ${this.state.mobileSearchShown ? 'none' : 'inline-block'};
+                `}
+              >
+                <Dropdown placement="bottomRight" overlay={menu} trigger={['click']}>
+                  {user.avatar ? (
+                    <StyledAvatar src={user.avatar} />
+                  ) : (
+                    <Avatar
+                      style={{
+                        verticalAlign: 'middle',
+                        cursor: 'pointer',
+                        color: '#f56a00',
+                        backgroundColor: '#fde3cf',
+                      }}
+                    >
+                      {this.getAvatarLetter(user)}
+                    </Avatar>
+                  )}
+                </Dropdown>
+              </ListItem>
+            </div>
           </List>
         </Wrapper>
-        {showBurger && <BurgerMenu isMenuActive={isMenuActive} onClick={handleBurgerMenu} />}
       </React.Fragment>
     )
   }
 }
 
 const List = styled.ul`
+  width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 0;
-  @media screen and (max-width: 745px) {
-    display: flex;
-    flex-direction: column;
-    margin-left: 0;
-    padding-left: 0;
-  }
+  ${props =>
+    props.type === 'regularPages' &&
+    css`
+      width: auto;
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    `}
 `
 
 const StyledAvatar = styled(Avatar)`
@@ -348,7 +437,9 @@ const UpvoteIcon = styled.img`
   width: 18px;
   height: 18px;
 `
-
+const StyledLogo = styled(Logo)`
+  margin-right: 1rem;
+`
 const DownvoteIcon = styled(UpvoteIcon)`
   transform: rotate(180deg);
 `
@@ -361,6 +452,17 @@ const TargetPostTitle = styled.p`
   font-weight: 500;
   margin: 4px 0;
   color: black;
+`
+
+const StyledSearch = styled(Search)`
+  @media screen and (max-width: 768px) {
+    display: none;
+    ${props =>
+      props.shown &&
+      css`
+        display: block;
+      `}
+  }
 `
 
 export default LoggedInNav

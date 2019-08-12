@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import Logo from '../Logo'
 import PropTypes from 'prop-types'
 import LoggedInNav from './LoggedInNav'
 import LoggedOutNav from './LoggedOutNav'
@@ -34,10 +33,7 @@ const Navigation = ({
   )
   return (
     <Wrapper>
-      <Container>
-        {showLogo && <StyledLogo type="short" />}
-        {navJSX}
-      </Container>
+      <Container>{navJSX}</Container>
     </Wrapper>
   )
 }
@@ -59,9 +55,6 @@ const Container = styled.div`
   padding: 0 2rem;
   margin: 0 auto;
   z-index: 1;
-`
-const StyledLogo = styled(Logo)`
-  margin-right: 1rem;
 `
 
 Navigation.propTypes = {
