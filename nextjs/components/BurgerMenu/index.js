@@ -18,19 +18,24 @@ BurgerMenu.propTypes = {
 
 const Wrapper = styled.div`
   display: none;
+
   @media screen and (max-width: 745px) {
-    display: inline-block;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
     cursor: pointer;
   }
 `
 
 const Line = styled.div`
   width: 35px;
-  height: 5px;
+  height: 3px;
   background-color: #333;
-  margin: 6px 0;
   transition: 0.4s;
   opacity: ${props => (props.visible ? '1' : '0')};
+  &:last-of-type {
+    margin-bottom: 0;
+  }
   &:nth-child(1) {
     transform: ${props => (props.rotation ? 'rotate(-45deg) translate(-8px, 6px);' : 'rotate(0)')};
   }
