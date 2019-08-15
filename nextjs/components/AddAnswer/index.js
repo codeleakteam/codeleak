@@ -16,6 +16,7 @@ class AddAnswer extends React.Component {
     sandboxID: null,
     // Data
     description: '',
+    vmMounted: '',
   }
 
   static propTypes = {
@@ -42,6 +43,7 @@ class AddAnswer extends React.Component {
       dependencies: PropTypes.object.isRequired,
     }),
   }
+
   componentDidMount() {
     this.forkOriginalStackblitzProject()
   }
@@ -57,7 +59,8 @@ class AddAnswer extends React.Component {
 
     try {
       this.setState({ contentLoading: true })
-      this._stackBlitzVm = await stackBlitzSdk.embedProject('stackblitz-iframemile', project, { view: 'both' })
+      let res = await stackBlitzSdk.embedProject('stackblitz-iframemile', project, { view: 'both' })
+      this._stackBlitzVm = res
       this.setState({ contentLoading: false, vmMounted: true })
     } catch (err) {
       console.error('[createAndEmbedStackblitzProject]', { err })
@@ -154,22 +157,33 @@ class AddAnswer extends React.Component {
 }
 
 // Margin-bottom 15px instead of 16px because we can't get iframe inside iframewrapper to be 100% height
+// const IFrameWrapper = styled.div`
+//   width: ${props => (props.isVmMounted ? '100%' : 0)};
+//   min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+//   margin-bottom: 15px;
+//   ${props =>
+//     !props.isVmMounted &&
+//     css`
+//       height: 0;
+//     `}
+//   #stackblitz-iframemile {
+//     border: none;
+//     border-radius: 4px;
+//     min-height: 90vh;
+//   }
+// `
+
 const IFrameWrapper = styled.div`
-  width: ${props => (props.isVmMounted ? '100%' : 0)};
-  min-height: ${props => (props.isVmMounted ? '90vh' : 0)};
+  width: 100%;
+  min-height: 90vh;
   margin-bottom: 15px;
-  ${props =>
-    !props.isVmMounted &&
-    css`
-      height: 0;
-    `}
+
   #stackblitz-iframemile {
     border: none;
     border-radius: 4px;
     min-height: 90vh;
   }
 `
-
 const StepsWrapper = styled.div`
   display: ${props => (props.active ? 'block' : 'none')};
   width: 100%;
