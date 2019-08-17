@@ -18,7 +18,6 @@ class Index extends Component {
   }
   static async getInitialProps(ctx) {
     try {
-      const { resiUser } = ctx
       const questionsRes = await apiGet.getIndex()
       // const tagsRes = await apiGet.getTags({ q: '' })
       const questions = _.get(questionsRes, 'data.results', null)
@@ -29,7 +28,6 @@ class Index extends Component {
         questions,
         // tags,
         error: false,
-        resiUser,
       }
     } catch (error) {
       console.error('[getInitialProps]', { error })

@@ -22,6 +22,7 @@ class LoggedInNav extends React.Component {
       id: PropTypes.number.isRequired,
       username: PropTypes.string,
     }),
+    authToken: PropTypes.string.isRequired,
   }
 
   state = {
@@ -49,7 +50,10 @@ class LoggedInNav extends React.Component {
 
   getUserProfile = async () => {
     try {
-      const res = await apiGet.getUserProfile(this.state.user.id)
+      const res = await apiGet.getUserProfile({
+        userID: this.state.user.id,
+        token: this.props.authToken,
+      })
       const user = _.get(res, 'data.user', null)
       if (!user) throw new Error('User null or undefined')
       this.setState({ user })
@@ -62,7 +66,7 @@ class LoggedInNav extends React.Component {
   getNotifications = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.getNotifications(this.state.user.id)
+      const res = await apiGet.getNotifications({ userID: this.state.user.id, token: this.props.authToken })
       const notifications = _.get(res, 'data.notifications', null)
       if (!notifications) throw new Error('Notifications null or undefined')
       const unreadNotificationsCount = notifications.filter(n => n.unread).length
@@ -76,8 +80,10 @@ class LoggedInNav extends React.Component {
   markAllAsRead = async () => {
     try {
       this.setState({ contentLoading: true })
-      const res = await apiGet.markAllAsRead(this.state.user.id)
-      this.setState({ contentLoading: false, unreadNotificationsCount: 0 })
+      const res = await apiGet.markAllAsRead({ userID: this.state.user.id, token: this.props.authToken })
+      this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
+        console.log('[markAllAsRead] state changed', this.state)
+      })
     } catch (err) {
       console.error('[markAllAsRead]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })

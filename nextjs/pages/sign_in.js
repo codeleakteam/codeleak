@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Alert, Form, Icon, Input, Button, Spin } from 'antd'
 import _ from 'lodash'
+import axios from '../axios'
 import styled from 'styled-components'
+import { destroyCookie } from 'nookies'
 import { apiPost } from '../api'
 import { login } from '../helpers/functions/auth'
 
@@ -10,6 +12,11 @@ class SignIn extends Component {
     errors: [],
     loading: false,
   }
+  componentDidMount() {
+    destroyCookie(undefined, 'codeleakUser')
+    destroyCookie(undefined, 'codeleakAuthToken')
+  }
+
   login = async ({ email, password }) => {
     try {
       this.setState({ loading: true })

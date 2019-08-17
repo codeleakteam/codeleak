@@ -13,6 +13,7 @@ class AskQuestionPage extends Component {
       avatar: PropTypes.string,
       full_name: PropTypes.string,
     }),
+    authToken: PropTypes.string.isRequired,
   }
   render() {
     return (
@@ -23,7 +24,7 @@ class AskQuestionPage extends Component {
 
         <div>
           <Title>Submit question</Title>
-          <AskQuestion user={this.props.codeleakUser} />
+          <AskQuestion user={this.props.codeleakUser} authToken={this.props.authToken} />
         </div>
       </React.Fragment>
     )

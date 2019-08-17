@@ -12,21 +12,9 @@ const guestRoutes = ['/login', '/register']
 export const login = async ({ user, token }) => {
   try {
     const userJSON = JSON.stringify(user)
-
+    console.log('[login]', { userJSON, token })
     setCookie(undefined, 'codeleakUser', userJSON)
     setCookie(undefined, 'codeleakAuthToken', token)
-    if (token) {
-      axios.interceptors.request.use(
-        config => {
-          config.headers.Authorization = `JWT ${token}`
-          return config
-        },
-        err => {
-          return Promise.reject(err)
-        }
-      )
-    }
-
     Router.push('/')
   } catch (err) {
     // Ignore
@@ -39,6 +27,8 @@ export const logout = () => {
   destroyCookie(undefined, 'codeleakAuthToken')
 
   // window.localStorage.setItem("logout", Date.now());
+
+  console.log('Logged out. Redirecting')
   Router.push('/')
   message.success('Successfully logged out!')
 }
@@ -103,6 +93,7 @@ export const auth = ctx => {
     isGuestRoute = guestRoutes.filter(r => r === ctx.pathname)[0] ? true : false
 
     if (isProtectedRoute && !isLoggedIn) {
+      console.log('Route is protected. Redirecting')
       Router.push('/sign_in')
     }
 

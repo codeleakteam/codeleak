@@ -38,6 +38,7 @@ class AskQuestion extends Component {
       avatar: PropTypes.string,
       full_name: PropTypes.string,
     }),
+    authToken: PropTypes.string.isRequired,
   }
 
   handleTitleInputChange = e => this.setState({ title: e.target.value })
@@ -70,6 +71,7 @@ class AskQuestion extends Component {
         stackBlitzTemplate: this.state.chosenTemplate.stackBlitzTemplate,
         fs: this.state.files,
         dependencies: this.state.dependencies,
+        token: this.props.authToken,
       })
       const question = _.get(res, 'data.question', null)
       const questionId = _.get(res, 'data.question.id', null)
@@ -151,7 +153,7 @@ class AskQuestion extends Component {
 
   render() {
     const { editorState, _mounted, contentLoading } = this.state
-
+    console.log('[rendercina3]')
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>

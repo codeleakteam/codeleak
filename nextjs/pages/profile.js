@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Head from 'next/head'
 import TwoSideLayout from '../components/TwoSideLayout'
 import Profile from '../components/Profile'
@@ -8,10 +9,13 @@ import { Alert, message } from 'antd'
 import { withAuthSync } from '../helpers/functions/auth'
 
 class ProfilePage extends Component {
-  static async getInitialProps({ query }) {
+  static propTypes = {
+    authToken: PropTypes.string.isRequired,
+  }
+  static async getInitialProps({ query, codeleakAuthToken }, token) {
     try {
       const { id } = query
-      const res = await apiGet.getUserProfile(id)
+      const res = await apiGet.getUserProfile({ userID: id, token: codeleakAuthToken })
       const user = _.get(res, 'data.user', null)
       if (!user) throw new Error('No user object available')
       return {

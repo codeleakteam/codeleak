@@ -10,7 +10,7 @@ import { apiGet } from '../api'
 class AddAnswerPage extends Component {
   static async getInitialProps({ query }) {
     try {
-      const res = await apiGet.getQuestion(query.id)
+      const res = await apiGet.getQuestion({ questionID: query.id })
       const question = _.get(res, 'data.question', null)
       if (!question) throw new Error('No question object available')
       return {
@@ -46,6 +46,7 @@ class AddAnswerPage extends Component {
       fs: PropTypes.object.isRequired,
       dependencies: PropTypes.object.isRequired,
     }),
+    authToken: PropTypes.string.isRequired,
   }
   render() {
     return (
@@ -55,7 +56,9 @@ class AddAnswerPage extends Component {
         </Head>
 
         <Title>Submit answer</Title>
-        {!this.props.error && <AddAnswer question={this.props.question} user={this.props.codeleakUser} />}
+        {!this.props.error && (
+          <AddAnswer authToken={this.props.authToken} question={this.props.question} user={this.props.codeleakUser} />
+        )}
       </div>
     )
   }
