@@ -42,6 +42,7 @@ class AddAnswer extends React.Component {
       fs: PropTypes.object.isRequired,
       dependencies: PropTypes.object.isRequired,
     }),
+    authToken: PropTypes.string.isRequired,
   }
 
   componentDidMount() {
@@ -100,6 +101,7 @@ class AddAnswer extends React.Component {
         dependencies: dependencies,
         editor: 1,
         repoUrl: `https://codesandbox.io/embed/${sandboxID}`,
+        token: this.props.authToken,
       })
       this.setState({ contentLoading: true, vmMounted: false })
 

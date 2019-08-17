@@ -32,6 +32,7 @@ class Question extends Component {
       id: PropTypes.number.isRequired,
       username: PropTypes.string.isRequired,
     }),
+    authToken: PropTypes.string.isRequired,
   }
   componentDidMount() {
     const { comments, description, author } = this.props
@@ -42,7 +43,7 @@ class Question extends Component {
 
   submitComment = async (question_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content)
+      const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content, this.props.authToken)
       const comment = _.get(res, 'data.comment', null)
       // console.log('[submitComment]', { data: res.data, comment })
       if (!comment) throw new Error('Comment null or undefined')
@@ -62,9 +63,8 @@ class Question extends Component {
 
   upvoteComment = async (userId, commentId) => {
     try {
-      const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId)
+      const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
       let comment = _.get(res, 'data', null)
-      
 
       if (comment) {
         this.setState({ updatedScore: comment.comment.score })
@@ -78,7 +78,7 @@ class Question extends Component {
 
   reportComment = async (userId, commentId) => {
     try {
-      await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId)
+      await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
       message.success('Comment is successfully reported!')
     } catch (error) {
       console.error('[reportComment]', { error })
@@ -100,7 +100,6 @@ class Question extends Component {
       updatedQuestionScore,
       authorReputation,
     } = this.props
-    
 
     return (
       <Wrapper>

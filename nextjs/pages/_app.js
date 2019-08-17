@@ -2,9 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import App, { Container } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
-import SideMenu from '../components/SideMenu'
 import Navigation from '../components/Navigation'
-// import axios from 'axios'
 import MainContentWrapper from '../components/MainContentWrapper'
 import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
@@ -36,10 +34,11 @@ class MyApp extends App {
 
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
+
     const { codeleakAuthToken } = parseCookies(ctx)
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps({ ...ctx, codeleakAuthToken })
+    }
     return { pageProps, codeleakAuthToken, codeleakUser: ctx.codeleakUser }
   }
 
@@ -49,41 +48,10 @@ class MyApp extends App {
     }
   }
 
-  setRequestInterceptor = () => {
-    const { codeleakAuthToken } = this.props
-    this.requestInterceptor = axios.interceptors.request.use(
-      config => {
-        config.headers.Authorization = `JWT ${codeleakAuthToken}`
-        return config
-      },
-      err => {
-        return Promise.reject(err)
-      }
-    )
-  }
-
-  setResponseInterceptor = () => {
-    axios.interceptors.response.use(
-      response => response,
-      err => {
-        if (err.response && err.response.status === 401) {
-          destroyCookie(undefined, 'codeleakUser')
-          destroyCookie(undefined, 'codeleakAuthToken')
-          axios.interceptors.request.eject(this.requestInterceptor)
-          Router.push('/sign_in')
-        }
-        return Promise.reject(err)
-      }
-    )
-  }
-
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
     const { Component, pageProps } = this.props
-
-    if (this.props.codeleakAuthToken) this.setRequestInterceptor()
-    this.setResponseInterceptor()
     return (
       <ThemeProvider theme={theme}>
         <Container>
@@ -100,7 +68,7 @@ class MyApp extends App {
           />
 
           <MainContentWrapper>
-            <Component {...pageProps} />
+            <Component {...pageProps} authToken={this.props.codeleakAuthToken} />
           </MainContentWrapper>
           <Footer />
           {/* <SideMenu isMenuActive={isMenuActive}>

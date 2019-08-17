@@ -14,23 +14,24 @@ const Navigation = ({
   isLoggedIn,
   authToken,
 }) => {
-  const navJSX = isLoggedIn ? (
-    <LoggedInNav
-      isMenuActive={isMenuActive}
-      handleBurgerMenu={handleBurgerMenuClick}
-      authToken={authToken}
-      isResponsive={isResponsive}
-      showBurger={showBurger}
-      user={user}
-    />
-  ) : (
-    <LoggedOutNav
-      isMenuActive={isMenuActive}
-      handleBurgerMenu={handleBurgerMenuClick}
-      isResponsive={isResponsive}
-      showBurger={showBurger}
-    />
-  )
+  const navJSX =
+    isLoggedIn && authToken ? (
+      <LoggedInNav
+        isMenuActive={isMenuActive}
+        handleBurgerMenu={handleBurgerMenuClick}
+        authToken={authToken}
+        isResponsive={isResponsive}
+        showBurger={showBurger}
+        user={user}
+      />
+    ) : (
+      <LoggedOutNav
+        isMenuActive={isMenuActive}
+        handleBurgerMenu={handleBurgerMenuClick}
+        isResponsive={isResponsive}
+        showBurger={showBurger}
+      />
+    )
   return (
     <Wrapper>
       <Container>{navJSX}</Container>

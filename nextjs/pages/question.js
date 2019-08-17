@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import Head from 'next/head'
 import { Alert, message } from 'antd'
@@ -8,9 +9,13 @@ import { apiGet, apiPut, apiPost } from '../api'
 import { withAuthSync } from '../helpers/functions/auth'
 
 class QuestionFullPage extends Component {
+  static propTypes = {
+    authToken: PropTypes.string.isRequired,
+  }
+
   static async getInitialProps({ query }) {
     try {
-      const res = await apiGet.getQuestion(query.id)
+      const res = await apiGet.getQuestion({ questionID: query.id })
       const question = _.get(res, 'data.question', null)
 
       if (!question) throw new Error('No question object available')
@@ -31,9 +36,9 @@ class QuestionFullPage extends Component {
     authorReputation: _.get(this.props, 'question.author.reputation'),
   }
 
-  updateQuestionScore = async (type, questionId, userId) => {
+  updateQuestionScore = async (type, questionId, userID) => {
     try {
-      const res = await apiPut.updateQuestionScore(type, questionId, userId)
+      const res = await apiPut.updateQuestionScore({ type, questionId, userID, token: this.props.authToken })
       const score = _.get(res, 'data.question.score', null)
       const authorReputation = _.get(res, 'data.question.author.reputation', null)
 
@@ -55,40 +60,29 @@ class QuestionFullPage extends Component {
 
         {error && <Alert message="Internal server error" type="error" />}
         {!error && (
-          <QuestionWithAnswersWrapper
-            answers={this.state.answers}
-            updateQuestionScore={this.updateQuestionScore}
-            questionScore={this.state.questionScore}
-            question={question}
-            authorReputation={this.state.authorReputation}
-          />
+          <React.Fragment>
+            <Question
+              id={question.id}
+              slug={question.slug}
+              title={question.title}
+              description={question.description}
+              score={question.score}
+              created_at={question.created_at}
+              repository_url={question.repository_url}
+              comments={question.comments}
+              tags={question.tags}
+              author={question.author}
+              updateQuestionScore={this.updateQuestionScore}
+              updatedQuestionScore={this.state.questionScore}
+              authorReputation={this.state.authorReputation}
+              authToken={this.props.authToken}
+            />
+            <AnswerList answers={question.answers} />
+          </React.Fragment>
         )}
       </div>
     )
   }
-}
-
-function QuestionWithAnswersWrapper({ question, questionScore, updateQuestionScore, answers, authorReputation }) {
-  return (
-    <React.Fragment>
-      <Question
-        id={question.id}
-        slug={question.slug}
-        title={question.title}
-        description={question.description}
-        score={question.score}
-        created_at={question.created_at}
-        repository_url={question.repository_url}
-        updateQuestionScore={updateQuestionScore}
-        updatedQuestionScore={questionScore}
-        comments={question.comments}
-        tags={question.tags}
-        author={question.author}
-        authorReputation={authorReputation}
-      />
-      <AnswerList answers={answers} />
-    </React.Fragment>
-  )
 }
 
 export default withAuthSync(QuestionFullPage)
