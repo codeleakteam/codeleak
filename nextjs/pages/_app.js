@@ -61,7 +61,6 @@ class MyApp extends App {
             handleBurgerMenuClick={this.handleBurgerMenuClick}
             showLogo={true}
             showBurger={true}
-            isResponsive={true}
             isLoggedIn={!!pageProps.codeleakUser}
             user={_.get(pageProps, 'codeleakUser', undefined)}
             authToken={this.props.codeleakAuthToken}
@@ -77,7 +76,6 @@ class MyApp extends App {
               handleBurgerMenuClick={this.handleBurgerMenuClick}
               showLogo={false}
               showBurger={false}
-              isResponsive={true}
               isLoggedIn={isLoggedIn}
             />
           </SideMenu> */}

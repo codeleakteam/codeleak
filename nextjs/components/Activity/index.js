@@ -5,6 +5,7 @@ import Link from 'next/link'
 import singularCheck from '../../helpers/functions/singularCheck'
 
 const Activity = ({ name, points, answers, time, slug, id }) => {
+  console.log('AAAAAAAAAAA', { answers, name })
   return (
     <Wrapper>
       <div

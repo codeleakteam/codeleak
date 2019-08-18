@@ -24,6 +24,7 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     twitter_username,
     github_username,
   } = userData
+  console.log('userData 2', userData)
 
   const uploadImageProps = {
     name: 'file',
@@ -168,7 +169,7 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
           </Links>
         </UserSection>
       </LeftSide>
-      {/* <RightSide>
+      <RightSide>
         <Card>
           <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
             Answers({answers.length})
@@ -184,7 +185,7 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
           )}
         </Card>
-      </RightSide> */}
+      </RightSide>
     </Wrapper>
   )
 }

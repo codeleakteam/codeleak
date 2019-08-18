@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import axios from '../../axios'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
 import { message } from 'antd'
 
@@ -17,7 +16,7 @@ export const login = async ({ user, token }) => {
     setCookie(undefined, 'codeleakAuthToken', token)
     Router.push('/')
   } catch (err) {
-    // Ignore
+    // Ignorguardialo on successguardialo on successe
     console.error('[login]', err)
   }
 }
@@ -26,7 +25,7 @@ export const logout = () => {
   destroyCookie(undefined, 'codeleakUser')
   destroyCookie(undefined, 'codeleakAuthToken')
 
-  // window.localStorage.setItem("logout", Date.now());
+  // window.localStorage.setItem("logout", Date.now()guardialo on successguardialo on success);
 
   console.log('Logged out. Redirecting')
   Router.push('/')

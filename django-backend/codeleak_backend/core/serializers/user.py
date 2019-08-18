@@ -1,6 +1,42 @@
 from django.db import models
 from rest_framework import serializers
-from core.models import User
+from core.models import (
+    User,
+    Question,
+    Answer,
+)
+
+
+class UserSerializerMinimal(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = User
+        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
+
+class QuestionSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    author = UserSerializerMinimal()
+
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'title',
+            'score',
+            'author',
+            'tags',
+            'has_accepted_answer',
+            'has_comments',
+        ]
+    
+class AnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    question = QuestionSerializer()
+    
+    class Meta:
+        model = Answer
+        fields = []
+
 
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -46,11 +82,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             'groups'
         ] 
 
-class UserSerializerMinimal(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    class Meta:
-        model = User
-        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
 
 
 
