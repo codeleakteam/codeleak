@@ -4,13 +4,16 @@ import App, { Container } from 'next/app'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import Navigation from '../components/Navigation'
 import MainContentWrapper from '../components/MainContentWrapper'
-import Footer from '../components/Footer'
 import trackPageView from '../helpers/configs/trackPageView'
 import Router from 'next/router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
-import { parseCookies, destroyCookie } from 'nookies'
-import axios from '../axios'
+import { parseCookies } from 'nookies'
+import * as Sentry from '@sentry/browser'
+
+Sentry.init({
+  dsn: 'https://66e6fd9fe82e42f1b636c99f0e5cc527@sentry.io/1510922',
+})
 
 library.add(faAngleUp, faComment, faEye, faBan)
 
@@ -46,6 +49,20 @@ class MyApp extends App {
     Router.onRouteChangeComplete = url => {
       trackPageView(url)
     }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log('[componentDidCatch]')
+    Sentry.withScope(scope => {
+      console.log('[componentDidCatch] Sentry withscope')
+      Object.keys(errorInfo).forEach(key => {
+        scope.setExtra(key, errorInfo[key])
+      })
+
+      Sentry.captureException(error)
+    })
+
+    super.componentDidCatch(error, errorInfo)
   }
 
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))

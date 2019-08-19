@@ -2,13 +2,27 @@ import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 import getConfig from 'next/config'
 const { publicRuntimeConfig } = getConfig()
+import * as Sentry from '@sentry/browser'
+
+Sentry.init({
+  dsn: 'https://66e6fd9fe82e42f1b636c99f0e5cc527@sentry.io/1510922',
+})
+
+process.on('unhandledRejection', err => {
+  console.error('_document.unhandledRejection', err)
+  Sentry.captureException(err)
+})
+
+process.on('uncaughtException', err => {
+  console.error('_document.unhandledRejection', err)
+  Sentry.captureException(err)
+})
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const isProduction = publicRuntimeConfig.baseUrl === 'http://codeleak.io' ? true : false
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
-
     try {
       ctx.renderPage = () =>
         originalRenderPage({
