@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
-import { Input, Button, Popover, Menu, Icon, Dropdown } from 'antd'
+import { Input, Button, Popover, Menu, Icon } from 'antd'
 import { Wrapper, ListItem, Anchor, StatefulLink } from './shared'
 import Search from '../Search'
 
@@ -36,9 +36,21 @@ class LoggedOutNav extends React.Component {
                 placement="bottomLeft"
                 content={
                   <Menu onClick={this.handleClick} style={{ width: 256 }} mode="inline">
-                    <Menu.Item key="1">Home</Menu.Item>
-                    <Menu.Item key="2">Tags</Menu.Item>
-                    <Menu.Item key="3">Blog</Menu.Item>
+                    <Menu.Item key="1">
+                      <StatefulLink href="/">
+                        <Anchor>Questions</Anchor>
+                      </StatefulLink>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                      <StatefulLink href="/jobs">
+                        <Anchor>Jobs</Anchor>
+                      </StatefulLink>
+                    </Menu.Item>
+                    <Menu.Item key="3">
+                      <StatefulLink href="/tags">
+                        <Anchor>Tags</Anchor>
+                      </StatefulLink>
+                    </Menu.Item>
                   </Menu>
                 }
                 trigger="click"
@@ -157,12 +169,12 @@ const regularPages = [
   },
   {
     name: 'Tags',
-    href: '/taglist',
+    href: '/tags',
   },
-  {
-    name: 'Blog',
-    href: '/medium/blog',
-  },
+  // {
+  //   name: 'Blog',
+  //   href: '/medium/blog',
+  // },
 ]
 
 const List = styled.ul`

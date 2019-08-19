@@ -92,6 +92,10 @@ const dropdown = {
 
 const SearchWrapper = styled.div`
   width: 364px;
+  @media screen and (max-width: 960px) {
+    width: auto;
+    flex: 1;
+  }
   @media screen and (max-width: 750px) {
     width: 100%;
     margin: 4px 0;
