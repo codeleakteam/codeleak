@@ -22,6 +22,7 @@ class UserQuestionSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'title',
+            'slug',
             'score',
             'author',
             'tags',

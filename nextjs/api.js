@@ -16,7 +16,6 @@ export const apiGet = {
     return axios.get(`${BASE_URL}/api/tags?q=${q}`)
   },
   getUserProfile: ({ userID, token }) => {
-    console.log('[getUserProfile] fired', { token, userID })
     return axios.get(`${BASE_URL}/api/users/${userID}`, {
       headers: {
         Authorization: `JWT ${token}`,
@@ -24,7 +23,6 @@ export const apiGet = {
     })
   },
   getNotifications: ({ userID, token }) => {
-    console.log('[getNotifications] fired', { token })
     return axios.get(`${BASE_URL}/api/notifications/${userID}`, {
       headers: {
         Authorization: `JWT ${token}`,
@@ -125,7 +123,6 @@ export const apiPost = {
     stackBlitzTemplate,
     token,
   }) => {
-    console.log('[sendQuestion]', { stackBlitzTemplate })
     return axios.post(
       `${BASE_URL}/api/questions`,
       {

@@ -153,7 +153,6 @@ class AskQuestion extends Component {
 
   render() {
     const { editorState, _mounted, contentLoading } = this.state
-    console.log('[rendercina3]')
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>

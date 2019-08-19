@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
+import Head from 'next/head'
 import { Alert, Form, Icon, Input, Button, Spin } from 'antd'
 import _ from 'lodash'
-import axios from '../axios'
 import styled from 'styled-components'
 import { destroyCookie } from 'nookies'
 import { apiPost } from '../api'
@@ -52,6 +52,10 @@ class SignIn extends Component {
 
     return (
       <Wrapper>
+        <Head>
+          <title>Sign In</title>
+        </Head>
+
         <Title>codeLeak</Title>
         <Description>An online-editor based question and answer platform for front-end developers</Description>
         {/* <Socials>

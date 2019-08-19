@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
+import Logo from '../Logo'
 import { Input, Button, Popover, Menu, Icon } from 'antd'
 import { Wrapper, ListItem, Anchor, StatefulLink } from './shared'
 import Search from '../Search'
@@ -83,6 +84,16 @@ class LoggedOutNav extends React.Component {
                 width: ${this.state.mobileSearchShown ? '100%' : 'auto'};
               `}
             >
+              <Logo
+                css={`
+                  font-size: 1.5rem;
+                  margin-right: 16px;
+                  @media screen and (max-width: 768px) {
+                    display: none;
+                  }
+                `}
+                type="short"
+              />
               <StyledSearch shown={this.state.mobileSearchShown} />
               <List type="regularPages">
                 {regularPages.map(l => {

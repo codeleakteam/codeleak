@@ -2,14 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Link from 'next/link'
-// import singularCheck from '../../helpers/functions/singularCheck'
 
-const Activity = ({ title, type, score, timestamp, slug, id }) => {
+const Activity = ({ title, type, score, timestamp, questionSlug, questionID }) => {
   const verb = type === 'answers' ? 'Answered' : 'Asked'
   return (
     <Wrapper>
       <div>
-        <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
+        <Link href={`/question/${questionID}/${questionSlug}`}>
           <a>
             <ActivityName>{title}</ActivityName>
           </a>
@@ -17,9 +16,6 @@ const Activity = ({ title, type, score, timestamp, slug, id }) => {
         <PointsCounter>{score}</PointsCounter> <PointsIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" />
       </div>
       <div>
-        {/* <AnswersCounter>
-          {answers} {singularCheck('answer', answers)}
-        </AnswersCounter> */}
         <AskedTimes>
           {verb} {timestamp}
         </AskedTimes>
@@ -29,12 +25,11 @@ const Activity = ({ title, type, score, timestamp, slug, id }) => {
 }
 
 Activity.propTypes = {
-  id: PropTypes.number.isRequired,
-  slug: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  points: PropTypes.number.isRequired,
-  answers: PropTypes.number.isRequired,
-  time: PropTypes.string.isRequired,
+  questionID: PropTypes.number.isRequired,
+  questionSlug: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  score: PropTypes.number.isRequired,
+  timestamp: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
 }
 

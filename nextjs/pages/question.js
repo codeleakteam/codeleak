@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { Alert, message } from 'antd'
 import Question from '../components/Question'
 import AnswerList from '../components/AnswerList'
-import { apiGet, apiPut, apiPost } from '../api'
+import { apiGet, apiPut } from '../api'
 import { withAuthSync } from '../helpers/functions/auth'
 
 class QuestionFullPage extends Component {

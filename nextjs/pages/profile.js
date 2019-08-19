@@ -10,9 +10,15 @@ import { withAuthSync } from '../helpers/functions/auth'
 
 class ProfilePage extends Component {
   static propTypes = {
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
     authToken: PropTypes.string.isRequired,
   }
-  static async getInitialProps({ query, codeleakAuthToken }, token) {
+  static async getInitialProps({ query, codeleakAuthToken }) {
     try {
       const { id } = query
       const res = await apiGet.getUserProfile({ userID: id, token: codeleakAuthToken })
@@ -89,6 +95,7 @@ class ProfilePage extends Component {
                 saveChanges={this.saveChanges}
                 userData={this.props.user}
                 editProfileFields={this.editProfileFields}
+                codeleakUser={this.props.codeleakUser}
               />
             }
           />

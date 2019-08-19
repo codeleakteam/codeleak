@@ -11,7 +11,6 @@ const guestRoutes = ['/login', '/register']
 export const login = async ({ user, token }) => {
   try {
     const userJSON = JSON.stringify(user)
-    console.log('[login]', { userJSON, token })
     setCookie(undefined, 'codeleakUser', userJSON)
     setCookie(undefined, 'codeleakAuthToken', token)
     Router.push('/')

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { destroyCookie } from 'nookies'
 import Router from 'next/router'
 
 const instance = axios.create({})
