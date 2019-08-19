@@ -86,7 +86,7 @@ const Heading = styled.div`
 
 const Title = styled.h2`
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin: 0;
 `
 

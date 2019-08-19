@@ -27,8 +27,5 @@ const StyledAntTag = styled(Tag)`
   border: 1px solid #e0e0e0;
   background: #e6e8ed;
   color: #000;
-  @media screen and (max-width: 745px) {
-    width: 45%;
-  }
 `
 export default TagWithLink

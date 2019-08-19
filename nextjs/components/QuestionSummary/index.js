@@ -153,10 +153,6 @@ const DotTextSeparator = styled.div`
 const Date = styled.span`
   color: ${props => props.theme.darkGrey};
   font-size: 14px;
-  width: 30%;
-  @media screen and (max-width: 745px) {
-    max-width: 30%;
-  }
 `
 
 const Description = styled.p`
