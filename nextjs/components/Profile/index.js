@@ -6,9 +6,6 @@ import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
 
-const { TextArea } = Input
-const { Dragger } = Upload
-
 const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enableEditMode, editProfileFields }) => {
   let {
     username,
@@ -24,7 +21,6 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     twitter_username,
     github_username,
   } = userData
-  console.log('userData 2', userData)
 
   const uploadImageProps = {
     name: 'file',
@@ -200,16 +196,23 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
   )
 }
 
-// Profile.propTypes = {
-//   username: PropTypes.string.isRequired,
-//   reputation: PropTypes.number.isRequired,
-//   avatar: PropTypes.string.isRequired,
-//   full_name: PropTypes.string.isRequired,
-//   biography: PropTypes.string.isRequired,
-//   questions: PropTypes.array.isRequired,
-//   answers: PropTypes.array.isRequired,
-
-// }
+Profile.propTypes = {
+  codeleakUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    reputation: PropTypes.number.isRequired,
+    avatar: PropTypes.string,
+    full_name: PropTypes.string,
+  }),
+  userData: PropTypes.shape({
+    username: PropTypes.string.isRequired,
+    questions: PropTypes.array.isRequired,
+    answers: PropTypes.array.isRequired,
+    full_name: PropTypes.string,
+    website_url: PropTypes.string,
+    twitter_username: PropTypes.string,
+    github_username: PropTypes.string,
+  }),
+}
 
 const Wrapper = styled.div`
   display: flex;

@@ -13,12 +13,14 @@ const RecentActivities = ({ type, typeCounts, data }) => {
       </ActivitiesHeader>
       {data.map(d => {
         const title = type === 'answers' ? d.question.title : d.title
+        const questionID = type === 'answers' ? d.question.id : d.id
+        const questionSlug = type === 'answers' ? d.question.slug : d.slug
         return (
           <Activity
             type={type}
             key={d.id}
-            slug={d.slug}
-            id={d.id}
+            questionID={questionID}
+            questionSlug={questionSlug}
             title={title}
             score={d.score}
             timestamp={timeAgo(d.created_at)}
@@ -35,10 +37,12 @@ RecentActivities.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
       score: PropTypes.number.isRequired,
-      answers: PropTypes.array.isRequired,
-      slug: PropTypes.string.isRequired,
+      // Required fileds here depend on activity type
+      // Questions have title, answers and slug on them while answers themselves do not
+      title: PropTypes.string,
+      answers: PropTypes.array,
+      slug: PropTypes.string,
     })
   ),
 }

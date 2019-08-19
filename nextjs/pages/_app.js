@@ -69,7 +69,7 @@ class MyApp extends App {
           <MainContentWrapper>
             <Component {...pageProps} authToken={this.props.codeleakAuthToken} />
           </MainContentWrapper>
-          <Footer />
+          {/* <Footer /> */}
           {/* <SideMenu isMenuActive={isMenuActive}>
             <Navigation
               isMenuActive={isMenuActive}

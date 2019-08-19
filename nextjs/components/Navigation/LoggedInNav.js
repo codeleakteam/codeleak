@@ -80,9 +80,7 @@ class LoggedInNav extends React.Component {
     try {
       this.setState({ contentLoading: true })
       const res = await apiGet.markAllAsRead({ userID: this.state.user.id, token: this.props.authToken })
-      this.setState({ contentLoading: false, unreadNotificationsCount: 0 }, () => {
-        console.log('[markAllAsRead] state changed', this.state)
-      })
+      this.setState({ contentLoading: false, unreadNotificationsCount: 0 })
     } catch (err) {
       console.error('[markAllAsRead]', { err })
       this.setState({ contentLoading: false, err: 'Internal server error' })
@@ -291,6 +289,17 @@ class LoggedInNav extends React.Component {
                 }
               `}
             >
+              <Logo
+                css={`
+                  font-size: 1.5rem;
+                  margin-right: 16px;
+                  @media screen and (max-width: 768px) {
+                    display: none;
+                  }
+                `}
+                type="short"
+              />
+
               <StyledSearch shown={this.state.mobileSearchShown} />
               <List type="regularPages">
                 {regularPages.map(l => {
