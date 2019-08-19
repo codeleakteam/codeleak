@@ -12,15 +12,16 @@ const RecentActivities = ({ type, typeCounts, data }) => {
         <span>{type}</span>
       </ActivitiesHeader>
       {data.map(d => {
+        const title = type === 'answers' ? d.question.title : d.title
         return (
           <Activity
+            type={type}
             key={d.id}
             slug={d.slug}
             id={d.id}
-            name={d.title}
-            points={d.score}
-            answers={d.answers.length}
-            time={timeAgo(d.created_at)}
+            title={title}
+            score={d.score}
+            timestamp={timeAgo(d.created_at)}
           />
         )
       })}

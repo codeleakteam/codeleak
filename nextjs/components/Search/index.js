@@ -31,8 +31,6 @@ class Search extends Component {
   }
 
   render() {
-    const { isResponsive } = this.props
-
     let daRealOptions = []
     Object.keys(this.state.results).map(group => {
       daRealOptions.push({ title: group, children: this.state.results[group] })
@@ -75,7 +73,7 @@ class Search extends Component {
           className="certain-category-search"
           dropdownClassName="certain-category-search-dropdown"
           dropdownMatchSelectWidth={false}
-          dropdownStyle={{ width: isResponsive ? 100 : 300 }}
+          dropdownStyle={{ width: 100 }}
           size="large"
           style={{ width: '100%' }}
           dataSource={options}

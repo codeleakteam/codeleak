@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
 import { Input, Button, Popover, Menu, Icon, Dropdown } from 'antd'
-import { Wrapper, ListItem, Anchor } from './shared'
+import { Wrapper, ListItem, Anchor, StatefulLink } from './shared'
 import Search from '../Search'
 
 class LoggedOutNav extends React.Component {
@@ -15,13 +15,12 @@ class LoggedOutNav extends React.Component {
     isMenuActive: PropTypes.bool.isRequired,
     handleBurgerMenu: PropTypes.func.isRequired,
     showBurger: PropTypes.bool.isRequired,
-    isResponsive: PropTypes.bool.isRequired,
   }
 
   render() {
-    const { handleBurgerMenu, isResponsive, showBurger } = this.props
+    const { handleBurgerMenu, showBurger } = this.props
     return (
-      <Wrapper isResponsive={isResponsive}>
+      <Wrapper>
         <List>
           {showBurger && (
             <ListItem
@@ -72,25 +71,26 @@ class LoggedOutNav extends React.Component {
                 width: ${this.state.mobileSearchShown ? '100%' : 'auto'};
               `}
             >
-              <StyledSearch shown={this.state.mobileSearchShown} isResponsive={isResponsive} />
+              <StyledSearch shown={this.state.mobileSearchShown} />
               <List type="regularPages">
                 {regularPages.map(l => {
                   return (
                     <ListItem key={l.name}>
-                      <Link href={l.href}>
-                        {isResponsive ? (
-                          <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
-                        ) : (
-                          <Anchor>{l.name}</Anchor>
-                        )}
-                      </Link>
+                      <StatefulLink href={l.href}>
+                        <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
+                      </StatefulLink>
                     </ListItem>
                   )
                 })}
               </List>
             </div>
 
-            <div>
+            <div
+              css={`
+                display: flex;
+                align-items: center;
+              `}
+            >
               <ListItem
                 css={`
                   margin-bottom: -4px;
@@ -148,8 +148,12 @@ class LoggedOutNav extends React.Component {
 
 const regularPages = [
   {
-    name: 'Jobs',
+    name: 'Questions',
     href: '/',
+  },
+  {
+    name: 'Jobs',
+    href: '/jobs',
   },
   {
     name: 'Tags',

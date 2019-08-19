@@ -4,33 +4,18 @@ import PropTypes from 'prop-types'
 import LoggedInNav from './LoggedInNav'
 import LoggedOutNav from './LoggedOutNav'
 
-const Navigation = ({
-  user,
-  isMenuActive,
-  handleBurgerMenuClick,
-  showLogo,
-  showBurger,
-  isResponsive,
-  isLoggedIn,
-  authToken,
-}) => {
+const Navigation = ({ user, isMenuActive, handleBurgerMenuClick, showLogo, showBurger, isLoggedIn, authToken }) => {
   const navJSX =
     isLoggedIn && authToken ? (
       <LoggedInNav
         isMenuActive={isMenuActive}
         handleBurgerMenu={handleBurgerMenuClick}
         authToken={authToken}
-        isResponsive={isResponsive}
         showBurger={showBurger}
         user={user}
       />
     ) : (
-      <LoggedOutNav
-        isMenuActive={isMenuActive}
-        handleBurgerMenu={handleBurgerMenuClick}
-        isResponsive={isResponsive}
-        showBurger={showBurger}
-      />
+      <LoggedOutNav isMenuActive={isMenuActive} handleBurgerMenu={handleBurgerMenuClick} showBurger={showBurger} />
     )
   return (
     <Wrapper>
@@ -63,7 +48,6 @@ Navigation.propTypes = {
   handleBurgerMenuClick: PropTypes.func.isRequired,
   showLogo: PropTypes.bool.isRequired,
   showBurger: PropTypes.bool.isRequired,
-  isResponsive: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
     username: PropTypes.string.isRequired,

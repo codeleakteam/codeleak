@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Input, Checkbox, Upload, Icon, message } from 'antd'
+import { Avatar, Button, Input, Checkbox, Upload, Icon, message } from 'antd'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import RecentActivities from '../RecentActivities'
@@ -24,6 +24,7 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     twitter_username,
     github_username,
   } = userData
+  console.log('userData 2', userData)
 
   const uploadImageProps = {
     name: 'file',
@@ -46,7 +47,22 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     <Wrapper>
       <LeftSide>
         <AvatarWrapper>
-          {editMode ? (
+          {avatar ? (
+            <StyledAvatar linkToImage={avatar} alt={username} />
+          ) : (
+            <Avatar
+              shape="square"
+              size={246}
+              style={{
+                verticalAlign: 'middle',
+                color: '#f56a00',
+                backgroundColor: '#fde3cf',
+              }}
+            >
+              {getAvatarLetter(username, full_name)}
+            </Avatar>
+          )}
+          {/* {editMode ? (
             <Dragger {...uploadImageProps}>
               <p className="ant-upload-drag-icon">
                 <Icon type="inbox" />
@@ -58,19 +74,27 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             </Dragger>
           ) : (
             <Avatar linkToImage={avatar} alt={username} />
-          )}
+          )} */}
         </AvatarWrapper>
-        {editMode ? (
+        {full_name && (
+          <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
+        )}
+        {/* {editMode ? (
           <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
         ) : (
           <UserFullName>{full_name}</UserFullName>
-        )}
-        {editMode ? (
+        )} */}
+
+        <Username>@{username}</Username>
+
+        {/* {editMode ? (
           <Input onChange={editProfileFields} value={username} name="username" style={{ marginBottom: 15 }} />
         ) : (
           <Username>@{username}</Username>
-        )}
-        {editMode ? (
+        )} */}
+
+        {biography && <UserBio>{biography}</UserBio>}
+        {/* {editMode ? (
           <TextArea
             onChange={editProfileFields}
             value={biography}
@@ -78,8 +102,8 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             style={{ height: 100, marginBottom: 15 }}
           />
         ) : (
-          <UserBio>{biography}</UserBio>
-        )}
+          <React.Fragment>{biography && <UserBio>{biography}</UserBio>}</React.Fragment>
+        )} */}
         {editMode ? (
           <Button type="primary" onClick={() => saveChanges()}>
             Save changes
@@ -101,20 +125,20 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
           <UserSection>
             <UserSectionTitle>INFO</UserSectionTitle>
             <Row>
-              <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-              {editMode ? (
-                <Input onChange={editProfileFields} value={location} name="location" />
-              ) : (
-                <GreyText>{location}</GreyText>
+              {location && (
+                <React.Fragment>
+                  <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
+                  <GreyText>{location}</GreyText>
+                </React.Fragment>
               )}
             </Row>
-            {looking_for_job && !editMode && (
+            {looking_for_job && (
               <Row>
                 <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
                 <BlueText>Looking for a job</BlueText>
               </Row>
             )}
-            {editMode && (
+            {/* {editMode && (
               <Checkbox
                 onChange={editProfileFields}
                 defaultChecked={looking_for_job}
@@ -123,7 +147,7 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
               >
                 Looking for job
               </Checkbox>
-            )}
+            )} */}
 
             <Row>
               <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
@@ -132,43 +156,30 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
           </UserSection>
         </div>
 
-        <UserSection>
-          <UserSectionTitle>Links</UserSectionTitle>
-          <Links editMode={editMode}>
-            {website_url && !editMode ? (
-              <Link href={website_url} target="_blank">
-                <LoweredOpacityIcon name="website" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
-                <LoweredOpacityIcon name="website" height="22px" />
-                <Input onChange={editProfileFields} value={website_url} name="website_url" />
-              </div>
-            )}
-            {twitter_username && !editMode ? (
-              <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
-                <LoweredOpacityIcon name="twitter" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
-                <LoweredOpacityIcon name="twitter" height="22px" />
-                <Input onChange={editProfileFields} value={twitter_username} name="twitter_username" />
-              </div>
-            )}
-            {github_username && !editMode ? (
-              <Link href={`https://github.com/${github_username}`} target="_blank">
-                <LoweredOpacityIcon name="github" height="22px" />
-              </Link>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
-                <LoweredOpacityIcon name="github" height="22px" />
-                <Input onChange={editProfileFields} value={github_username} name="github_username" />
-              </div>
-            )}
-          </Links>
-        </UserSection>
+        {website_url || twitter_username || github_username ? (
+          <UserSection>
+            <UserSectionTitle>Links</UserSectionTitle>
+            <Links>
+              {website_url && (
+                <Link href={website_url} target="_blank">
+                  <LoweredOpacityIcon name="website" height="22px" />
+                </Link>
+              )}
+              {twitter_username && (
+                <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
+                  <LoweredOpacityIcon name="twitter" height="22px" />
+                </Link>
+              )}
+              {github_username && (
+                <Link href={`https://github.com/${github_username}`} target="_blank">
+                  <LoweredOpacityIcon name="github" height="22px" />
+                </Link>
+              )}
+            </Links>
+          </UserSection>
+        ) : null}
       </LeftSide>
-      {/* <RightSide>
+      <RightSide>
         <Card>
           <ContentSwitchButton id="answers" onClick={changeTab} active={activeTab === 'answers' ? true : false}>
             Answers({answers.length})
@@ -179,12 +190,12 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
         </Card>
         <Card>
           {activeTab === 'answers' ? (
-            <RecentActivities type="Answers" typeCounts={answers.length} data={answers} />
+            <RecentActivities type="answers" typeCounts={answers.length} data={answers} />
           ) : (
-            <RecentActivities type="Questions" typeCounts={questions.length} data={questions} />
+            <RecentActivities type="questions" typeCounts={questions.length} data={questions} />
           )}
         </Card>
-      </RightSide> */}
+      </RightSide>
     </Wrapper>
   )
 }
@@ -219,6 +230,7 @@ const LeftSide = styled.div`
   display: flex;
   flex-direction: column;
   @media screen and (max-width: 740px) {
+    width: 100%;
     margin: 0 auto;
   }
 `
@@ -226,11 +238,14 @@ const LeftSide = styled.div`
 const AvatarWrapper = styled.div`
   width: 246px;
   overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  @media screen and (max-width: 740px) {
+    margin: 0 auto 16px auto;
+  }
 `
 
-const Avatar = styled.div`
+const StyledAvatar = styled.div`
   width: 100%;
   height: 246px;
   background-image: url(${props => (props.linkToImage ? props.linkToImage : null)});
@@ -251,17 +266,17 @@ const Break = styled.div`
   height: 1.5px;
   background: ${props => props.theme.antGrey};
   opacity: 0.35;
-  margin: 10px 0;
+  margin: 16px 0;
 `
 
 const UserSectionTitle = styled.p`
-font-size 0.85rem;
-color: ${props => props.theme.darkerDarkGrey};
-text-transform: uppercase;
-font-weight: bold;
-opacity: .64;
-margin-bottom: 5px;
-margin-right:5px;
+  font-size: 0.85rem;
+  color: ${props => props.theme.darkerDarkGrey};
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0.64;
+  margin-bottom: 5px;
+  margin-right: 5px;
 `
 
 const ReputationIcon = styled.img`
@@ -288,7 +303,7 @@ const Link = styled.a`
 `
 
 const UserSection = styled.div`
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 `
 
 const GreyText = styled.span`
@@ -313,7 +328,10 @@ const Username = styled.p`
   font-size: 1rem;
   color: ${props => props.theme.darkerDarkGrey};
   opacity: 0.64;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
+  @media screen and (max-width: 740px) {
+    text-align: center;
+  }
 `
 
 const UserFullName = styled.span`
@@ -325,7 +343,15 @@ const UserBio = styled.span`
   font-size: 1rem;
   color: ${props => props.theme.darkerDarkGrey};
   line-height: 22px;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 `
+
+const getAvatarLetter = (username, full_name) => {
+  if (!!full_name) {
+    return full_name.charAt(0).toUpperCase()
+  } else if (!!username) {
+    return username.charAt(0).toUpperCase()
+  } else return
+}
 
 export default Profile

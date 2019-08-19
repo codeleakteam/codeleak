@@ -30,6 +30,7 @@ class ListUserView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class GetUpdateUserView(RetrieveUpdateAPIView):
+    authentication_classes = ()
     parser_classes = [FormParser, MultiPartParser, ]
     permission_classes = (IsMeOrReadOnly, )
     

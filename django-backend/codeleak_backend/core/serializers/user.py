@@ -1,6 +1,47 @@
 from django.db import models
 from rest_framework import serializers
-from core.models import User
+from core.models import (
+    User,
+    Question,
+    Answer,
+)
+
+
+class UserSerializerMinimal(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    class Meta:
+        model = User
+        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
+
+class UserQuestionSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    author = UserSerializerMinimal()
+
+    class Meta:
+        model = Question
+        fields = [
+            'id',
+            'title',
+            'score',
+            'author',
+            'tags',
+            'has_accepted_answer',
+            'has_comments',
+        ]
+    
+class UserAnswerSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    question = UserQuestionSerializer()
+    
+    class Meta:
+        model = Answer
+        fields = [
+            'id',
+            'question',
+            'has_comments',
+            'score',
+        ]
+
 
 class UserSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -8,12 +49,10 @@ class UserSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
 
     def get_questions(self, user_obj):
-        from .question import QuestionSerializer
-        return QuestionSerializer(user_obj.question_author.all(), many=True).data
+        return UserQuestionSerializer(user_obj.question_author.all(), many=True).data
 
     def get_answers(self, user_obj):
-        from .answer import AnswerSerializer
-        return AnswerSerializer(user_obj.answer_author.all(), many=True).data
+        return UserAnswerSerializer(user_obj.answer_author.all(), many=True).data
 
     class Meta:
         model = User
@@ -46,11 +85,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
             'groups'
         ] 
 
-class UserSerializerMinimal(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    class Meta:
-        model = User
-        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
 
 
 

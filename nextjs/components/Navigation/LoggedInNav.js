@@ -1,23 +1,22 @@
-import React from 'react'
+import React, { Children } from 'react'
 import PropTypes from 'prop-types'
 import { Avatar, Popover, Menu, Dropdown, Switch, Icon, Badge } from 'antd'
 import styled, { css } from 'styled-components'
 import moment from 'moment'
 import Logo from '../Logo'
 import Card from '../Card'
-import Link from 'next/link'
 import { Wrapper, Anchor, ListItem } from './shared'
 import Search from '../Search'
 import { logout } from '../../helpers/functions/auth'
 import { apiGet } from '../../api'
 import CustomIcon from '../../assets/icons'
+import { StatefulLink } from '../Navigation/shared'
 
 class LoggedInNav extends React.Component {
   static propTypes = {
     isMenuActive: PropTypes.bool.isRequired,
     handleBurgerMenu: PropTypes.func.isRequired,
     showBurger: PropTypes.bool.isRequired,
-    isResponsive: PropTypes.bool.isRequired,
     user: PropTypes.shape({
       id: PropTypes.number.isRequired,
       username: PropTypes.string,
@@ -192,7 +191,7 @@ class LoggedInNav extends React.Component {
   }
 
   render() {
-    const { handleBurgerMenu, isResponsive, showBurger } = this.props
+    const { handleBurgerMenu, showBurger } = this.props
     const { user } = this.state
 
     const menu = (
@@ -238,7 +237,7 @@ class LoggedInNav extends React.Component {
 
     return (
       <React.Fragment>
-        <Wrapper isResponsive={isResponsive}>
+        <Wrapper>
           <List>
             {showBurger && (
               <ListItem
@@ -280,18 +279,14 @@ class LoggedInNav extends React.Component {
                 }
               `}
             >
-              <StyledSearch shown={this.state.mobileSearchShown} isResponsive={isResponsive} />
+              <StyledSearch shown={this.state.mobileSearchShown} />
               <List type="regularPages">
                 {regularPages.map(l => {
                   return (
                     <ListItem key={l.name}>
-                      <Link href={l.href}>
-                        {isResponsive ? (
-                          <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
-                        ) : (
-                          <Anchor>{l.name}</Anchor>
-                        )}
-                      </Link>
+                      <StatefulLink href={l.href}>
+                        <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
+                      </StatefulLink>
                     </ListItem>
                   )
                 })}
@@ -402,8 +397,12 @@ const StyledAvatar = styled(Avatar)`
 
 const regularPages = [
   {
-    name: 'Jobs',
+    name: 'Questions',
     href: '/',
+  },
+  {
+    name: 'Jobs',
+    href: '/jobs',
   },
   {
     name: 'Tags',
