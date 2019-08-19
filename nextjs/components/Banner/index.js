@@ -65,7 +65,7 @@ class Banner extends Component {
                 {getFieldDecorator(
                   'password',
                   {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
+                    rules: [{ required: true, message: 'Please input your password!' }],
                   },
                   {
                     validator: this.compareToNextPass,
@@ -82,7 +82,7 @@ class Banner extends Component {
                 {getFieldDecorator(
                   'repeatPassword',
                   {
-                    rules: [{ required: true, message: 'Please repeat your Password!' }],
+                    rules: [{ required: true, message: 'Please repeat your password!' }],
                   },
                   {
                     validator: this.compareToFirstPass,

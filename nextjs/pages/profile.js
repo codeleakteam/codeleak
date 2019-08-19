@@ -73,7 +73,9 @@ class ProfilePage extends Component {
     return (
       <React.Fragment>
         <Head>
-          <title>{!this.props.error ? this.props.codeleakUser.username : 'Internal server error'}</title>
+          <title>
+            {this.props.user && this.props.user.full_name ? this.props.user.full_name : this.props.user.username}
+          </title>
         </Head>
         {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (

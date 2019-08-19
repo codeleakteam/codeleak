@@ -81,7 +81,13 @@ class SignIn extends Component {
             <Form.Item>
               {getFieldDecorator('email', {
                 rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
-              })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />)}
+              })(
+                <Input
+                  size="large"
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Email"
+                />
+              )}
             </Form.Item>
             <Form.Item>
               {getFieldDecorator(
@@ -94,6 +100,7 @@ class SignIn extends Component {
                 }
               )(
                 <Input
+                  size="large"
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
                   placeholder="Password"
@@ -101,7 +108,7 @@ class SignIn extends Component {
               )}
             </Form.Item>
             <Form.Item>
-              <StyledLoginButton type="primary" htmlType="submit">
+              <StyledLoginButton size="large" type="primary" htmlType="submit">
                 Login
               </StyledLoginButton>
               <a href="">Forgot password</a>

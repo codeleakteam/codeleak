@@ -13,7 +13,7 @@ class UserSerializerMinimal(serializers.ModelSerializer):
         model = User
         fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
 
-class QuestionSerializer(serializers.ModelSerializer):
+class UserQuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     author = UserSerializerMinimal()
 
@@ -29,13 +29,18 @@ class QuestionSerializer(serializers.ModelSerializer):
             'has_comments',
         ]
     
-class AnswerSerializer(serializers.ModelSerializer):
+class UserAnswerSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    question = QuestionSerializer()
+    question = UserQuestionSerializer()
     
     class Meta:
         model = Answer
-        fields = []
+        fields = [
+            'id',
+            'question',
+            'has_comments',
+            'score',
+        ]
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,12 +49,10 @@ class UserSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField()
 
     def get_questions(self, user_obj):
-        from .question import QuestionSerializer
-        return QuestionSerializer(user_obj.question_author.all(), many=True).data
+        return UserQuestionSerializer(user_obj.question_author.all(), many=True).data
 
     def get_answers(self, user_obj):
-        from .answer import AnswerSerializer
-        return AnswerSerializer(user_obj.answer_author.all(), many=True).data
+        return UserAnswerSerializer(user_obj.answer_author.all(), many=True).data
 
     class Meta:
         model = User

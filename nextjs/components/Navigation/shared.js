@@ -13,6 +13,7 @@ export const Wrapper = styled.div`
 
 export const Anchor = styled.a`
   color: ${props => (!props.isActive ? 'black' : props.theme.antBlue)};
+  text-transform: uppercase;
   font-weight: 500;
 `
 

@@ -73,6 +73,7 @@ class SignUp extends Component {
                 rules: [{ required: true, message: 'Please input display name!' }],
               })(
                 <Input
+                  size="large"
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="text"
                   placeholder="Full name"
@@ -83,7 +84,13 @@ class SignUp extends Component {
             <Form.Item>
               {getFieldDecorator('email', {
                 rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
-              })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />)}
+              })(
+                <Input
+                  size="large"
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Email"
+                />
+              )}
             </Form.Item>
             <Form.Item>
               {getFieldDecorator(
@@ -96,6 +103,7 @@ class SignUp extends Component {
                 }
               )(
                 <Input
+                  size="large"
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
                   placeholder="Password"
@@ -114,13 +122,14 @@ class SignUp extends Component {
               )(
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  size="large"
                   type="password"
                   placeholder="Repeat password"
                 />
               )}
             </Form.Item>
             <Form.Item>
-              <StyledRegisterButton type="primary" htmlType="submit">
+              <StyledRegisterButton type="primary" size="large" htmlType="submit">
                 Register
               </StyledRegisterButton>
             </Form.Item>

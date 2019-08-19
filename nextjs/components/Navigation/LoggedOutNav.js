@@ -85,7 +85,12 @@ class LoggedOutNav extends React.Component {
               </List>
             </div>
 
-            <div>
+            <div
+              css={`
+                display: flex;
+                align-items: center;
+              `}
+            >
               <ListItem
                 css={`
                   margin-bottom: -4px;

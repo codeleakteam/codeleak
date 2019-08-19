@@ -2,29 +2,27 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Link from 'next/link'
-import singularCheck from '../../helpers/functions/singularCheck'
+// import singularCheck from '../../helpers/functions/singularCheck'
 
-const Activity = ({ name, points, answers, time, slug, id }) => {
-  console.log('AAAAAAAAAAA', { answers, name })
+const Activity = ({ title, type, score, timestamp, slug, id }) => {
+  const verb = type === 'answers' ? 'Answered' : 'Asked'
   return (
     <Wrapper>
-      <div
-        css={`
-          margin-bottom: 5px;
-        `}
-      >
+      <div>
         <Link as={`/question/${id}/${slug}`} href={`question/?title=${id}`}>
           <a>
-            <ActivityName>{name}</ActivityName>
+            <ActivityName>{title}</ActivityName>
           </a>
         </Link>
-        <PointsCounter>{points}</PointsCounter> <PointsIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" />
+        <PointsCounter>{score}</PointsCounter> <PointsIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" />
       </div>
       <div>
-        <AnswersCounter>
+        {/* <AnswersCounter>
           {answers} {singularCheck('answer', answers)}
-        </AnswersCounter>
-        <AskedTimes>Asked {time}</AskedTimes>
+        </AnswersCounter> */}
+        <AskedTimes>
+          {verb} {timestamp}
+        </AskedTimes>
       </div>
     </Wrapper>
   )
@@ -37,13 +35,14 @@ Activity.propTypes = {
   points: PropTypes.number.isRequired,
   answers: PropTypes.number.isRequired,
   time: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 }
 
 const Wrapper = styled.div`
   margin-bottom: 1rem;
 `
 const ActivityName = styled.span`
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   line-height: 22px;
   &:after {
     content: '';
@@ -64,7 +63,7 @@ const AnswersCounter = styled.span`
 `
 
 const AskedTimes = styled.span`
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   line-height: 22px;
 `
 const PointsCounter = styled.span`

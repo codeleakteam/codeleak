@@ -5,7 +5,6 @@ import Activity from '../Activity'
 import timeAgo from '../../helpers/functions/timeAgo'
 
 const RecentActivities = ({ type, typeCounts, data }) => {
-  console.log('[datatatata]', { data, type, typeCounts })
   return (
     <Wrapper>
       <ActivitiesHeader>
@@ -13,16 +12,16 @@ const RecentActivities = ({ type, typeCounts, data }) => {
         <span>{type}</span>
       </ActivitiesHeader>
       {data.map(d => {
-        console.log('DD??', { d })
+        const title = type === 'answers' ? d.question.title : d.title
         return (
           <Activity
+            type={type}
             key={d.id}
             slug={d.slug}
             id={d.id}
-            name={d.title}
-            points={d.score}
-            answers={d.answers}
-            time={timeAgo(d.created_at)}
+            title={title}
+            score={d.score}
+            timestamp={timeAgo(d.created_at)}
           />
         )
       })}
