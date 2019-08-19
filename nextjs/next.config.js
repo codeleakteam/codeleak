@@ -1,3 +1,4 @@
+const withSourceMaps = require('@zeit/next-source-maps')()
 // const withSass = require('@zeit/next-sass')
 // const withCSS = require('@zeit/next-css')
 // const withPlugins = require('next-compose-plugins')
@@ -14,8 +15,13 @@ const productionConfig = {
   baseUrl: 'http://142.93.14.233',
 }
 
-const nextConfig = {
-  publicRuntimeConfig: isProduction ? productionConfig : developmentConfig,
-}
+// const nextConfig = {
+//   publicRuntimeConfig: isProduction ? productionConfig : developmentConfig,
+// }
 
-module.exports = nextConfig
+module.exports = withSourceMaps({
+  webpack(config, options) {
+    return config
+  },
+  publicRuntimeConfig: isProduction ? productionConfig : developmentConfig,
+})
