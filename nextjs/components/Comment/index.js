@@ -75,7 +75,7 @@ const CounterValue = styled.span`
 
 Comment.propTypes = {
   username: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   created_at: PropTypes.string.isRequired,
   reputation: PropTypes.number.isRequired,
   content: PropTypes.string.isRequired,

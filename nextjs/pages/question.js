@@ -77,7 +77,7 @@ class QuestionFullPage extends Component {
               authorReputation={this.state.authorReputation}
               authToken={this.props.authToken}
             />
-            <AnswerList answers={question.answers} />
+            <AnswerList authToken={this.props.authToken} answers={question.answers} />
           </React.Fragment>
         )}
       </div>

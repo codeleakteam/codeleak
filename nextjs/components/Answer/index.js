@@ -20,6 +20,7 @@ class Answer extends Component {
   }
 
   static propTypes = {
+    authToken: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     score: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
@@ -48,7 +49,7 @@ class Answer extends Component {
 
   submitComment = async (answer_id, author_id, content) => {
     try {
-      const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content)
+      const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content, this.props.authToken)
       const comment = _.get(res, 'data.comment', null)
       if (!comment) throw new Error('No comment object available')
       this.setState(state => ({
