@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
+import Link from 'next/link'
 
 const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enableEditMode, editProfileFields }) => {
   let {
@@ -58,57 +59,17 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
               {getAvatarLetter(username, full_name)}
             </Avatar>
           )}
-          {/* {editMode ? (
-            <Dragger {...uploadImageProps}>
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
-              <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
-              </p>
-            </Dragger>
-          ) : (
-            <Avatar linkToImage={avatar} alt={username} />
-          )} */}
         </AvatarWrapper>
         {full_name && (
           <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
         )}
-        {/* {editMode ? (
-          <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
-        ) : (
-          <UserFullName>{full_name}</UserFullName>
-        )} */}
-
         <Username>@{username}</Username>
-
-        {/* {editMode ? (
-          <Input onChange={editProfileFields} value={username} name="username" style={{ marginBottom: 15 }} />
-        ) : (
-          <Username>@{username}</Username>
-        )} */}
-
         {biography && <UserBio>{biography}</UserBio>}
-        {/* {editMode ? (
-          <TextArea
-            onChange={editProfileFields}
-            value={biography}
-            name="biography"
-            style={{ height: 100, marginBottom: 15 }}
-          />
-        ) : (
-          <React.Fragment>{biography && <UserBio>{biography}</UserBio>}</React.Fragment>
-        )} */}
-        {editMode ? (
-          <Button type="primary" onClick={() => saveChanges()}>
-            Save changes
-          </Button>
-        ) : (
-          <Button type="default" onClick={() => enableEditMode()}>
-            Edit Profile
-          </Button>
-        )}
+
+        <Link href="/profile/edit">
+          <Button type="default">Edit Profile</Button>
+        </Link>
+
         <Break />
         <div>
           <UserSection>
@@ -134,17 +95,6 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
                 <BlueText>Looking for a job</BlueText>
               </Row>
             )}
-            {/* {editMode && (
-              <Checkbox
-                onChange={editProfileFields}
-                defaultChecked={looking_for_job}
-                name="looking_for_job"
-                style={{ marginBottom: 15 }}
-              >
-                Looking for job
-              </Checkbox>
-            )} */}
-
             <Row>
               <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
               <BlueText>Sign In to view email</BlueText>
@@ -301,9 +251,9 @@ const Links = styled.div`
   flex-direction: ${props => (props.editMode ? 'column' : 'row')};
 `
 
-const Link = styled.a`
-  margin: 5px;
-`
+// const Link = styled.a`
+//   margin: 5px;
+// `
 
 const UserSection = styled.div`
   margin-bottom: 16px;
