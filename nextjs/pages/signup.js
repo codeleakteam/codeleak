@@ -5,6 +5,7 @@ import { Alert, Form, Icon, Input, Spin, Button } from 'antd'
 import styled from 'styled-components'
 import { apiPost } from '../api'
 import { login } from '../helpers/functions/auth'
+import Router from 'next/router'
 
 class SignUp extends Component {
   state = {
@@ -19,6 +20,7 @@ class SignUp extends Component {
       const token = _.get(res, 'data.token', null)
       const user = _.get(res, 'data.user', null)
       login({ user, token })
+      Router.push('/profile/edit')
     } catch (err) {
       if (err.response && err.response.status === 400) {
         const errors = Object.values(err.response.data)

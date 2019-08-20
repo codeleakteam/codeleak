@@ -196,7 +196,12 @@ export const apiPut = {
       }
     )
   },
-  updateUser: (data, id) => {
-    return axios.put(`${BASE_URL}/api/users/${id}`, data)
+  updateUser: (data, id, token) => {
+    return axios.put(`${BASE_URL}/api/users/${id}`, data, {
+      headers: {
+        Authorization: `JWT ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    })
   },
 }
