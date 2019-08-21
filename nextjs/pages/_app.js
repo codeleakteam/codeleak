@@ -1,15 +1,16 @@
 import React from 'react'
 import _ from 'lodash'
 import App, { Container } from 'next/app'
+import Router from 'next/router'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { parseCookies } from 'nookies'
+import * as Sentry from '@sentry/browser'
+import { library } from '@fortawesome/fontawesome-svg-core'
 import Navigation from '../components/Navigation'
 import MainContentWrapper from '../components/MainContentWrapper'
 import trackPageView from '../helpers/configs/trackPageView'
-import Router from 'next/router'
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
-import { parseCookies } from 'nookies'
-import * as Sentry from '@sentry/browser'
+import GdprNotification from '../components/GDPRNotification'
 
 Sentry.init({
   dsn: 'https://66e6fd9fe82e42f1b636c99f0e5cc527@sentry.io/1510922',
@@ -46,6 +47,10 @@ class MyApp extends App {
   }
 
   componentDidMount() {
+    if (!localStorage.getItem('codeleak-cookies')) {
+      GdprNotification()
+    }
+
     Router.onRouteChangeComplete = url => {
       trackPageView(url)
     }
