@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
 import { message } from 'antd'
 
-const protectedRoutes = ['/questions/ask']
+const protectedRoutes = ['/questions/ask', '/profile/edit']
 const guestRoutes = ['/login', '/register']
 
 // Protected routes: Routes we show only to logged in users. If not logged in, redirect to login page
@@ -11,8 +11,8 @@ const guestRoutes = ['/login', '/register']
 export const login = async ({ user, token }) => {
   try {
     const userJSON = JSON.stringify(user)
-    setCookie(undefined, 'codeleakUser', userJSON)
-    setCookie(undefined, 'codeleakAuthToken', token)
+    setCookie(undefined, 'codeleakUser', userJSON, { path: '/' })
+    setCookie(undefined, 'codeleakAuthToken', token, { path: '/' })
     Router.push('/')
   } catch (err) {
     // Ignorguardialo on successguardialo on successe

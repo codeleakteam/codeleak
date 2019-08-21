@@ -5,7 +5,7 @@ import TwoSideLayout from '../components/TwoSideLayout'
 import Profile from '../components/Profile'
 import { apiGet, apiPut } from '../api'
 import _ from 'lodash'
-import { Alert, message } from 'antd'
+import { message } from 'antd'
 import { withAuthSync } from '../helpers/functions/auth'
 
 class ProfilePage extends Component {
@@ -66,7 +66,6 @@ class ProfilePage extends Component {
   updateUser = async (data, id) => {
     try {
       const res = await apiPut.updateUser(data, id)
-      let user = _.get(res, 'data', null)
       let userId = _.get(res, 'data.id', null)
       if (!userId) throw new Error('Cannot update user data!')
       message.success('Profile is successfully updated!')
@@ -76,16 +75,16 @@ class ProfilePage extends Component {
   }
 
   render() {
-    console.log(this.props)
-
+    const title = this.props.error
+      ? 'Internal server error'
+      : this.props.user.full_name
+      ? this.props.user.full_name
+      : this.props.user.username
     return (
       <React.Fragment>
         <Head>
-          <title>
-            {this.props.user && this.props.user.full_name ? this.props.user.full_name : this.props.user.username}
-          </title>
+          <title>{title}</title>
         </Head>
-        {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (
           <TwoSideLayout
             mainSectionElement={

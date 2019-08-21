@@ -29,11 +29,10 @@ class ListUserView(ListAPIView):
         serializer = UserSerializerMinimal(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class GetUpdateUserView(RetrieveUpdateAPIView):
+class GetUserView(RetrieveAPIView):
     authentication_classes = ()
-    parser_classes = [FormParser, MultiPartParser, ]
-    permission_classes = (IsMeOrReadOnly, )
-    
+    permission_classes = ()
+
     def get(self, request, user_id):
         users = User.objects.filter(pk=user_id).prefetch_related('question_author', 'answer_author')
         if len(users) > 0:
@@ -48,6 +47,11 @@ class GetUpdateUserView(RetrieveUpdateAPIView):
             'user': serializer.data
         }, status=status.HTTP_200_OK)
 
+
+class UpdateUserView(UpdateAPIView):
+    parser_classes = [FormParser, MultiPartParser, ]
+    permission_classes = (IsMeOrReadOnly, )
+    
     def put(self, request, user_id):
         print("Update quesiton data: ", request.data)
         print("Update question id: ", user_id)
@@ -60,5 +64,5 @@ class GetUpdateUserView(RetrieveUpdateAPIView):
         serializer = UpdateUserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
