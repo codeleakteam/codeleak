@@ -6,7 +6,11 @@ from .question import (
     ListCreateQuestionView,
     ReportQuestionView
 )
-from .user import GetUpdateUserView, ListUserView
+from .user import (
+    GetUserView,
+    UpdateUserView,
+    ListUserView
+)
 from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
 from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
@@ -25,7 +29,8 @@ from .notification import (
 __all__ = [
     'HomeView',
     'ListUserView',
-    'GetUpdateUserView',
+    'GetUserView',
+    'UpdateUserView',
     'ReportQuestionView',
     'ListCreateTagView',
     'GetTagView',

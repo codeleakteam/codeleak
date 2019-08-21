@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import Head from 'next/head'
 import TwoSideLayout from '../../components/TwoSideLayout'
 import EditProfile from '../../components/EditProfile'
-import { apiGet, apiPut } from '../../api'
+import { apiGet } from '../../api'
 import _ from 'lodash'
-import { Alert, message } from 'antd'
+import { Alert } from 'antd'
 import { withAuthSync } from '../../helpers/functions/auth'
 
 class EditProfilePage extends Component {
@@ -29,7 +29,7 @@ class EditProfilePage extends Component {
         error: false,
       }
     } catch (err) {
-      console.error('[getInitialProps]', { err })
+      console.error('[getInitialProps] staepuklo', { err })
       return {
         error: true,
       }
@@ -37,14 +37,16 @@ class EditProfilePage extends Component {
   }
 
   render() {
-    console.log('r', this.props)
+    const title = this.props.error
+      ? 'Internal server error'
+      : this.props.user.full_name
+      ? this.props.user.full_name
+      : this.props.user.username
 
     return (
       <React.Fragment>
         <Head>
-          <title>
-            {this.props.user && this.props.user.full_name ? this.props.user.full_name : this.props.user.username}
-          </title>
+          <title>{title}</title>
         </Head>
         {this.props.error && <Alert message="Internal sever error" type="error" />}
         {!this.props.error && (

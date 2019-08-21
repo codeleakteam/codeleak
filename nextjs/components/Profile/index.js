@@ -1,14 +1,15 @@
 import React from 'react'
-import { Avatar, Button, Input, Checkbox, Upload, Icon, message } from 'antd'
+import { Avatar, Button, message } from 'antd'
 import PropTypes from 'prop-types'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import RecentActivities from '../RecentActivities'
 import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
 import Link from 'next/link'
 
-const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enableEditMode, editProfileFields }) => {
+const Profile = ({ userData, codeleakUser, saveChanges, changeTab, activeTab, editProfileFields }) => {
   let {
+    id,
     username,
     avatar,
     reputation,
@@ -22,23 +23,6 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
     twitter_username,
     github_username,
   } = userData
-
-  const uploadImageProps = {
-    name: 'file',
-    multiple: false,
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange(info) {
-      const { status } = info.file
-      // if (status !== 'uploading') {
-      //   console.log(info.file, info.fileList)
-      // }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`)
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-  }
 
   return (
     <Wrapper>
@@ -60,15 +44,14 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             </Avatar>
           )}
         </AvatarWrapper>
-        {full_name && (
-          <Input onChange={editProfileFields} value={full_name} name="full_name" style={{ marginBottom: 15 }} />
-        )}
+        {full_name && <UserFullName>{full_name}</UserFullName>}
         <Username>@{username}</Username>
         {biography && <UserBio>{biography}</UserBio>}
-
-        <Link href="/profile/edit">
-          <Button type="default">Edit Profile</Button>
-        </Link>
+        {codeleakUser && codeleakUser.id === id && (
+          <Link href="/profile/edit">
+            <Button type="default">Edit Profile</Button>
+          </Link>
+        )}
 
         <Break />
         <div>
@@ -107,19 +90,19 @@ const Profile = ({ userData, saveChanges, changeTab, activeTab, editMode, enable
             <UserSectionTitle>Links</UserSectionTitle>
             <Links>
               {website_url && (
-                <Link href={website_url} target="_blank">
+                <Anchor href={website_url} target="_blank">
                   <LoweredOpacityIcon name="website" height="22px" />
-                </Link>
+                </Anchor>
               )}
               {twitter_username && (
-                <Link href={`https://twitter.com/${twitter_username}`} target="_blank">
+                <Anchor href={`https://twitter.com/${twitter_username}`} target="_blank">
                   <LoweredOpacityIcon name="twitter" height="22px" />
-                </Link>
+                </Anchor>
               )}
               {github_username && (
-                <Link href={`https://github.com/${github_username}`} target="_blank">
+                <Anchor href={`https://github.com/${github_username}`} target="_blank">
                   <LoweredOpacityIcon name="github" height="22px" />
-                </Link>
+                </Anchor>
               )}
             </Links>
           </UserSection>
@@ -232,13 +215,6 @@ const UserSectionTitle = styled.p`
   margin-right: 5px;
 `
 
-const ReputationIcon = styled.img`
-  width: 22px;
-  height: 22px;
-  margin-bottom: 3px;
-  margin-right: 5px;
-`
-
 const ReputationCounter = styled.p`
   color: ${props => props.theme.nextBlack};
   font-weight: bold;
@@ -247,13 +223,12 @@ const ReputationCounter = styled.p`
 `
 const Links = styled.div`
   display: flex;
-  margin: -5px;
   flex-direction: ${props => (props.editMode ? 'column' : 'row')};
 `
 
-// const Link = styled.a`
-//   margin: 5px;
-// `
+const Anchor = styled.a`
+  margin-right: 8px;
+`
 
 const UserSection = styled.div`
   margin-bottom: 16px;
@@ -291,6 +266,9 @@ const UserFullName = styled.span`
   font-size: 25px;
   line-height: 25px;
   font-weight: bold;
+  @media screen and (max-width: 740px) {
+    text-align: center;
+  }
 `
 const UserBio = styled.span`
   font-size: 1rem;

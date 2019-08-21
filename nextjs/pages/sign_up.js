@@ -72,7 +72,7 @@ class SignUp extends Component {
           <Form onSubmit={this.handleSubmit}>
             <Form.Item>
               {getFieldDecorator('fullName', {
-                rules: [{ required: true, message: 'Please input display name!' }],
+                rules: [{ required: true, message: 'Please input your name!' }],
               })(
                 <Input
                   size="large"

@@ -28,6 +28,7 @@ class UserQuestionSerializer(serializers.ModelSerializer):
             'tags',
             'has_accepted_answer',
             'has_comments',
+            'created_at'
         ]
     
 class UserAnswerSerializer(serializers.ModelSerializer):
@@ -41,6 +42,7 @@ class UserAnswerSerializer(serializers.ModelSerializer):
             'question',
             'has_comments',
             'score',
+            'created_at'
         ]
 
 
@@ -58,6 +60,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = [
+            'first_name',
+            'last_name',
             'password',
             'is_superuser',
             'is_staff',
@@ -78,6 +82,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = [
+            'first_name',
+            'last_name',
             'password',
             'is_superuser',
             'is_staff',

@@ -201,11 +201,11 @@ class LoggedInNav extends React.Component {
           <a href="/">Settings</a>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item key="2">
+        {/* <Menu.Item key="2">
           Night mode
           <Switch style={{ marginLeft: '8px' }} size="small" />
-        </Menu.Item>
-        <Menu.Divider />
+        </Menu.Item> */}
+        {/* <Menu.Divider /> */}
         <Menu.Item key="3" onClick={() => logout()}>
           <a>Log out</a>
         </Menu.Item>
