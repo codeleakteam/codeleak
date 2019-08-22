@@ -140,6 +140,18 @@ const GlobalStyle = createGlobalStyle`
   p {
     margin-bottom: 0;
   }
+  .ant-notification.ant-notification-bottomLeft{
+    width: 100%;
+    margin: 0 auto!important;
+    right: 0;
+  }
+  .ant-notification-notice.ant-notification-notice-closable{
+    margin-bottom:0;
+  }
+  .ant-notification-notice-icon{
+    margin-top:8px;
+  }
+
 `
 
 export default MyApp
