@@ -6,6 +6,8 @@ import styled from 'styled-components'
 import { apiPost } from '../api'
 import { login } from '../helpers/functions/auth'
 import Router from 'next/router'
+import Card from '../components/Card'
+import Logo from '../components/Logo'
 
 class SignUp extends Component {
   state = {
@@ -13,10 +15,10 @@ class SignUp extends Component {
     loading: false,
   }
 
-  register = async ({ fullName, email, password }) => {
+  register = async ({ username, email, password }) => {
     try {
       this.setState({ loading: true })
-      const res = await apiPost.register({ fullName, email, password })
+      const res = await apiPost.register({ username, email, password })
       const token = _.get(res, 'data.token', null)
       const user = _.get(res, 'data.user', null)
       login({ user, token })
@@ -42,13 +44,14 @@ class SignUp extends Component {
   render() {
     const { getFieldDecorator } = this.props.form
     return (
-      <Wrapper>
-        <Head>
-          <title>Sign up</title>
-        </Head>
-        <Title>codeLeak</Title>
-        <Description>An online-editor based question and answer platform for front-end developers</Description>
-        {/* <Socials>
+      <StyledCard>
+        <Wrapper>
+          <Head>
+            <title>Sign up</title>
+          </Head>
+          <StyledLogo type="long" />
+          <Description>An online-editor based question and answer platform for front-end developers</Description>
+          {/* <Socials>
           <StyledSocialButton type="primary" icon="google">
             Google
           </StyledSocialButton>
@@ -56,88 +59,89 @@ class SignUp extends Component {
             Twitter
           </StyledSocialButton>
         </Socials> */}
-        {!this.state.loading && this.state.errors.length > 0 && (
-          <React.Fragment>
-            {this.state.errors.map((err, i) => (
-              <Alert style={{ marginBottom: '8px' }} message={err[i]} key={i} type="error" showIcon />
-            ))}
-          </React.Fragment>
-        )}
-        {this.state.loading && (
-          <SpinWrapper>
-            <Spin size="large" />
-          </SpinWrapper>
-        )}
-        {!this.state.loading && (
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Item>
-              {getFieldDecorator('fullName', {
-                rules: [{ required: true, message: 'Please input your name!' }],
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="text"
-                  placeholder="Full name"
-                />
-              )}
-            </Form.Item>
+          {!this.state.loading && this.state.errors.length > 0 && (
+            <React.Fragment>
+              {this.state.errors.map((err, i) => (
+                <Alert style={{ marginBottom: '8px' }} message={err[i]} key={i} type="error" showIcon />
+              ))}
+            </React.Fragment>
+          )}
+          {this.state.loading && (
+            <SpinWrapper>
+              <Spin size="large" />
+            </SpinWrapper>
+          )}
+          {!this.state.loading && (
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Item>
+                {getFieldDecorator('username', {
+                  rules: [{ required: true, message: 'Please input your username!' }],
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="text"
+                    placeholder="Username"
+                  />
+                )}
+              </Form.Item>
 
-            <Form.Item>
-              {getFieldDecorator('email', {
-                rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
-              })(
-                <Input
-                  size="large"
-                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  placeholder="Email"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator(
-                'password',
-                {
-                  rules: [{ required: true, message: 'Please input your Password!' }],
-                },
-                {
-                  validator: this.compareToNextPass,
-                }
-              )(
-                <Input
-                  size="large"
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  type="password"
-                  placeholder="Password"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator(
-                'repeatPassword',
-                {
-                  rules: [{ required: true, message: 'Please repeat your Password!' }],
-                },
-                {
-                  validator: this.compareToFirstPass,
-                }
-              )(
-                <Input
-                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                  size="large"
-                  type="password"
-                  placeholder="Repeat password"
-                />
-              )}
-            </Form.Item>
-            <Form.Item>
-              <StyledRegisterButton type="primary" size="large" htmlType="submit">
-                Register
-              </StyledRegisterButton>
-            </Form.Item>
-          </Form>
-        )}
-      </Wrapper>
+              <Form.Item>
+                {getFieldDecorator('email', {
+                  rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
+                })(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Email"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator(
+                  'password',
+                  {
+                    rules: [{ required: true, message: 'Please input your Password!' }],
+                  },
+                  {
+                    validator: this.compareToNextPass,
+                  }
+                )(
+                  <Input
+                    size="large"
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    type="password"
+                    placeholder="Password"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                {getFieldDecorator(
+                  'repeatPassword',
+                  {
+                    rules: [{ required: true, message: 'Please repeat your Password!' }],
+                  },
+                  {
+                    validator: this.compareToFirstPass,
+                  }
+                )(
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    size="large"
+                    type="password"
+                    placeholder="Repeat password"
+                  />
+                )}
+              </Form.Item>
+              <Form.Item>
+                <StyledRegisterButton type="primary" size="large" htmlType="submit">
+                  Register
+                </StyledRegisterButton>
+              </Form.Item>
+            </Form>
+          )}
+        </Wrapper>
+      </StyledCard>
     )
   }
 }
@@ -149,24 +153,31 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `
 
-const Socials = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
+// const Socials = styled.div`
+//   display: flex;
+//   flex-wrap: wrap;
+//   margin-bottom: 16px;
+// `
+
+const StyledCard = styled(Card)`
+  width: 750px;
+  margin: 0 auto;
+  @media screen and (max-width: 750px) {
+    width: 100%;
+  }
 `
 
-const Title = styled.h2`
-  font-size: 44px;
-  line-height: 76px;
+const StyledLogo = styled(Logo)`
   text-align: center;
-  color: black;
+  margin-bottom: 16px;
 `
 
 const Description = styled.p`
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 22px;
   color: black;
   margin-bottom: 16px;
+  text-align: center;
 `
 
 const SpinWrapper = styled.div`
@@ -177,14 +188,14 @@ const SpinWrapper = styled.div`
   height: 80vh;
 `
 
-const StyledSocialButton = styled(Button)`
-  margin-right: 1rem;
-  max-width: 112px;
-  margin-bottom: 8px;
-  &:last-of-type {
-    margin-right: 0;
-  }
-`
+// const StyledSocialButton = styled(Button)`
+//   margin-right: 1rem;
+//   max-width: 112px;
+//   margin-bottom: 8px;
+//   &:last-of-type {
+//     margin-right: 0;
+//   }
+// `
 
 const StyledRegisterButton = styled(Button)`
   width: 100%;
