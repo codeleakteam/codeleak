@@ -50,10 +50,10 @@ export const apiGet = {
 }
 
 export const apiPost = {
-  register: ({ fullName, email, password }) => {
+  register: ({ username, email, password }) => {
     return axios.post(`${BASE_URL}/rest-auth/registration/`, {
-      email: email,
-      full_name: fullName,
+      email,
+      username,
       password1: password,
       password2: password,
     })

@@ -33,6 +33,7 @@ Logo.propTypes = {
 }
 
 const Wrapper = styled.div`
+  letter-spacing: 1.5px;
   font-size: 32px;
   color: black;
   font-weight: 500;

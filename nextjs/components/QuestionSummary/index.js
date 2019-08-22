@@ -27,7 +27,6 @@ class QuestionSummary extends Component {
     ),
   }
   render() {
-    let formatDate = moment(createdAt).fromNow()
     const {
       score,
       answers,
@@ -42,6 +41,8 @@ class QuestionSummary extends Component {
       authorAvatar,
       authorFullName,
     } = this.props
+
+    let formatDate = moment(createdAt).fromNow()
     return (
       <Card>
         <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
