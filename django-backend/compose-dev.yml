@@ -4,7 +4,10 @@ services:
   web:
     build: .
     command: python /code/codeleak_backend/manage.py runserver 0.0.0.0:8000
-    # networks: 
+    environment:
+      - DEBUG=True
+      - CODELEAK_SECRET_KEY=lamerajxlamex
+        # networks: 
     #   - postgres_django
     volumes:
       - .:/code
@@ -25,4 +28,4 @@ services:
 # networks:
 #   postgres_django:
 #     external: true
-        
+  

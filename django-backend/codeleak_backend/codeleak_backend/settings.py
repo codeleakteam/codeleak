@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+import ast
 import os
 import sys
 import datetime
@@ -44,10 +45,10 @@ print("BASE_DIR", BASE_DIR)
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bs2@o%lli08&0poqek7+=5n5eu2aeu3-2jthoy-=ac)k+zeae^'
+SECRET_KEY = os.getenv('CODELEAK_SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = ast.literal_eval(os.getenv('DEBUG', 'True'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -183,16 +184,31 @@ WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'codeleak',
-        'USER': 'postgres',
-        'PASSWORD': 'lamerajlame321',
-        'HOST': '134.209.195.55',
-        'PORT': '5432',
+if DEBUG != True:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DATABASE_NAME', ''),
+            'USER': os.getenv('DATABASE_USER', ''),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+            'HOST': os.getenv('DATABASE_HOST', ''),
+            'PORT': os.getenv('DATABASE_PORT', ''),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'codeleak',
+            'USER': 'postgres',
+            'PASSWORD': 'lamerajlame321',
+            'HOST': '104.248.229.133',
+            'PORT': 5432,
+        }
+    }
+
+print(DATABASES['default']['HOST'])
+
 
 # DATABASES = {
 #     'default': {
