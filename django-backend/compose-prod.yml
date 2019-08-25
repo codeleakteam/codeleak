@@ -13,15 +13,4 @@ services:
     ports:
       - "8000:8000"
     command:
-      "gunicorn --pythonpath /code/codeleak_backend --workers=5 --bind=0.0.0.0:8000 codeleak_backend.wsgi:application"
-    extra_hosts:
-      - "host_machine:192.168.0.20"
-  nginx:
-    image: nginx:1.17
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-    depends_on:
-      - app
+      "gunicorn --pythonpath /code/codeleak_backend --workers=5 --log-file /code/codeleak_backend/gunicorn_logfile --bind=0.0.0.0:8000 codeleak_backend.wsgi:application"

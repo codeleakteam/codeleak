@@ -9,7 +9,7 @@ const withSourceMaps = require('@zeit/next-source-maps')()
 const isProduction = process.env.CODE_ENV === 'production'
 
 const developmentConfig = {
-  baseUrl: 'http://localhost:8000',
+  baseUrl: '104.248.1.100',
 }
 const productionConfig = {
   baseUrl: 'http://142.93.14.233',
