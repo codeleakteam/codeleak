@@ -47,4 +47,8 @@ class Answer(models.Model):
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return 'Answer on {} by {} - ID:{}'.format(self.question.title, self.author.username, self.id)
+        if self.author.full_name:
+            author_display_name = self.author.full_name
+        else:
+            author_display_name = self.author.username
+        return '{} by {}'.format(self.question.title, author_display_name)

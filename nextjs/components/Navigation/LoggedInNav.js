@@ -143,7 +143,7 @@ class LoggedInNav extends React.Component {
 
   renderNotifications = () => {
     return (
-      <Menu style={{ width: '500px', background: '#eff1f4', padding: '8px' }}>
+      <StyledMenu>
         {(this.state.notifications || []).map((n, i) => {
           if (i < 3) {
             return (
@@ -184,7 +184,7 @@ class LoggedInNav extends React.Component {
             return null
           }
         })}
-      </Menu>
+      </StyledMenu>
     )
   }
 
@@ -471,9 +471,16 @@ const UpvoteIcon = styled.img`
   width: 18px;
   height: 18px;
 `
-const StyledLogo = styled(Logo)`
-  margin-right: 1rem;
+
+const StyledMenu = styled(Menu)`
+  width: 500px;
+  background: #eff1f4;
+  padding: 8px;
+  @media screen and (max-width:505px){
+    width: 100%;
+  }
 `
+
 const DownvoteIcon = styled(UpvoteIcon)`
   transform: rotate(180deg);
   margin-top: 4px;
