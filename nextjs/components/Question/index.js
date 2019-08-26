@@ -16,8 +16,9 @@ class Question extends Component {
     comments: [],
     commentsReversed: [],
     commentSummary: true,
-    updatedScore: '',
+    updatedScore: {},
   }
+
   static propTypes = {
     id: PropTypes.number.isRequired,
     slug: PropTypes.string.isRequired,
@@ -40,8 +41,10 @@ class Question extends Component {
       full_name: PropTypes.string,
     }),
   }
+
   componentDidMount() {
     const { comments, description, author } = this.props
+
     this.setState({
       comments,
     })
@@ -71,12 +74,19 @@ class Question extends Component {
   }
 
   upvoteComment = async (userId, commentId) => {
+    console.log('upvoteComment', userId, commentId)
+
     try {
       message.loading('Voting', 5)
       const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
       let comment = _.get(res, 'data', null)
       if (!comment) throw new Error('Comment object is null or undefined')
-      this.setState({ updatedScore: comment.comment.score })
+      this.setState({
+        updatedScore: {
+          ...this.state.updatedScore,
+          [commentId]: comment.comment.score,
+        },
+      })
       message.destroy()
       message.success('Thank you for voting')
     } catch (err) {
@@ -186,7 +196,7 @@ class Question extends Component {
                     reputation={c.author.reputation}
                     content={c.content}
                     score={c.score}
-                    updatedScore={this.state.updatedScore}
+                    updatedScore={this.state.updatedScore[c.id]}
                     upvoteComment={() => this.upvoteComment(1, c.id)}
                     reportComment={() => this.reportComment(1, c.id)}
                     amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
@@ -208,7 +218,7 @@ class Question extends Component {
                 reputation={c.author.reputation}
                 content={c.content}
                 score={c.score}
-                updatedScore={this.state.updatedScore}
+                updatedScore={this.state.updatedScore[c.id]}
                 upvoteComment={() => this.upvoteComment(1, c.id)}
                 reportComment={() => this.reportComment(1, c.id)}
                 amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
