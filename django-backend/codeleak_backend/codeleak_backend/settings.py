@@ -153,11 +153,14 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ORIGIN_WHITELIST = [
     'localhost:3000',
+    'codeleak.io',
     'http://codeleak.io',
     'https://codeleak.io',
-)
+    "*",
+]
+
 
 
 ROOT_URLCONF = 'codeleak_backend.urls'
