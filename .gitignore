@@ -88,7 +88,7 @@ target/
 __pycache__/
 local_settings.py
 
-.env
+*.env
 # migrations
 venv
 statics
@@ -100,3 +100,4 @@ Scripts
 lib
 tcl
 *.idea
+gunicorn_logfile

@@ -124,7 +124,7 @@ class Answer extends Component {
 
           <Description dangerouslySetInnerHTML={{ __html: description }} />
 
-          {/* <iframe
+          <iframe
             src={repository_url}
             style={{
               width: '100%',
@@ -134,7 +134,7 @@ class Answer extends Component {
               overflow: 'hidden',
             }}
             sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-          /> */}
+          />
 
           <PostCTAS
             postType="answer"

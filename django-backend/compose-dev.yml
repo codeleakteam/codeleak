@@ -4,6 +4,8 @@ services:
   web:
     build: .
     command: python /code/codeleak_backend/manage.py runserver 0.0.0.0:8000
+    env_file:
+      - ./env/dev.env
     # networks: 
     #   - postgres_django
     volumes:
@@ -25,4 +27,4 @@ services:
 # networks:
 #   postgres_django:
 #     external: true
-        
+  

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+import ast
 import os
 import sys
 import datetime
@@ -44,10 +45,10 @@ print("BASE_DIR", BASE_DIR)
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bs2@o%lli08&0poqek7+=5n5eu2aeu3-2jthoy-=ac)k+zeae^'
+SECRET_KEY = os.getenv('CODELEAK_SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = ast.literal_eval(os.getenv('DEBUG', 'True'))
 
 ALLOWED_HOSTS = ['*']
 
@@ -152,9 +153,14 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000'
-)
+CORS_ORIGIN_WHITELIST = [
+    'localhost:3000',
+    'codeleak.io',
+    'http://codeleak.io',
+    'https://codeleak.io',
+    "*",
+]
+
 
 
 ROOT_URLCONF = 'codeleak_backend.urls'
@@ -178,7 +184,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
-
+FRONT_END_APP_URL = os.getenv('FRONT_END_APP_URL', '')
+print("FRONT_END_APP_URL", FRONT_END_APP_URL)
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -186,13 +193,16 @@ WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'codeleak',
-        'USER': 'postgres',
-        'PASSWORD': 'lamerajlame321',
-        'HOST': '134.209.195.55',
-        'PORT': '5432',
+        'NAME': os.getenv('DATABASE_NAME', ''),
+        'USER': os.getenv('DATABASE_USER', ''),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+        'HOST': os.getenv('DATABASE_HOST', ''),
+        'PORT': os.getenv('DATABASE_PORT', ''),
     }
 }
+
+print("DATABSE HOST", DATABASES['default']['HOST'])
+
 
 # DATABASES = {
 #     'default': {
@@ -250,6 +260,8 @@ REST_USE_JWT = True
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'core.serializers.UserSerializerMinimal'
 }
+
+ACCOUNT_EMAIL_VERIFICATION = None
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':

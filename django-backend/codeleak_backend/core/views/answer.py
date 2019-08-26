@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveUpdateAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.response import Response
@@ -61,7 +62,11 @@ class CreateAnswerView(CreateAPIView):
             serializer.save()
             print("Saving answer...")
             answer = Answer.objects.get(pk=serializer.data['id'])
-            print("answer:", )
+            if answer.question.author.full_name is not None:
+                answer_author_display_name = answer.question.author.full_name
+            else:
+                answer_author_display_name = answer.question.author.username
+
             notify.send(
                     verb='ADD_ANSWER',
                     action_object=answer,
@@ -73,17 +78,19 @@ class CreateAnswerView(CreateAPIView):
                 "https://api.mailgun.net/v3/codeleak.io/messages",
                 auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
                 # edit this when registration flow on front is finished
-                data={"from": "{} <mailgun@codeleak.io>".format("Branko Zivanovic"),
+                data={"from": "{} <mailgun@codeleak.io>".format(answer_author_display_name),
                         "to": [question.author.email],
                         "subject": "Re: {}".format(question.title),
                         "template": "answer-comment-inbox-alert",
                         "o:tag": ["inbox"],
                         "v:question_title": question.title,
                         # edit this when registration flow on front is finished
-                        "v:author_full_name": 'Branko Zivanovic',
+                        "v:author_full_name": answer_author_display_name,
                         "v:foreword": "has just added an answer on your question.",
-                        "v:answer_or_comment_description": answer.description,
-                        "v:codeleak_question_link": "http://localhost:3000/question/{}/{}".format(question.id, question.slug) 
+                        "v:codeleak_question_link": "{}/question/{}/{}".format(settings.FRONT_END_APP_URL,
+                                                                               question.id,
+                                                                               question.slug
+                                                                               ) 
                 })
             print("mailgun response", r.text)
             read_serializer = AnswerSerializer(answer)
