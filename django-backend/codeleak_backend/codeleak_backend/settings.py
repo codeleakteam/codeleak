@@ -189,30 +189,18 @@ WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if DEBUG != True:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DATABASE_NAME', ''),
-            'USER': os.getenv('DATABASE_USER', ''),
-            'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
-            'HOST': os.getenv('DATABASE_HOST', ''),
-            'PORT': os.getenv('DATABASE_PORT', ''),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE_NAME', ''),
+        'USER': os.getenv('DATABASE_USER', ''),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
+        'HOST': os.getenv('DATABASE_HOST', ''),
+        'PORT': os.getenv('DATABASE_PORT', ''),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'codeleak',
-            'USER': 'postgres',
-            'PASSWORD': 'lamerajlame321',
-            'HOST': '104.248.229.133',
-            'PORT': 5432,
-        }
-    }
+}
 
-print(DATABASES['default']['HOST'])
+print("DATABSE HOST", DATABASES['default']['HOST'])
 
 
 # DATABASES = {
