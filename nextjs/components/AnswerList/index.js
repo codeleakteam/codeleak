@@ -3,18 +3,24 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Answer from '../Answer'
 
-const AnswerList = ({ answers, authToken }) => {
+const AnswerList = ({ answers, authToken, codeleakUser }) => {
   return (
     <Wrapper>
       {answers.map(answer => {
-        return <Answer authToken={authToken} key={answer.id} id={answer.id} {...answer} />
+        return <Answer codeleakUser={codeleakUser} authToken={authToken} key={answer.id} id={answer.id} {...answer} />
       })}
     </Wrapper>
   )
 }
 
 AnswerList.propTypes = {
-  authToken: PropTypes.string.isRequired,
+  authToken: PropTypes.string,
+  codeleakUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    reputation: PropTypes.number.isRequired,
+    avatar: PropTypes.string,
+    full_name: PropTypes.string,
+  }),
   answers: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

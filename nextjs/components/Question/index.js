@@ -32,7 +32,13 @@ class Question extends Component {
       id: PropTypes.number.isRequired,
       username: PropTypes.string.isRequired,
     }),
-    authToken: PropTypes.string.isRequired,
+    authToken: PropTypes.string,
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
   }
   componentDidMount() {
     const { comments, description, author } = this.props
@@ -97,6 +103,7 @@ class Question extends Component {
 
   render() {
     const {
+      codeleakUser,
       id,
       slug,
       created_at,
@@ -121,6 +128,9 @@ class Question extends Component {
             postedAt={created_at}
             avatar={author.avatar}
           />
+          <Description>
+            <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
+          </Description>
           <TagsList>
             {tags.map(q => {
               return (
@@ -134,9 +144,7 @@ class Question extends Component {
               )
             })}
           </TagsList>
-          <Description>
-            <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
-          </Description>
+
           <iframe
             src={repository_url}
             style={{
@@ -160,26 +168,34 @@ class Question extends Component {
             id={id}
             score={score}
             updatedScore={updatedQuestionScore}
+            amIAuthor={codeleakUser ? codeleakUser.id === author.id : false}
+            isLoggedIn={!!codeleakUser}
           />
         </Card>
         {this.state.commentSummary &&
-          this.state.comments.slice(0, 3).map((c, i) => (
-            <Card hoverable={true} isComment={true} key={i}>
-              <Comment
-                key={c.id}
-                id={c.id}
-                created_at={c.created_at}
-                username={c.author.username}
-                avatar={c.author.avatar}
-                reputation={c.author.reputation}
-                content={c.content}
-                score={c.score}
-                updatedScore={this.state.updatedScore}
-                upvoteComment={() => this.upvoteComment(1, c.id)}
-                reportComment={() => this.reportComment(1, c.id)}
-              />
-            </Card>
-          ))}
+          this.state.comments.map((c, i) => {
+            if (i < 3) {
+              return (
+                <Card hoverable={true} isComment={true} key={i}>
+                  <Comment
+                    key={c.id}
+                    id={c.id}
+                    created_at={c.created_at}
+                    username={c.author.username}
+                    avatar={c.author.avatar}
+                    reputation={c.author.reputation}
+                    content={c.content}
+                    score={c.score}
+                    updatedScore={this.state.updatedScore}
+                    upvoteComment={() => this.upvoteComment(1, c.id)}
+                    reportComment={() => this.reportComment(1, c.id)}
+                    amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+                    isLoggedIn={!!codeleakUser}
+                  />
+                </Card>
+              )
+            } else return null
+          })}
         {!this.state.commentSummary &&
           this.state.comments.map((c, i) => (
             <Card hoverable={true} isComment={true} key={i}>
@@ -195,6 +211,8 @@ class Question extends Component {
                 updatedScore={this.state.updatedScore}
                 upvoteComment={() => this.upvoteComment(1, c.id)}
                 reportComment={() => this.reportComment(1, c.id)}
+                amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+                isLoggedIn={!!codeleakUser}
               />
             </Card>
           ))}

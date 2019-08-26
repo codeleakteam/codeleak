@@ -10,7 +10,13 @@ import { withAuthSync } from '../helpers/functions/auth'
 
 class QuestionFullPage extends Component {
   static propTypes = {
-    authToken: PropTypes.string.isRequired,
+    authToken: PropTypes.string,
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
   }
 
   static async getInitialProps({ query }) {
@@ -81,8 +87,13 @@ class QuestionFullPage extends Component {
               updatedQuestionScore={this.state.questionScore}
               authorReputation={this.state.authorReputation}
               authToken={this.props.authToken}
+              codeleakUser={this.props.codeleakUser}
             />
-            <AnswerList authToken={this.props.authToken} answers={question.answers} />
+            <AnswerList
+              codeleakUser={this.props.codeleakUser}
+              authToken={this.props.authToken}
+              answers={question.answers}
+            />
           </React.Fragment>
         )}
       </div>

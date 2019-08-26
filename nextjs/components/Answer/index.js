@@ -20,7 +20,7 @@ class Answer extends Component {
   }
 
   static propTypes = {
-    authToken: PropTypes.string.isRequired,
+    authToken: PropTypes.string,
     id: PropTypes.number.isRequired,
     score: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
@@ -37,6 +37,12 @@ class Answer extends Component {
         }),
       })
     ),
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
   }
 
   componentDidMount() {
@@ -123,11 +129,10 @@ class Answer extends Component {
   }
 
   render() {
-    const { id, score, author, repository_url, created_at, description } = this.props
+    const { codeleakUser, id, score, author, repository_url, created_at, description } = this.props
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const comments = this.state.commentSummary ? reverseeed : this.state.comments
-    console.log('ayay', this.props.authToken)
     return (
       <React.Fragment>
         <Card>
@@ -161,6 +166,8 @@ class Answer extends Component {
             updatedScore={this.state.answerScore}
             submitComment={this.submitComment}
             disableAnswerWithCode={true}
+            amIAuthor={codeleakUser ? codeleakUser.id === author.id : false}
+            isLoggedIn={!!codeleakUser}
           />
         </Card>
 
@@ -177,6 +184,8 @@ class Answer extends Component {
               score={c.score}
               upvoteComment={() => this.upvoteComment(1, c.id)}
               reportComment={() => this.reportComment(1, c.id)}
+              amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+              isLoggedIn={!!codeleakUser}
             />
             {this.state.comments.length > 3 && (
               <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
