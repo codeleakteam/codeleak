@@ -16,6 +16,7 @@ const Comment = ({
   reportComment,
   updatedScore,
 }) => {
+  const buttonProps = {}
   return (
     <Wrapper>
       <UserSignature
@@ -26,7 +27,13 @@ const Comment = ({
         postedAt={created_at}
         upvoteComment={upvoteComment}
       />
-      <p>{content}</p>
+      <p
+        css={`
+          margin-bottom: 16px;
+        `}
+      >
+        {content}
+      </p>
       <ButtonContainer>
         <VoteButton onClick={() => upvoteComment()}>
           <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />

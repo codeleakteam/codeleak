@@ -70,7 +70,7 @@ class InputWithButton extends Component {
           />
           <Button modifier="subscribe" onClick={this.handleSubmit} text="Get Early Access" />
         </Wrapper>
-        {success && <SuccessMessage>Email is successfully submited!</SuccessMessage>}
+        {success && <SuccessMessage>Email has been successfully submited!</SuccessMessage>}
         {hasErr && <ErrorMessage>{errMsg}</ErrorMessage>}
       </React.Fragment>
     )

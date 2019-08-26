@@ -68,7 +68,7 @@ class ProfilePage extends Component {
       const res = await apiPut.updateUser(data, id)
       let userId = _.get(res, 'data.id', null)
       if (!userId) throw new Error('Cannot update user data!')
-      message.success('Profile is successfully updated!')
+      message.success('Successfully updated')
     } catch (error) {
       message.error('Could not update user data!')
     }

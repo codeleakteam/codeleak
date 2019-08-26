@@ -43,6 +43,7 @@ class Question extends Component {
 
   submitComment = async (question_id, author_id, content) => {
     try {
+      message.loading('Posting', 5)
       const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content, this.props.authToken)
       const comment = _.get(res, 'data.comment', null)
       // console.log('[submitComment]', { data: res.data, comment })
@@ -50,8 +51,10 @@ class Question extends Component {
       this.setState(state => ({
         comments: [comment, ...state.comments],
       }))
-      message.success('Comment is successfully submited!')
+      message.destroy()
+      message.success('Your comment has been added')
     } catch (error) {
+      message.destroy()
       console.error('[submitComment]', { error })
       message.error('Internal server error')
     }
@@ -63,26 +66,32 @@ class Question extends Component {
 
   upvoteComment = async (userId, commentId) => {
     try {
+      message.loading('Voting', 5)
       const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
       let comment = _.get(res, 'data', null)
-
-      if (comment) {
-        this.setState({ updatedScore: comment.comment.score })
-        message.success('Comment score is successfully updated!')
-      }
+      if (!comment) throw new Error('Comment object is null or undefined')
+      this.setState({ updatedScore: comment.comment.score })
+      message.destroy()
+      message.success('Thank you for voting')
     } catch (err) {
+      message.destroy()
       console.error('[upvoteCommeent]', { err })
-      message.error('Internal server error')
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
     }
   }
 
   reportComment = async (userId, commentId) => {
     try {
+      message.loading('Reporting', 5)
       await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
-      message.success('Comment is successfully reported!')
-    } catch (error) {
-      console.error('[reportComment]', { error })
-      message.error('Could not report comment!')
+      message.destroy()
+      message.success('Thank you for reporting')
+    } catch (err) {
+      console.error('[reportComment]', { err })
+      message.destroy()
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
     }
   }
 

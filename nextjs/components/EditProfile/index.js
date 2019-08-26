@@ -31,7 +31,7 @@ const EditProfile = props => {
 
   // Submit api call
   const handleEditSave = async data => {
-    message.loading('Please wait')
+    message.loading('Saving', 5)
     var formData = new FormData()
 
     Object.entries(data)
@@ -51,7 +51,7 @@ const EditProfile = props => {
       const res = await apiPut.updateUser(formData, props.userData.id, props.token)
       console.log('[handleEditSave]', res.data)
       message.destroy()
-      message.success('Profile successfully updated')
+      message.success('Updated')
       Router.push(`/profile/${props.userData.id}/${props.userData.username}`)
     } catch (error) {
       message.destroy()
