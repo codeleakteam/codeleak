@@ -149,8 +149,11 @@ class SignUp extends Component {
 const WrapperSignUpForm = Form.create({ name: 'signup' })(SignUp)
 const Wrapper = styled.div`
   max-width: 500px;
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
+  @media screen and (max-width: 500px) {
+    max-width: auto;
+  }
 `
 
 // const Socials = styled.div`
@@ -169,15 +172,18 @@ const StyledCard = styled(Card)`
 
 const StyledLogo = styled(Logo)`
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 `
 
 const Description = styled.p`
   font-size: 1rem;
   line-height: 22px;
   color: black;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   text-align: center;
+  @media screen and (max-width: 740px) {
+    font-size: 0.9rem;
+  }
 `
 
 const SpinWrapper = styled.div`
