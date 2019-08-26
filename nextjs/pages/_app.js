@@ -43,6 +43,7 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({ ...ctx, codeleakAuthToken })
     }
+
     return { pageProps, codeleakAuthToken, codeleakUser: ctx.codeleakUser }
   }
 
@@ -89,18 +90,8 @@ class MyApp extends App {
           />
 
           <MainContentWrapper>
-            <Component {...pageProps} authToken={this.props.codeleakAuthToken} />
+            <Component {...pageProps} authToken={this.props.codeleakAuthToken} codeleakUser={pageProps.codeleakUser} />
           </MainContentWrapper>
-          {/* <Footer /> */}
-          {/* <SideMenu isMenuActive={isMenuActive}>
-            <Navigation
-              isMenuActive={isMenuActive}
-              handleBurgerMenuClick={this.handleBurgerMenuClick}
-              showLogo={false}
-              showBurger={false}
-              isLoggedIn={isLoggedIn}
-            />
-          </SideMenu> */}
         </Container>
       </ThemeProvider>
     )

@@ -11,6 +11,7 @@ const QuestionList = ({ questions }) => {
             score={question.score}
             viewedTimes={question.viewed_times}
             answers={question.answers}
+            comments={question.comments}
             title={question.title}
             description={question.description}
             createdAt={question.created_at}

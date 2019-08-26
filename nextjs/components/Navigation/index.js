@@ -38,7 +38,7 @@ const Container = styled.div`
   justify-content: space-between;
   max-width: 1300px;
   width: 100%;
-  padding: 0 2rem;
+  padding: 0 8px;
   margin: 0 auto;
   z-index: 1;
 `

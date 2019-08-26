@@ -16,6 +16,7 @@ class QuestionSummary extends Component {
     questionId: PropTypes.number.isRequired,
     slug: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
+    comments: PropTypes.array.isRequired,
     score: PropTypes.number.isRequired,
     createdAt: PropTypes.string.isRequired,
     tags: PropTypes.arrayOf(
@@ -30,6 +31,7 @@ class QuestionSummary extends Component {
     const {
       score,
       answers,
+      comments,
       title,
       description,
       createdAt,
@@ -42,7 +44,8 @@ class QuestionSummary extends Component {
       authorFullName,
     } = this.props
 
-    let formatDate = moment(createdAt).fromNow()
+    const formatDate = moment(createdAt).fromNow()
+    const answersAndCommentsCount = answers.length + comments.length
     return (
       <Card>
         <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
@@ -91,7 +94,7 @@ class QuestionSummary extends Component {
           <CounterValue>{score}</CounterValue>
 
           <AnswersCommentsCouterIcon name="comments" height="18px" />
-          <CounterValue>{answers.length}</CounterValue>
+          <CounterValue>{answersAndCommentsCount}</CounterValue>
         </CountersRow>
       </Card>
     )

@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -15,8 +16,12 @@ const Comment = ({
   upvoteComment,
   reportComment,
   updatedScore,
+  amIAuthor,
+  isLoggedIn,
 }) => {
   const buttonProps = {}
+  if (amIAuthor) buttonProps.disabled = true
+
   return (
     <Wrapper>
       <UserSignature
@@ -35,13 +40,26 @@ const Comment = ({
         {content}
       </p>
       <ButtonContainer>
-        <VoteButton onClick={() => upvoteComment()}>
+        <VoteButton
+          {...buttonProps}
+          onClick={() => {
+            if (isLoggedIn) upvoteComment()
+            else Router.push('/sign_in')
+          }}
+        >
           <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
           <CounterValue>{updatedScore ? updatedScore : score}</CounterValue>
         </VoteButton>
-        <VoteButton onClick={() => reportComment()}>
-          <ReportIcon src="https://cdn1.iconfinder.com/data/icons/color-bold-style/21/50-512.png" />
-        </VoteButton>
+        {!amIAuthor && (
+          <VoteButton
+            onClick={() => {
+              if (isLoggedIn) reportComment()
+              else Router.push('/sign_in')
+            }}
+          >
+            <ReportIcon src="https://cdn1.iconfinder.com/data/icons/color-bold-style/21/50-512.png" />
+          </VoteButton>
+        )}
       </ButtonContainer>
     </Wrapper>
   )
@@ -57,7 +75,7 @@ const ButtonContainer = styled.div`
 const VoteButton = styled.button`
   padding: 0.25rem 0.75rem;
   border: 1px solid #e0e0e0;
-  background: 0 0;
+  background: ${props => (props.disabled ? props.theme.lightGrey : 'white')};
   border-radius: 1000px;
   cursor: pointer;
   line-height: 1;
@@ -89,6 +107,8 @@ Comment.propTypes = {
   score: PropTypes.number.isRequired,
   upvoteComment: PropTypes.func.isRequired,
   reportComment: PropTypes.func.isRequired,
+  amIAuthor: PropTypes.bool.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 }
 
 export default Comment

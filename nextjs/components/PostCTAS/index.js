@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Input } from 'antd'
@@ -19,6 +20,8 @@ export default class PostCTAS extends React.Component {
       id: PropTypes.number.isRequired,
       slug: PropTypes.string,
     }),
+    amIAuthor: PropTypes.bool.isRequired,
+    isLoggedIn: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -36,30 +39,47 @@ export default class PostCTAS extends React.Component {
     }))
 
   handleCommentInputChange = e => this.setState({ commentValue: e.target.value })
-
+  handleVoteButtonClick = (isVote, id) => {
+    if (this.props.isLoggedIn) this.props.updateScore(isVote, id, 1)
+    else Router.push('/sign_in')
+  }
   render() {
-    const { id, score, updatedScore, object } = this.props
+    const { isLoggedIn, amIAuthor, id, score, updatedScore, object } = this.props
+    const buttonProps = {}
+    if (amIAuthor) buttonProps.disabled = true
     return (
       <Column>
         <Row>
           <div>
-            <VoteButton onClick={() => this.props.updateScore('true', id, 1)}>
+            <VoteButton {...buttonProps} onClick={() => this.handleVoteButtonClick('true', id)}>
               <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
               <CounterValue>{updatedScore ? updatedScore : score}</CounterValue>
             </VoteButton>
-            <VoteButton onClick={() => this.props.updateScore('false', id, 1)}>
-              <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-            </VoteButton>
+            {!amIAuthor && (
+              <VoteButton onClick={() => this.handleVoteButtonClick('false', id)}>
+                <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
+              </VoteButton>
+            )}
           </div>
           <RightSide>
             {!this.props.disableAnswerWithCode && (
-              <Link href={`/question/${object.id}/${object.slug}/answer`}>
-                <Button type="primary">Answer with code</Button>
-              </Link>
+              <React.Fragment>
+                {isLoggedIn ? (
+                  <Link href={`/question/${object.id}/${object.slug}/answer`}>
+                    <Button type="primary">Answer with code</Button>
+                  </Link>
+                ) : (
+                  <Link href={`/sign_in`}>
+                    <Button type="primary">Answer with code</Button>
+                  </Link>
+                )}
+              </React.Fragment>
             )}
-            <StyledToggleQuickCommentButton default onClick={this.toggleCommentVisibility}>
-              {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
-            </StyledToggleQuickCommentButton>
+            {isLoggedIn && (
+              <StyledToggleQuickCommentButton default onClick={this.toggleCommentVisibility}>
+                {!this.state.isCommentVisible ? 'Quick comment' : 'Close'}
+              </StyledToggleQuickCommentButton>
+            )}
           </RightSide>
         </Row>
         {this.state.isCommentVisible && (
@@ -98,7 +118,7 @@ const Row = styled.div`
 const VoteButton = styled.button`
   padding: 0.25rem 0.75rem;
   border: 1px solid #e0e0e0;
-  background: 0 0;
+  background: ${props => (props.disabled ? props.theme.lightGrey : 'white')};
   border-radius: 1000px;
   cursor: pointer;
   line-height: 1;
