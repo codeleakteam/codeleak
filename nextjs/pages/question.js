@@ -63,6 +63,7 @@ class QuestionFullPage extends Component {
 
   render() {
     const { question, error } = this.props
+
     return (
       <div>
         <Head>
