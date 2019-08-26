@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from rest_framework.response import Response
@@ -130,21 +131,37 @@ class ListCreateCommentView(ListCreateAPIView):
                 recipient=object_commented_on.author,
             )
 
+            if new_comment_obj.author.full_name is not None:
+                new_comment_author_display_name = new_comment_obj.author.full_name
+            else:
+                new_comment_author_display_name = new_comment_obj.author.username
+
+            codeleak_question_link = "{}/question/{}/{}".format(settings.FRONT_END_APP_URL,
+                                                                question.id,
+                                                                question.slug
+                                                                ) 
+
+            print("question_link", codeleak_question_link)                                                        
+
+
             r = requests.post(
                 "https://api.mailgun.net/v3/codeleak.io/messages",
                 auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
                 # edit this when registration flow on front is finished
-                data={"from": "{} <mailgun@codeleak.io>".format("Branko Zivanovic"),
+                data={"from": "{} <mailgun@codeleak.io>".format(new_comment_author_display_name),
                         "to": [question.author.email],
                         "subject": "Re: {}".format(question.title),
                         "template": "answer-comment-inbox-alert",
                         "o:tag": ["inbox"],
                         "v:question_title": question.title,
                         # edit this when registration flow on front is finished
-                        "v:author_full_name": 'Branko Zivanovic',
+                        "v:author_full_name": new_comment_author_display_name,
                         "v:foreword": "has just added a comment on your question.",
                         "v:answer_or_comment_description": new_comment_obj.content,
-                        "v:codeleak_question_link": "http://localhost:3000/question/{}/{}".format(question.id, question.slug) 
+                        "v:codeleak_question_link": "{}/question/{}/{}".format(settings.FRONT_END_APP_URL,
+                                                                               question.id,
+                                                                               question.slug
+                                                                               ) 
                 })
 
             return Response({

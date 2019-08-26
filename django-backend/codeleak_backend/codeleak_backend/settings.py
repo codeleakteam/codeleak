@@ -184,7 +184,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'codeleak_backend.wsgi.application'
-
+FRONT_END_APP_URL = os.getenv('FRONT_END_APP_URL', '')
+print("FRONT_END_APP_URL", FRONT_END_APP_URL)
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -259,6 +260,8 @@ REST_USE_JWT = True
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'core.serializers.UserSerializerMinimal'
 }
+
+ACCOUNT_EMAIL_VERIFICATION = None
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
