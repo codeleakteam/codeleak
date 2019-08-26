@@ -261,7 +261,7 @@ class UpdateCommentScoreView(UpdateAPIView):
             # If user tries to upvote an already upvoted answer
             else:
                 return Response({
-                    'message': 'You can only vote once in the same direction'
+                    'message': 'Already voted'
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         # If it does not exist, we create one

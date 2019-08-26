@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Menu, message } from 'antd'
+import { message } from 'antd'
 import Comment from '../Comment'
 import UserSignature from '../UserSignature'
 import PostCTAS from '../PostCTAS'
@@ -49,6 +49,7 @@ class Answer extends Component {
 
   submitComment = async (answer_id, author_id, content) => {
     try {
+      message.loading('Posting', 5)
       const res = await apiPost.sendComment('ANSWER_COMMENT', answer_id, author_id, content, this.props.authToken)
       const comment = _.get(res, 'data.comment', null)
       if (!comment) throw new Error('No comment object available')
@@ -56,7 +57,10 @@ class Answer extends Component {
         comments: [...state.comments, comment],
         commentsReversed: [...state.commentsReversed, comment].reverse(),
       }))
+      message.destroy()
+      message.success('Your comment has been added')
     } catch (error) {
+      message.destroy()
       console.error('[submitComment]', { error })
       message.error('Internal server error')
     }
@@ -66,7 +70,8 @@ class Answer extends Component {
 
   upvoteComment = async (userId, commentId) => {
     try {
-      const res = await apiPut.updateCommentScore('true', userId, 'ANSWER_COMMENT', commentId)
+      message.loading('Voting', 5)
+      const res = await apiPut.updateCommentScore('true', userId, 'ANSWER_COMMENT', commentId, this.props.authToken)
       let comment = _.get(res, 'data', null)
       if (!comment) throw new Error('No comment object available')
       let index = _.findIndex(this.state.comments, { id: comment.comment.id })
@@ -75,33 +80,45 @@ class Answer extends Component {
 
       newArr.splice(index, 1, comment.comment)
       newArrReversed.splice(index, 1, comment.comment)
-
       this.setState({ comments: newArr, commentsReversed: newArrReversed })
-    } catch (error) {
-      console.error('[upvoteComment]', { error })
-      message.error('Internal server error')
+      message.destroy()
+      message.success('Thank you for voting')
+    } catch (err) {
+      message.destroy()
+      console.error('[upvoteComment]', { err })
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
     }
   }
 
   reportComment = async (userId, commentId) => {
     try {
-      await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId)
-      message.success('Comment is successfully reported!')
-    } catch (error) {
-      message.error(error.response.data.message)
+      message.loading('Reporting', 5)
+      await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId, this.props.authToken)
+      message.destroy()
+      message.success('Thank you for reporting')
+    } catch (err) {
+      message.destroy()
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
     }
   }
 
   updateAnswerScore = async (type, answerId, userId) => {
     try {
-      const res = await apiPut.updateAnswerScore(type, answerId, userId)
+      message.loading('Voting', 5)
+      const res = await apiPut.updateAnswerScore(type, answerId, userId, this.props.authToken)
       const score = _.get(res, 'data.answer.score', null)
       const authorReputation = _.get(res, 'data.answer.author.reputation', null)
       if (!score) throw new Error('Retrieved score is null or undefined')
       this.setState({ answerScore: score, authorReputation })
-    } catch (error) {
-      console.error('[updateAnswerScore]', { error })
-      message.error('Internal server error')
+      message.destroy()
+      message.success('Thank you for voting')
+    } catch (err) {
+      message.destroy()
+      console.error('[updateAnswerScore]', { err })
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
     }
   }
 
@@ -110,7 +127,7 @@ class Answer extends Component {
     const reverseeed =
       this.state.comments.length > 3 ? this.state.commentsReversed.slice(0, 3) : this.state.commentsReversed
     const comments = this.state.commentSummary ? reverseeed : this.state.comments
-
+    console.log('ayay', this.props.authToken)
     return (
       <React.Fragment>
         <Card>

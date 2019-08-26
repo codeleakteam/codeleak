@@ -166,7 +166,7 @@ export const apiPut = {
       `${BASE_URL}/api/questions/${questionId}/vote`,
       {
         is_upvote: type,
-        user_id: userId,
+        user_id: userID,
       },
       {
         headers: {
@@ -175,11 +175,19 @@ export const apiPut = {
       }
     )
   },
-  updateAnswerScore: (type, answerId, userId) => {
-    return axios.put(`${BASE_URL}/api/answers/${answerId}/vote`, {
-      is_upvote: type,
-      user_id: userId,
-    })
+  updateAnswerScore: (type, answerId, userId, token) => {
+    return axios.put(
+      `${BASE_URL}/api/answers/${answerId}/vote`,
+      {
+        is_upvote: type,
+        user_id: userId,
+      },
+      {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }
+    )
   },
   updateCommentScore: (isUpvote, userId, type, commentId, token) => {
     return axios.put(

@@ -38,15 +38,20 @@ class QuestionFullPage extends Component {
 
   updateQuestionScore = async (type, questionId, userID) => {
     try {
+      message.loading('Voting', 5)
       const res = await apiPut.updateQuestionScore({ type, questionId, userID, token: this.props.authToken })
       const score = _.get(res, 'data.question.score', null)
       const authorReputation = _.get(res, 'data.question.author.reputation', null)
 
       if (!score) throw new Error('No score on updaeQuestionScore received')
+      message.destroy()
+      message.success('Thank you for voting')
       this.setState(state => ({ questionScore: score, authorReputation }))
-    } catch (error) {
-      console.error('[updateQuestionScore]', { error })
-      message.error('Internal server error')
+    } catch (err) {
+      message.destroy()
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      console.error('[updateQuestionScore]', { err })
+      message.error(errMsg)
     }
   }
 
