@@ -6,8 +6,12 @@ const { publicRuntimeConfig } = getConfig()
 const BASE_URL = publicRuntimeConfig.baseUrl
 
 export const apiGet = {
-  getIndex: () => {
-    return axios.get(`${BASE_URL}/api/home`)
+  getIndex: page => {
+    return axios.get(`${BASE_URL}/api/home`, {
+      params: {
+        page,
+      },
+    })
   },
   getQuestion: ({ questionID }) => {
     return axios.get(`${BASE_URL}/api/questions/${questionID}`)
