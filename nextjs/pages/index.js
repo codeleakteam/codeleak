@@ -11,6 +11,7 @@ import PopularTags from '../components/SideWidgets/PopularTags'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
 import _ from 'lodash'
+import Loader from '../components/Loader'
 
 class Index extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ class Index extends Component {
   }
 
   fetchMoreQuestions = async (page = 1) => {
+    this.setState({ loader: true })
     try {
       const questionsRes = await apiGet.getIndex(page)
       const questions = _.get(questionsRes, 'data.results', null)
@@ -68,6 +70,7 @@ class Index extends Component {
       if (!questions) throw new Error('Could not fetch more questions')
 
       this.setState({
+        loader: false,
         questions: [...this.state.questions, ...questions],
         haveNextPage: !!questionsNextPage,
       })
@@ -108,6 +111,7 @@ class Index extends Component {
               rightSectionElement={<PopularTags />}
             />
             <div ref={loadingRef => (this.loadingRef = loadingRef)} />
+            {this.state.loader ? <Loader text="Fetching more questions..." /> : null}
           </React.Fragment>
         )}
       </Wrapper>
