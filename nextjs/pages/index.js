@@ -1,31 +1,27 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import Link from 'next/link'
-import { Button, Alert } from 'antd'
+import { Button, Alert, message } from 'antd'
 import QuestionList from '../components/QuestionList'
 import { withAuthSync } from '../helpers/functions/auth'
-import Banner from '../components/Banner'
-import Navigation from '../components/Navigation'
 import PopularTags from '../components/SideWidgets/PopularTags'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
 import _ from 'lodash'
-import Loader from '../components/Loader'
 
 class Index extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isMenuActive: false,
-      errorMessage: null,
-      page: 0,
-      loading: false,
-      prevY: 0,
+      isFetchingQuestions: false,
+      // Always changing list of questions
       questions: this.props.questions,
       currentPage: 1,
       haveNextPage: this.props.haveNextPage,
     }
+
+    this.fetchMoreQuestions = _.debounce(this._fetchMoreQuestions, 1000)
   }
 
   static async getInitialProps(ctx) {
@@ -48,46 +44,28 @@ class Index extends Component {
     }
   }
 
-  componentDidMount() {
-    var options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0,
-    }
+  _fetchMoreQuestions = async (page = 1) => {
+    if (this.state.isFetchingQuestions) return
 
-    this.observer = new IntersectionObserver(this.handleObserver.bind(this), options)
+    this.setState({ isFetchingQuestions: true, currentPage: page })
 
-    this.observer.observe(this.loadingRef)
-  }
-
-  fetchMoreQuestions = async (page = 1) => {
-    this.setState({ loader: true })
     try {
       const questionsRes = await apiGet.getIndex(page)
       const questions = _.get(questionsRes, 'data.results', null)
       const questionsNextPage = _.get(questionsRes, 'data.links.next', null)
-
       if (!questions) throw new Error('Could not fetch more questions')
 
       this.setState({
-        loader: false,
+        isFetchingQuestions: false,
         questions: [...this.state.questions, ...questions],
         haveNextPage: !!questionsNextPage,
       })
     } catch (error) {
       message.error('Internal server error', { error })
+      this.setState({
+        isFetchingQuestions: false,
+      })
     }
-  }
-
-  handleObserver(entities, observer) {
-    const y = entities[0].boundingClientRect.y
-    if (this.state.prevY > y) {
-      if (this.state.haveNextPage) {
-        this.fetchMoreQuestions(this.state.currentPage + 1)
-        this.setState({ currentPage: this.state.currentPage + 1 })
-      }
-    }
-    this.setState({ prevY: y })
   }
 
   render() {
@@ -107,11 +85,18 @@ class Index extends Component {
               </Link>
             </Heading>
             <TwoSideLayout
-              mainSectionElement={<QuestionList isLoggedIn={this.props.isLoggedIn} questions={this.state.questions} />}
+              mainSectionElement={
+                <QuestionList
+                  isFetchingQuestions={this.state.isFetchingQuestions}
+                  currentPage={this.state.currentPage}
+                  haveNextPage={this.state.haveNextPage}
+                  isLoggedIn={this.props.isLoggedIn}
+                  questions={this.state.questions}
+                  fetchMoreQuestions={this.fetchMoreQuestions}
+                />
+              }
               rightSectionElement={<PopularTags />}
             />
-            <div ref={loadingRef => (this.loadingRef = loadingRef)} />
-            {this.state.loader ? <Loader text="Fetching more questions..." /> : null}
           </React.Fragment>
         )}
       </Wrapper>

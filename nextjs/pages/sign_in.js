@@ -35,7 +35,6 @@ class SignIn extends Component {
       } else {
         this.setState({ loading: false, errors: ['Internal server error. Please try again!'] })
       }
-      console.error('[register]', { err })
 
       console.error('[login]', { err })
     }
@@ -160,7 +159,6 @@ const SpinWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
 `
 
 const Description = styled.p`
