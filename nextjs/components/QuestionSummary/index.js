@@ -26,6 +26,7 @@ class QuestionSummary extends Component {
         title: PropTypes.string.isRequired,
       })
     ),
+    setLastItemRef: PropTypes.func,
   }
   render() {
     const {
@@ -42,12 +43,17 @@ class QuestionSummary extends Component {
       slug,
       authorAvatar,
       authorFullName,
+      setLastItemRef,
+      id,
     } = this.props
-
     const formatDate = moment(createdAt).fromNow()
     const answersAndCommentsCount = answers.length + comments.length
+
     return (
-      <Card>
+      <Card
+        key={id}
+        ref={setLastItemRef ? lastItemRef => setLastItemRef({ lastItemRef, lastItemRefFakeId: id }) : undefined}
+      >
         <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
           <Title>{title}</Title>
         </Link>
