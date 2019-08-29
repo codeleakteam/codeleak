@@ -197,9 +197,6 @@ class LoggedInNav extends React.Component {
         <Menu.Item key="0">
           <a href={`/profile/${this.props.user.id}/${this.props.user.username}`}>My profile</a>
         </Menu.Item>
-        <Menu.Item key="1">
-          <a href="/">Settings</a>
-        </Menu.Item>
         <Menu.Divider />
         {/* <Menu.Item key="2">
           Night mode
@@ -476,7 +473,7 @@ const StyledMenu = styled(Menu)`
   width: 500px;
   background: #eff1f4;
   padding: 8px;
-  @media screen and (max-width:505px){
+  @media screen and (max-width: 505px) {
     width: 100%;
   }
 `
