@@ -19,7 +19,7 @@ const GdprNotification = () => {
       >
         I Accept
       </Button>
-      <Link href="/legal#cookie">
+      <Link href="/cookies">
         <a>Learn more</a>
       </Link>
     </div>
