@@ -1,5 +1,5 @@
 import React from 'react'
-import { Avatar, Button, message } from 'antd'
+import { Avatar, Button } from 'antd'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import RecentActivities from '../RecentActivities'
@@ -7,7 +7,7 @@ import Card from '../Card'
 import CustomIcon from '../../assets/icons/index'
 import Link from 'next/link'
 
-const Profile = ({ userData, codeleakUser, saveChanges, changeTab, activeTab, editProfileFields }) => {
+const Profile = ({ userData, codeleakUser, changeTab, activeTab }) => {
   let {
     id,
     username,
@@ -24,24 +24,18 @@ const Profile = ({ userData, codeleakUser, saveChanges, changeTab, activeTab, ed
     github_username,
   } = userData
 
+  const shouldRenderFirstUserSection = location || looking_for_job || !codeleakUser
+
   return (
     <Wrapper>
       <LeftSide>
         <AvatarWrapper>
           {avatar ? (
-            <StyledAvatar linkToImage={avatar} alt={username} />
+            <CustomAvatar linkToImage={avatar} alt={username} />
           ) : (
-            <Avatar
-              shape="square"
-              size={246}
-              style={{
-                verticalAlign: 'middle',
-                color: '#f56a00',
-                backgroundColor: '#fde3cf',
-              }}
-            >
+            <StyledLetterAvatar shape="square" size={246}>
               {getAvatarLetter(username, full_name)}
-            </Avatar>
+            </StyledLetterAvatar>
           )}
         </AvatarWrapper>
         {full_name && <UserFullName>{full_name}</UserFullName>}
@@ -61,28 +55,31 @@ const Profile = ({ userData, codeleakUser, saveChanges, changeTab, activeTab, ed
             </Row>
             <ReputationCounter>{reputation}</ReputationCounter>
           </UserSection>
-
-          <UserSection>
-            <UserSectionTitle>INFO</UserSectionTitle>
-            <Row>
-              {location && (
-                <React.Fragment>
-                  <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
-                  <GreyText>{location}</GreyText>
-                </React.Fragment>
-              )}
-            </Row>
-            {looking_for_job && (
+          {shouldRenderFirstUserSection && (
+            <UserSection>
+              <UserSectionTitle>INFO</UserSectionTitle>
               <Row>
-                <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
-                <BlueText>Looking for a job</BlueText>
+                {location && (
+                  <React.Fragment>
+                    <LoweredOpacityIcon name="location" fill="#4d4d4d" height="19px" />
+                    <GreyText>{location}</GreyText>
+                  </React.Fragment>
+                )}
               </Row>
-            )}
-            <Row>
-              <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
-              <BlueText>Sign In to view email</BlueText>
-            </Row>
-          </UserSection>
+              {looking_for_job && (
+                <Row>
+                  <LoweredOpacityIcon name="job" fill="#1890ff" height="19px" />
+                  <BlueText>Looking for a job</BlueText>
+                </Row>
+              )}
+              {!codeleakUser && (
+                <Row>
+                  <LoweredOpacityIcon name="email" fill="#1890ff" height="19px" />
+                  <BlueText>Sign In to view email</BlueText>
+                </Row>
+              )}
+            </UserSection>
+          )}
         </div>
 
         {website_url || twitter_username || github_username ? (
@@ -181,11 +178,18 @@ const AvatarWrapper = styled.div`
   }
 `
 
-const StyledAvatar = styled.div`
+const CustomAvatar = styled.div`
   width: 100%;
   height: 246px;
   background-image: url(${props => (props.linkToImage ? props.linkToImage : null)});
   background-size: cover;
+`
+
+const StyledLetterAvatar = styled(Avatar)`
+  vertical-align: middle;
+  color: #f56a00;
+  background-color: #fde3cf;
+  font-size: 2rem;
 `
 const ContentSwitchButton = styled.span`
   font-weight: bold;

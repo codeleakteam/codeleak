@@ -77,7 +77,7 @@ class SignUp extends Component {
                 {getFieldDecorator('username', {
                   rules: [{ required: true, message: 'Please input your username!' }],
                 })(
-                  <Input
+                  <StyledInput
                     size="large"
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="text"
@@ -90,7 +90,7 @@ class SignUp extends Component {
                 {getFieldDecorator('email', {
                   rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
                 })(
-                  <Input
+                  <StyledInput
                     size="large"
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="Email"
@@ -107,7 +107,7 @@ class SignUp extends Component {
                     validator: this.compareToNextPass,
                   }
                 )(
-                  <Input
+                  <StyledInput
                     size="large"
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
@@ -125,7 +125,7 @@ class SignUp extends Component {
                     validator: this.compareToFirstPass,
                   }
                 )(
-                  <Input
+                  <StyledInput
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     size="large"
                     type="password"
@@ -145,6 +145,10 @@ class SignUp extends Component {
     )
   }
 }
+
+const StyledInput = styled(Input)`
+  width: 100%;
+`
 
 const WrapperSignUpForm = Form.create({ name: 'signup' })(SignUp)
 const Wrapper = styled.div`

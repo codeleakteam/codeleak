@@ -87,7 +87,7 @@ class SignIn extends Component {
                 {getFieldDecorator('email', {
                   rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
                 })(
-                  <Input
+                  <StyledInput
                     size="large"
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     placeholder="Email"
@@ -104,7 +104,7 @@ class SignIn extends Component {
                     validator: this.compareToNextPass,
                   }
                 )(
-                  <Input
+                  <StyledInput
                     size="large"
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     type="password"
@@ -132,6 +132,10 @@ const StyledCard = styled(Card)`
   @media screen and (max-width: 750px) {
     width: 100%;
   }
+`
+
+const StyledInput = styled(Input)`
+  width: 100%;
 `
 
 const StyledLogo = styled(Logo)`

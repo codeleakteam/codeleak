@@ -1,6 +1,6 @@
-import React, { Component, memo } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Avatar } from 'antd'
+import { Avatar, Divider } from 'antd'
 import styled from 'styled-components'
 import moment from 'moment'
 import Link from 'next/link'
@@ -95,12 +95,14 @@ class QuestionSummary extends Component {
             <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" style={{ marginRight: '5px' }} />
           ))}
         </TagsList>
+        <StyledDivider />
         <CountersRow>
-          <ScoreCounterIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-          <CounterValue>{score}</CounterValue>
-
-          <AnswersCommentsCouterIcon name="comments" height="18px" />
-          <CounterValue>{answersAndCommentsCount}</CounterValue>
+          <RoundedWrapper>
+            <ScoreCounterIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
+            <CounterValue>{score}</CounterValue>
+            <AnswersCommentsCouterIcon name="comments" height="18px" />
+            <CounterValue isLast={true}>{answersAndCommentsCount}</CounterValue>
+          </RoundedWrapper>
         </CountersRow>
       </Card>
     )
@@ -192,7 +194,19 @@ const CounterValue = styled.span`
   display: inline-block;
   color: #4d4d4d;
   font-weight: bold;
-  margin-right: 18px;
+  margin-right: ${props => (props.isLast ? '0px' : '18px')};
+`
+
+const RoundedWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  border-radius: 1000px;
+  border: 1px solid #e0e0e0;
+  padding: 0.25rem 0.75rem;
+  background: ${props => props.theme.dirtyWhite};
+`
+const StyledDivider = styled(Divider)`
+  margin: 16px 0;
 `
 
 export default QuestionSummary

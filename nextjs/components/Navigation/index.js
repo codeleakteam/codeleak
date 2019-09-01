@@ -1,32 +1,38 @@
 import React from 'react'
-import styled from 'styled-components'
+import { withRouter } from 'next/router'
+import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import LoggedInNav from './LoggedInNav'
 import LoggedOutNav from './LoggedOutNav'
 
-const Navigation = ({ user, isMenuActive, handleBurgerMenuClick, showLogo, showBurger, isLoggedIn, authToken }) => {
-  const navJSX =
-    isLoggedIn && authToken ? (
-      <LoggedInNav
-        isMenuActive={isMenuActive}
-        handleBurgerMenu={handleBurgerMenuClick}
-        authToken={authToken}
-        showBurger={showBurger}
-        user={user}
-      />
-    ) : (
-      <LoggedOutNav isMenuActive={isMenuActive} handleBurgerMenu={handleBurgerMenuClick} showBurger={showBurger} />
+const Navigation = withRouter(
+  ({ router, user, isMenuActive, handleBurgerMenuClick, showLogo, showBurger, isLoggedIn, authToken }) => {
+    const navJSX =
+      isLoggedIn && authToken ? (
+        <LoggedInNav
+          isMenuActive={isMenuActive}
+          handleBurgerMenu={handleBurgerMenuClick}
+          authToken={authToken}
+          showBurger={showBurger}
+          user={user}
+        />
+      ) : (
+        <LoggedOutNav isMenuActive={isMenuActive} handleBurgerMenu={handleBurgerMenuClick} showBurger={showBurger} />
+      )
+    return (
+      <Wrapper
+        css={`
+          margin-bottom: ${router.asPath === '/' && !isLoggedIn ? '0' : '36px'};
+        `}
+      >
+        <Container>{navJSX}</Container>
+      </Wrapper>
     )
-  return (
-    <Wrapper>
-      <Container>{navJSX}</Container>
-    </Wrapper>
-  )
-}
+  }
+)
 
 const Wrapper = styled.nav`
   width: 100%;
-  margin-bottom: 36px;
   background: white;
   border-bottom: 1px solid #e0e0e0;
   padding: 0.7rem 0;
@@ -40,7 +46,7 @@ const Container = styled.div`
   width: 100%;
   padding: 0 8px;
   margin: 0 auto;
-  z-index: 1;
+  z-index: 50;
 `
 
 Navigation.propTypes = {

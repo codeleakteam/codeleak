@@ -20,6 +20,7 @@ class Search extends Component {
       try {
         const res = await apiGet.searchQuery(value)
         let query = _.get(res, 'data', null)
+        console.log('[handleChange]', { query })
         if (!query) throw new Error('Internal server error!')
         this.setState({ results: query })
       } catch (error) {

@@ -72,16 +72,17 @@ class Index extends Component {
     return (
       <Wrapper>
         <Head>
-          <title>Codeleak</title>
+          <title>codeleak</title>
         </Head>
-
         {this.props.error && <Alert message="Internal server error" type="error" />}
         {!this.props.error && (
           <React.Fragment>
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button type="primary">Submit question</Button>
+                <Button icon="laptop" type="primary">
+                  submit question
+                </Button>
               </Link>
             </Heading>
             <TwoSideLayout

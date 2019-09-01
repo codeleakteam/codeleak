@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 import App, { Container } from 'next/app'
-import Router from 'next/router'
+import Router, { withRouter } from 'next/router'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { parseCookies } from 'nookies'
 import * as Sentry from '@sentry/browser'
@@ -10,6 +10,7 @@ import Navigation from '../components/Navigation'
 import MainContentWrapper from '../components/MainContentWrapper'
 import trackPageView from '../helpers/configs/trackPageView'
 import { faAngleUp, faComment, faEye, faBan } from '@fortawesome/free-solid-svg-icons'
+import Banner from '../components/Banner'
 import GdprNotification from '../components/GDPRNotification'
 
 Sentry.init({
@@ -51,7 +52,6 @@ class MyApp extends App {
     if (!localStorage.getItem('codeleak-cookies')) {
       GdprNotification()
     }
-
     Router.onRouteChangeComplete = url => {
       trackPageView(url)
     }
@@ -74,7 +74,11 @@ class MyApp extends App {
   handleBurgerMenuClick = () => this.setState(prevState => ({ isMenuActive: !prevState.isMenuActive }))
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, router } = this.props
+    const isLoggedIn = !!pageProps.codeleakUser
+
+    const shouldRenderBanner = router.asPath === '/' && !isLoggedIn
+
     return (
       <ThemeProvider theme={theme}>
         <Container>
@@ -84,11 +88,11 @@ class MyApp extends App {
             handleBurgerMenuClick={this.handleBurgerMenuClick}
             showLogo={true}
             showBurger={true}
-            isLoggedIn={!!pageProps.codeleakUser}
-            user={_.get(pageProps, 'codeleakUser', undefined)}
+            isLoggedIn={isLoggedIn}
+            user={pageProps.codeleakUser}
             authToken={this.props.codeleakAuthToken}
           />
-
+          {shouldRenderBanner && <Banner />}
           <MainContentWrapper>
             <Component {...pageProps} authToken={this.props.codeleakAuthToken} codeleakUser={pageProps.codeleakUser} />
           </MainContentWrapper>
@@ -145,4 +149,4 @@ const GlobalStyle = createGlobalStyle`
 
 `
 
-export default MyApp
+export default withRouter(MyApp)
