@@ -11,7 +11,14 @@ class UserSerializerMinimal(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'username', 'avatar', 'reputation']
+        fields = [
+            'id',
+            'full_name',
+            'username',
+            'avatar',
+            'reputation',
+            'reputation_this_week'
+        ]
 
 class UserQuestionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

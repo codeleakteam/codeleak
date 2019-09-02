@@ -9,7 +9,8 @@ from .question import (
 from .user import (
     GetUserView,
     UpdateUserView,
-    ListUserView
+    ListUserView,
+    MostHelpfulThisWeek,
 )
 from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
@@ -29,6 +30,7 @@ from .notification import (
 __all__ = [
     'HomeView',
     'ListUserView',
+    'MostHelpfulThisWeek',
     'GetUserView',
     'UpdateUserView',
     'ReportQuestionView',

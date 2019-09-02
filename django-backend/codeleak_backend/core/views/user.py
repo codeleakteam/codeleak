@@ -29,6 +29,15 @@ class ListUserView(ListAPIView):
         serializer = UserSerializerMinimal(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class MostHelpfulThisWeek(ListAPIView):
+    authentication_classes = ()
+    permission_classes = ()
+    def get(self, request):
+        users = User.objects.all().order_by('-reputation_this_week')[:6]
+        serializer = UserSerializerMinimal(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class GetUserView(RetrieveAPIView):
     authentication_classes = ()
     permission_classes = ()
