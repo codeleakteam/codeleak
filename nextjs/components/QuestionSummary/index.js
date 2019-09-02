@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Avatar, Divider } from 'antd'
+import { Icon, Avatar, Divider } from 'antd'
 import styled from 'styled-components'
 import moment from 'moment'
 import Link from 'next/link'
 import Card from '../Card'
 import TagWithLink from '../TagWithLink'
-import Icon from '../../assets/icons'
+import CustomIcon from '../../assets/icons'
 
 class QuestionSummary extends Component {
   static propTypes = {
@@ -15,6 +15,7 @@ class QuestionSummary extends Component {
     authorFullName: PropTypes.string,
     questionId: PropTypes.number.isRequired,
     slug: PropTypes.string.isRequired,
+    repositoryUrl: PropTypes.string.isRequired,
     answers: PropTypes.array.isRequired,
     comments: PropTypes.array.isRequired,
     score: PropTypes.number.isRequired,
@@ -43,6 +44,7 @@ class QuestionSummary extends Component {
       slug,
       authorAvatar,
       authorFullName,
+      repositoryUrl,
       setLastItemRef,
       id,
     } = this.props
@@ -99,10 +101,19 @@ class QuestionSummary extends Component {
         <CountersRow>
           <RoundedWrapper>
             <ScoreCounterIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
-            <CounterValue>{score}</CounterValue>
+            <RoundedItemText>{score}</RoundedItemText>
             <AnswersCommentsCouterIcon name="comments" height="18px" />
-            <CounterValue isLast={true}>{answersAndCommentsCount}</CounterValue>
+            <RoundedItemText isLast={true}>{answersAndCommentsCount}</RoundedItemText>
           </RoundedWrapper>
+          <RoundedAnchor target="_blank" href={repositoryUrl}>
+            <Icon
+              type="code-sandbox"
+              css={`
+                margin-right: 8px;
+              `}
+            />
+            <RoundedItemText isLast={true}>code</RoundedItemText>
+          </RoundedAnchor>
         </CountersRow>
       </Card>
     )
@@ -183,27 +194,41 @@ const CountersRow = styled(Row)`
 const ScoreCounterIcon = styled.img`
   width: 18px;
   height: 18px;
-  margin-right: 7px;
+  margin-right: 8px;
 `
 
-const AnswersCommentsCouterIcon = styled(Icon)`
-  margin-right: 7px;
+const AnswersCommentsCouterIcon = styled(CustomIcon)`
+  margin-right: 8px;
 `
 
-const CounterValue = styled.span`
+const RoundedItemText = styled.span`
   display: inline-block;
   color: #4d4d4d;
   font-weight: bold;
   margin-right: ${props => (props.isLast ? '0px' : '18px')};
 `
 
-const RoundedWrapper = styled.div`
+const RoundedBase = () => `
   display: flex;
   align-items: center;
-  border-radius: 1000px;
+  border-radius: 4px;
   border: 1px solid #e0e0e0;
   padding: 0.25rem 0.75rem;
+`
+const RoundedWrapper = styled.div`
   background: ${props => props.theme.dirtyWhite};
+  ${RoundedBase};
+  margin-right: 8px;
+`
+
+const RoundedAnchor = styled.a`
+  color: #4d4d4d;
+  ${RoundedBase};
+  cursor: pointer;
+  :hover {
+    background: ${props => props.theme.dirtyWhite};
+    color: #4d4d4d;
+  }
 `
 const StyledDivider = styled(Divider)`
   margin: 16px 0;
