@@ -39,6 +39,7 @@ UserAdmin.fieldsets += ('Custom fields set',
             'student',
             'looking_for_job',
             'reputation',
+            'reputation_this_week',
             'reported_times',
         )
     }

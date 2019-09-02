@@ -127,6 +127,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'rest_auth.registration',
+    'django_extensions',
     # needed for social
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',

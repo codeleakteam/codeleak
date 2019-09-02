@@ -32,6 +32,7 @@ class User(AbstractUser):
     looking_for_job = models.BooleanField(default=False, blank=True, null=False)
     # Counters
     reputation = models.IntegerField(default=0, blank=True, null=False)
+    reputation_this_week = models.IntegerField(default=0, blank=True, null=False)
     reported_times = models.IntegerField(default=0, blank=True, null=False)
     # Timestamps
     created_at = models.DateTimeField(default=timezone.now, blank=True, null=False)
