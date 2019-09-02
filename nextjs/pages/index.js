@@ -103,29 +103,36 @@ class Index extends Component {
                     flex-flow: column nowrap;
                   `}
                 >
-                  <PopularTags />
+                  <PopularTags
+                    css={`
+                      margin-bottom: 16px;
+                    `}
+                  />
                   <CodeleakSection>
                     <SectionTitle>© 2019 · Codeleak</SectionTitle>
                     <div>
                       <Row>
                         <a href="https://spectrum.chat/codeleak">🌍 Community</a>
-
-                        <a style={{ textAlign: 'right' }} href="/cookies">
-                          Terms of Use
-                        </a>
+                        <Link href="/terms">
+                          <a>Terms of Use</a>
+                        </Link>
                       </Row>
 
                       <Row>
                         <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🚀 Request a feature </a>
-
-                        <a href="/privacy" style={{ textAlign: 'right' }}>
-                          Privacy
-                        </a>
+                        <Link href="/privacy">
+                          <a>Privacy</a>
+                        </Link>
                       </Row>
 
                       <Row>
-                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🐛 Report a bug </a>
-                        <a href="/cookies">Cookies</a>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🐛 Bug reports</a>
+                        <Link href="/cookies">
+                          <a>Cookies</a>
+                        </Link>
+                      </Row>
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">❤️ Become a sponsor</a>
                       </Row>
                     </div>
                   </CodeleakSection>
@@ -165,7 +172,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `
 
 const Heading = styled.div`
@@ -174,7 +181,6 @@ const Heading = styled.div`
   align-items: center;
   width: 75%;
   margin: 1rem 0;
-  align-items: center;
   @media screen and (max-width: 740px) {
     width: 100%;
   }

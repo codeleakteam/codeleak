@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import CustomIcon from '../../../assets/icons'
 import _ from 'lodash'
 
-const PopularTags = ({}) => {
+const PopularTags = props => {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <Title>Popular tags</Title>
       <List>
         <TagWrapper>

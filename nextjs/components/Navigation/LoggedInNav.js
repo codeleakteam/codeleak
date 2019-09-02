@@ -263,6 +263,11 @@ class LoggedInNav extends React.Component {
                           <Anchor>Tags</Anchor>
                         </StatefulLink>
                       </Menu.Item>
+                      <Menu.Item key="4">
+                        <StatefulLink href="/sponsor">
+                          <Anchor>Become a sponsor</Anchor>
+                        </StatefulLink>
+                      </Menu.Item>
                     </Menu>
                   }
                   trigger="click"
@@ -426,6 +431,11 @@ const regularPages = [
     name: 'Tags',
     href: '/tags',
   },
+  {
+    name: 'Become a Sponsor',
+    href: '/sponsor',
+  },
+
   // {
   //   name: 'Blog',
   //   href: '/medium/blog',
