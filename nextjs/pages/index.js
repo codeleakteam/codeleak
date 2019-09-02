@@ -96,7 +96,41 @@ class Index extends Component {
                   fetchMoreQuestions={this.fetchMoreQuestions}
                 />
               }
-              rightSectionElement={<PopularTags />}
+              rightSectionElement={
+                <div
+                  css={`
+                    display: flex;
+                    flex-flow: column nowrap;
+                  `}
+                >
+                  <PopularTags />
+                  <CodeleakSection>
+                    <SectionTitle>© 2019 · Codeleak</SectionTitle>
+                    <div>
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak">🌍 Community</a>
+
+                        <a style={{ textAlign: 'right' }} href="/cookies">
+                          Terms of Use
+                        </a>
+                      </Row>
+
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🚀 Request a feature </a>
+
+                        <a href="/privacy" style={{ textAlign: 'right' }}>
+                          Privacy
+                        </a>
+                      </Row>
+
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🐛 Report a bug </a>
+                        <a href="/cookies">Cookies</a>
+                      </Row>
+                    </div>
+                  </CodeleakSection>
+                </div>
+              }
             />
           </React.Fragment>
         )}
@@ -107,6 +141,31 @@ class Index extends Component {
 
 const Wrapper = styled.div`
   width: 100%;
+`
+
+const CodeleakSection = styled.div`
+  background: white;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`
+
+const SectionLinksWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`
+
+const SectionTitle = styled.h4`
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;
+`
+
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
 `
 
 const Heading = styled.div`
