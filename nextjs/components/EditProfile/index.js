@@ -114,11 +114,19 @@ const EditProfile = props => {
               })(<Input size="large" placeholder="Your name" />)}
             </Form.Item>
 
-            <Form.Item label="Biography">
+            <Form.Item label="Bio">
               {getFieldDecorator('biography', {
                 initialValue: biography,
                 rules: [{ message: 'Biography is required' }],
-              })(<Input.TextArea size="large" placeholder="Tell us about yourself" />)}
+              })(
+                <Input.TextArea
+                  size="large"
+                  placeholder="Tell us about yourself"
+                  css={`
+                    font-size: 16px;
+                  `}
+                />
+              )}
             </Form.Item>
 
             <Form.Item
@@ -164,19 +172,20 @@ const EditProfile = props => {
               {getFieldDecorator('twitter_username', {
                 initialValue: twitter_username,
                 rules: [{ required: false }],
-              })(<Input size="large" placeholder="Twitter username" prefix={<Icon type="twitter" />} />)}
-            </Form.Item>
-            <Form.Item>
-              {getFieldDecorator('website_url', {
-                initialValue: website_url ? website_url.replace(/^(https?:|)\/\//, '') : null,
-                rules: [{ required: false }],
-              })(<Input size="large" placeholder="Website" prefix={<Icon type="read" />} />)}
+              })(<Input size="large" placeholder="Twitter Username" prefix={<Icon type="twitter" />} />)}
             </Form.Item>
             <Form.Item>
               {getFieldDecorator('github_username', {
                 initialValue: github_username,
                 rules: [{ required: false }],
-              })(<Input size="large" placeholder="Github username" prefix={<Icon type="github" />} />)}
+              })(<Input size="large" placeholder="Github Username" prefix={<Icon type="github" />} />)}
+            </Form.Item>
+
+            <Form.Item>
+              {getFieldDecorator('website_url', {
+                initialValue: website_url ? website_url.replace(/^(https?:|)\/\//, '') : null,
+                rules: [{ required: false }],
+              })(<Input size="large" placeholder="Website URL" prefix={<Icon type="read" />} />)}
             </Form.Item>
 
             <Button size="large" type="primary" htmlType="submit">

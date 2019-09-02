@@ -72,16 +72,17 @@ class Index extends Component {
     return (
       <Wrapper>
         <Head>
-          <title>Codeleak</title>
+          <title>codeleak</title>
         </Head>
-
         {this.props.error && <Alert message="Internal server error" type="error" />}
         {!this.props.error && (
           <React.Fragment>
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button type="primary">Submit question</Button>
+                <Button icon="laptop" type="primary">
+                  submit question
+                </Button>
               </Link>
             </Heading>
             <TwoSideLayout
@@ -95,7 +96,48 @@ class Index extends Component {
                   fetchMoreQuestions={this.fetchMoreQuestions}
                 />
               }
-              rightSectionElement={<PopularTags />}
+              rightSectionElement={
+                <div
+                  css={`
+                    display: flex;
+                    flex-flow: column nowrap;
+                  `}
+                >
+                  <PopularTags
+                    css={`
+                      margin-bottom: 16px;
+                    `}
+                  />
+                  <CodeleakSection>
+                    <SectionTitle>© 2019 · Codeleak</SectionTitle>
+                    <div>
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak">🌍 Community</a>
+                        <Link href="/terms">
+                          <a>Terms of Use</a>
+                        </Link>
+                      </Row>
+
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🚀 Request a feature </a>
+                        <Link href="/privacy">
+                          <a>Privacy</a>
+                        </Link>
+                      </Row>
+
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🐛 Bug reports</a>
+                        <Link href="/cookies">
+                          <a>Cookies</a>
+                        </Link>
+                      </Row>
+                      <Row>
+                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">❤️ Become a sponsor</a>
+                      </Row>
+                    </div>
+                  </CodeleakSection>
+                </div>
+              }
             />
           </React.Fragment>
         )}
@@ -108,13 +150,37 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
+const CodeleakSection = styled.div`
+  background: white;
+  padding: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`
+
+const SectionLinksWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`
+
+const SectionTitle = styled.h4`
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;
+`
+
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+`
+
 const Heading = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 75%;
   margin: 1rem 0;
-  align-items: center;
   @media screen and (max-width: 740px) {
     width: 100%;
   }

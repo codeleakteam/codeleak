@@ -26,6 +26,7 @@ import SvelteIcon from './svelteIcon'
 import CxjsIcon from './cxjsIcon'
 import ReasonmlIcon from './reasonmlIcon'
 import DojoIcon from './dojoIcon'
+import WaveIcon from './waveIcon'
 
 const Icon = props => {
   switch (props.name) {
@@ -81,6 +82,9 @@ const Icon = props => {
       return <ReasonmlIcon {...props} />
     case 'dojo':
       return <DojoIcon {...props} />
+    case 'wave':
+      return <WaveIcon {...props} />
+
     default:
       return
   }

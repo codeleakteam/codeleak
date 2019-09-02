@@ -24,7 +24,7 @@ class LoggedOutNav extends React.Component {
       <Wrapper>
         <List>
           {showBurger && (
-            <ListItem
+            <StyledListItem
               css={`
                 display: none;
                 @media screen and (max-width: 768px) {
@@ -52,6 +52,11 @@ class LoggedOutNav extends React.Component {
                         <Anchor>Tags</Anchor>
                       </StatefulLink>
                     </Menu.Item>
+                    <Menu.Item key="4">
+                      <StatefulLink href="/sponsor">
+                        <Anchor>Become a sponsor</Anchor>
+                      </StatefulLink>
+                    </Menu.Item>
                   </Menu>
                 }
                 trigger="click"
@@ -64,7 +69,7 @@ class LoggedOutNav extends React.Component {
                   `}
                 />
               </Popover>
-            </ListItem>
+            </StyledListItem>
           )}
 
           <div
@@ -98,11 +103,11 @@ class LoggedOutNav extends React.Component {
               <List type="regularPages">
                 {regularPages.map(l => {
                   return (
-                    <ListItem key={l.name}>
+                    <StyledListItem key={l.name}>
                       <StatefulLink href={l.href}>
                         <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
                       </StatefulLink>
-                    </ListItem>
+                    </StyledListItem>
                   )
                 })}
               </List>
@@ -114,7 +119,7 @@ class LoggedOutNav extends React.Component {
                 align-items: center;
               `}
             >
-              <ListItem
+              <StyledListItem
                 css={`
                   margin-bottom: -4px;
                   display: none;
@@ -141,24 +146,24 @@ class LoggedOutNav extends React.Component {
                     `}
                   />
                 )}
-              </ListItem>
+              </StyledListItem>
               {!this.state.mobileSearchShown && (
                 <React.Fragment>
-                  <ListItem
+                  <StyledListItem
                     css={`
                       display: inline-block;
                     `}
                   >
                     <LoginButton href="/sign_in">Sign In</LoginButton>
-                  </ListItem>
+                  </StyledListItem>
 
-                  <ListItem
+                  <StyledListItem
                     css={`
                       display: inline-block;
                     `}
                   >
                     <RegisterButton href="/sign_up">Register</RegisterButton>
-                  </ListItem>
+                  </StyledListItem>
                 </React.Fragment>
               )}
             </div>
@@ -182,11 +187,22 @@ const regularPages = [
     name: 'Tags',
     href: '/tags',
   },
+  {
+    name: 'Become a Sponsor',
+    href: '/sponsor',
+  },
+
   // {
   //   name: 'Blog',
   //   href: '/medium/blog',
   // },
 ]
+
+const StyledListItem = styled(ListItem)`
+  a:hover {
+    color: ${props => props.theme.antBlue};
+  }
+`
 
 const List = styled.ul`
   width: 100%;
