@@ -12,6 +12,8 @@ import { apiGet } from '../../api'
 import CustomIcon from '../../assets/icons'
 import { StatefulLink } from '../Navigation/shared'
 
+const { SubMenu } = Menu
+
 class LoggedInNav extends React.Component {
   static propTypes = {
     isMenuActive: PropTypes.bool.isRequired,
@@ -264,10 +266,42 @@ class LoggedInNav extends React.Component {
                         </StatefulLink>
                       </Menu.Item>
                       <Menu.Item key="4">
+                        <Anchor href="mailto:hi@codeleak.io">Send us an email</Anchor>
+                      </Menu.Item>
+                      <Menu.Item key="5">
                         <StatefulLink href="/sponsor">
-                          <Anchor>Become a sponsor</Anchor>
+                          <Anchor>Become a sponsor ❤️</Anchor>
                         </StatefulLink>
                       </Menu.Item>
+
+                      <SubMenu
+                        key="sub1"
+                        title={
+                          <Anchor
+                            css={`
+                              color: rgba(0, 0, 0, 0.65);
+                            `}
+                          >
+                            Policies
+                          </Anchor>
+                        }
+                      >
+                        <Menu.Item key="6">
+                          <StatefulLink href="/privacy">
+                            <Anchor>Privacy</Anchor>
+                          </StatefulLink>
+                        </Menu.Item>
+                        <Menu.Item key="7">
+                          <StatefulLink href="/cookies">
+                            <Anchor>Cookie</Anchor>
+                          </StatefulLink>
+                        </Menu.Item>
+                        <Menu.Item key="8">
+                          <StatefulLink href="/terms">
+                            <Anchor>Terms of Use</Anchor>
+                          </StatefulLink>
+                        </Menu.Item>
+                      </SubMenu>
                     </Menu>
                   }
                   trigger="click"
