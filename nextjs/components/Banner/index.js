@@ -59,6 +59,8 @@ const LeftSection = styled(animated.div)`
   flex-direction: column;
   justify-content: center;
   width: 45%;
+  margin: 0 auto;
+  text-align: center;
   @media screen and (max-width: 740px) {
     width: 100%;
     margin-top: 0;

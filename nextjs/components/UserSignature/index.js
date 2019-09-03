@@ -5,9 +5,9 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import Link from 'next/link'
 
-export default function UserSignature({ id, username, full_name, reputation, postedAt, avatar, upvoteComment }) {
+export default function UserSignature({ id, username, full_name, reputation, postedAt, avatar, ...rest }) {
   return (
-    <Wrapper>
+    <Wrapper {...rest}>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
         {avatar ? (
           <AuthorAvatar src={avatar} alt={username} />
@@ -33,12 +33,60 @@ export default function UserSignature({ id, username, full_name, reputation, pos
               <AuthorUsername>{username}</AuthorUsername>
             </a>
           </Link>
-          <DotSeparator />
-          <PostTimestamp>{moment(postedAt).fromNow()}</PostTimestamp>
+          {postedAt && (
+            <>
+              <DotSeparator />
+              <PostTimestamp>{moment(postedAt).fromNow()}</PostTimestamp>
+            </>
+          )}
         </Row>
         <Row>
-          <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" alt="reputation-icon" />
+          <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-17-min.png" alt="reputation-icon" />
           <ReputationCounter>{reputation}</ReputationCounter>
+        </Row>
+      </Column>
+    </Wrapper>
+  )
+}
+
+export function MostHelpfulUserSignature({ id, username, full_name, reputation, postedAt, avatar, ...rest }) {
+  return (
+    <Wrapper {...rest}>
+      <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
+        {avatar ? (
+          <AuthorAvatar src={avatar} alt={username} />
+        ) : (
+          <Avatar
+            size={40}
+            style={{
+              marginRight: '16px',
+              verticalAlign: 'middle',
+              cursor: 'pointer',
+              color: '#f56a00',
+              backgroundColor: '#fde3cf',
+            }}
+          >
+            {getAvatarLetter(username, full_name)}
+          </Avatar>
+        )}
+      </Link>
+      <Column>
+        <Row>
+          <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
+            <a>
+              <AuthorUsername
+                css={`
+                  font-size: 0.9rem;
+                `}
+              >
+                {full_name ? full_name : username}
+              </AuthorUsername>
+            </a>
+          </Link>
+        </Row>
+        <Row>
+          <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-17-min.png" alt="reputation-icon" />
+          <ReputationCounter color="blue">{reputation}</ReputationCounter>
         </Row>
       </Column>
     </Wrapper>
@@ -56,13 +104,13 @@ const getAvatarLetter = (username, full_name) => {
 UserSignature.propTypes = {
   id: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired,
-  postedAt: PropTypes.string.isRequired,
+  postedAt: PropTypes.string,
   reputation: PropTypes.number.isRequired,
 }
 
 const Wrapper = styled.div`
   display: flex;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `
 
 const Row = styled.div`
@@ -104,7 +152,8 @@ const ReputationIcon = styled.img`
 `
 
 const ReputationCounter = styled.span`
-  color: #757575;
+  color: ${props => (props.color === 'blue' ? props.theme.antBlue : '#757575')};
+  font-weight: bold;
 `
 
 const PostTimestamp = styled.span`

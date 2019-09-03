@@ -67,6 +67,7 @@ class QuestionList extends React.Component {
               questionId={question.id}
               slug={question.slug}
               authorAvatar={question.author.avatar}
+              repositoryUrl={question.repository_url}
               setLastItemRef={this.props.questions.length - 1 === i ? this.setLastItemRef : undefined}
             />
           )
