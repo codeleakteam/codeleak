@@ -19,6 +19,9 @@ export const apiGet = {
   getTags: ({ q }) => {
     return axios.get(`${BASE_URL}/api/tags?q=${q}`)
   },
+  getMostHelpfulUsers: () => {
+    return axios.get(`${BASE_URL}/api/users/most_helpful`)
+  },
   getUserProfile: ({ userID, token }) => {
     return axios.get(`${BASE_URL}/api/users/${userID}`, {
       headers: {

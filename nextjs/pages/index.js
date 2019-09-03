@@ -6,6 +6,7 @@ import { Button, Alert, message } from 'antd'
 import QuestionList from '../components/QuestionList'
 import { withAuthSync } from '../helpers/functions/auth'
 import PopularTags from '../components/SideWidgets/PopularTags'
+import MostHelpfulUsers from '../components/MostHelpfulUsers'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
 import _ from 'lodash'
@@ -80,9 +81,7 @@ class Index extends Component {
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button icon="laptop" type="primary">
-                  submit question
-                </Button>
+                <Button icon="laptop">submit question</Button>
               </Link>
             </Heading>
             <TwoSideLayout
@@ -103,11 +102,16 @@ class Index extends Component {
                     flex-flow: column nowrap;
                   `}
                 >
-                  <PopularTags
+                  <MostHelpfulUsers
                     css={`
                       margin-bottom: 16px;
                     `}
                   />
+                  {/* <PopularTags
+                    css={`
+                      margin-bottom: 16px;
+                    `}
+                  /> */}
                   <CodeleakSection>
                     <SectionTitle>© 2019 · Codeleak</SectionTitle>
                     <div>
@@ -172,7 +176,7 @@ const Row = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 `
 
 const Heading = styled.div`

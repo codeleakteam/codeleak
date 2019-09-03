@@ -25,7 +25,7 @@ const MainSection = styled.div`
 `
 
 const SideSection = styled.section`
-  width: 20%;
+  width: 24%;
   @media screen and (max-width: 740px) {
     display: none;
   }
