@@ -75,10 +75,10 @@ class CreateAnswerView(CreateAPIView):
                     recipient=answer.question.author,
                 )
             r = requests.post(
-                "https://api.mailgun.net/v3/codeleak.io/messages",
+                "https://api.eu.mailgun.net/v3/mg.codeleak.io/messages",
                 auth=("api", "c6c3f027296426e477ad7040b5332039-afab6073-ab1946d1"),
                 # edit this when registration flow on front is finished
-                data={"from": "{} <mailgun@codeleak.io>".format(answer_author_display_name),
+                data={"from": "{} <mailgun@mg.codeleak.io>".format(answer_author_display_name),
                         "to": [question.author.email],
                         "subject": "Re: {}".format(question.title),
                         "template": "answer-comment-inbox-alert",
