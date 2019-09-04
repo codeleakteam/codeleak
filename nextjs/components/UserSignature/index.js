@@ -41,8 +41,8 @@ export default function UserSignature({ id, username, full_name, reputation, pos
           )}
         </Row>
         <Row>
-          <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-5-min.png" alt="reputation-icon" />
-          <ReputationCounter>{reputation}</ReputationCounter>
+          <ReputationIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-17-min.png" alt="reputation-icon" />
+          <ReputationCounter color="blue">{reputation}</ReputationCounter>
         </Row>
       </Column>
     </Wrapper>
