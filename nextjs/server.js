@@ -2,20 +2,33 @@ const express = require('express')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
+const PORT = process.env.PORT || 3000
+
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const PORT = 80
 
 app
   .prepare()
   .then(() => {
     const server = express()
 
-    // server.get('/question/:id', (req, res) => {
-    //   const actualPage = '/post'
-    //   const queryParams = { id: req.params.id }
-    //   app.render(req, res, actualPage, queryParams)
-    // })
+    server.get('/profile/:id/:username', (req, res) => {
+      const actualPage = '/profile'
+      const queryParams = { id: req.params.id, username: req.params.username }
+      app.render(req, res, actualPage, queryParams)
+    })
+
+    server.get('/question/:id/:slug', (req, res) => {
+      const actualPage = '/question'
+      const queryParams = { id: req.params.id, slug: req.params.slug }
+      app.render(req, res, actualPage, queryParams)
+    })
+
+    server.get('/question/:id/:slug/answer', (req, res) => {
+      const actualPage = '/add_answer'
+      const queryParams = { id: req.params.id, slug: req.params.slug }
+      app.render(req, res, actualPage, queryParams)
+    })
 
     server.get('*', (req, res) => {
       return handle(req, res)
@@ -23,10 +36,8 @@ app
 
     server.listen(PORT, err => {
       if (err) throw err
-      console.log(`ready on port: ${PORT}`)
     })
   })
   .catch(ex => {
-    console.log(ex.stack)
     process.exit(1)
   })

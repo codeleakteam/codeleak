@@ -1,103 +1,266 @@
-import React from 'react'
-import { Button, Icon, Dropdown, Menu } from 'antd'
-import Link from 'next/link'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { message } from 'antd'
+import Card from '../Card'
 import TagWithLink from '../TagWithLink'
-// import UpVote from '../CustomIcons/UpVote'
-import CustomIcon from '../../assets/icons/index'
 import Comment from '../Comment'
+import UserSignature from '../UserSignature'
+import PostCTAS from '../PostCTAS'
+import { apiPost, apiPut } from '../../api'
+import _ from 'lodash'
 
-import classes from './index.scss'
+class Question extends Component {
+  state = {
+    editorState: null,
+    comments: [],
+    commentsReversed: [],
+    commentSummary: true,
+    updatedScore: {},
+  }
 
-const Question = () => {
-  const questionOptions = (
-    <Menu>
-      <Menu.Item>
-        <Link href="/questions/edit">
-          <a>Edit question</a>
-        </Link>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="/">
-          2nd menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="/">
-          3rd menu item
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
-  return (
-    <div className={classes.question__container}>
-      <h3 className={classes.question__name}>How do next.js applications optimize for mobile screens?</h3>
-      <div className={classes.question__info}>
-        <div className={classes.question__detail}>
-          <Link href="/">
-            <div className={classes.question__avatar}>
-              <img
-                src="https://dummyimage.com/43x43/000/fff"
-                alt="user alt"
-                className={classes['question__avatar-img']}
-              />
-            </div>
-          </Link>
-          <span className={classes.question__rep}>100</span>
-        </div>
-        <div className={classes['question__user-info']}>
-          <Link href="/">
-            <a>
-              <span className={classes.question__user}>Jadranka Barjaktarevic</span>
-            </a>
-          </Link>
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    slug: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
+    repository_url: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    comments: PropTypes.array.isRequired,
+    tags: PropTypes.array.isRequired,
+    author: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      username: PropTypes.string.isRequired,
+    }),
+    authToken: PropTypes.string,
+    codeleakUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      reputation: PropTypes.number.isRequired,
+      avatar: PropTypes.string,
+      full_name: PropTypes.string,
+    }),
+  }
 
-          <span className={classes.question__time}>18 hours ago</span>
-        </div>
-      </div>
-      <div className={classes['question__tags-wrapper']}>
-        <div>
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-          <TagWithLink url="/" text="tech" />
-        </div>
-        <div>
-          <Link href="/">
-            <Button type="primary">Open in editor</Button>
-          </Link>
-        </div>
-      </div>
-      <div className={classes.question__text}>
-        <p>
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book.
-        </p>
-      </div>
-      <div className={classes.question__controls}>
-        <Button className={classes.question__upvote} type="primary">
-          Upvote{' '}
-          <CustomIcon
-            name="upvote"
-            height="20px"
-            className={classes.question__arrow}
-            strokeWidth={1}
-            strokeColor="#d9d9d9"
+  componentDidMount() {
+    const { comments, description, author } = this.props
+
+    this.setState({
+      comments,
+    })
+  }
+
+  submitComment = async (question_id, author_id, content) => {
+    try {
+      message.loading('Posting', 5)
+      const res = await apiPost.sendComment('QUESTION_COMMENT', question_id, author_id, content, this.props.authToken)
+      const comment = _.get(res, 'data.comment', null)
+      // console.log('[submitComment]', { data: res.data, comment })
+      if (!comment) throw new Error('Comment null or undefined')
+      this.setState(state => ({
+        comments: [comment, ...state.comments],
+      }))
+      message.destroy()
+      message.success('Your comment has been added')
+    } catch (error) {
+      message.destroy()
+      console.error('[submitComment]', { error })
+      message.error('Internal server error')
+    }
+  }
+
+  handleCommentSummary = () => {
+    this.setState(state => ({ commentSummary: !state.commentSummary }))
+  }
+
+  upvoteComment = async (userId, commentId) => {
+    console.log('upvoteComment', userId, commentId)
+
+    try {
+      message.loading('Voting', 5)
+      const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
+      let comment = _.get(res, 'data', null)
+      if (!comment) throw new Error('Comment object is null or undefined')
+      this.setState({
+        updatedScore: {
+          ...this.state.updatedScore,
+          [commentId]: comment.comment.score,
+        },
+      })
+      message.destroy()
+      message.success('Thank you for voting')
+    } catch (err) {
+      message.destroy()
+      console.error('[upvoteCommeent]', { err })
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
+    }
+  }
+
+  reportComment = async (userId, commentId) => {
+    try {
+      message.loading('Reporting', 5)
+      await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
+      message.destroy()
+      message.success('Thank you for reporting')
+    } catch (err) {
+      console.error('[reportComment]', { err })
+      message.destroy()
+      const errMsg = _.get(err, 'response.data.message', 'Internal server error')
+      message.error(errMsg)
+    }
+  }
+
+  render() {
+    const {
+      codeleakUser,
+      id,
+      slug,
+      created_at,
+      author,
+      score,
+      title,
+      tags,
+      repository_url,
+      updateQuestionScore,
+      updatedQuestionScore,
+      authorReputation,
+    } = this.props
+
+    return (
+      <Wrapper>
+        <Card>
+          <Title>{title}</Title>
+          <UserSignature
+            id={author.id}
+            username={author.username}
+            reputation={authorReputation}
+            postedAt={created_at}
+            avatar={author.avatar}
           />
-        </Button>
-        <Button className={classes.question__downvote}>Downvote</Button>
-        <Dropdown overlay={questionOptions}>
-          <Icon type="more" style={{ fontSize: '30px' }} />
-        </Dropdown>
-      </div>
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-      <Comment />
-    </div>
-  )
+          <Description>
+            <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
+          </Description>
+          <TagsList>
+            {tags.map(q => {
+              return (
+                <TagWithLink
+                  style={{ marginRight: '6px' }}
+                  url={`/tag/${q.slug}`}
+                  id={q.id}
+                  text={q.title}
+                  key={q.id}
+                />
+              )
+            })}
+          </TagsList>
+
+          <iframe
+            src={repository_url}
+            style={{
+              width: '100%',
+              height: '90vh',
+              border: 0,
+              borderRadius: 4,
+              overflow: 'hidden',
+            }}
+            sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+          />
+
+          <PostCTAS
+            postType="question"
+            object={{
+              id,
+              slug,
+            }}
+            submitComment={this.submitComment}
+            updateScore={updateQuestionScore}
+            id={id}
+            score={score}
+            updatedScore={updatedQuestionScore}
+            amIAuthor={codeleakUser ? codeleakUser.id === author.id : false}
+            isLoggedIn={!!codeleakUser}
+          />
+        </Card>
+        {this.state.commentSummary &&
+          this.state.comments.map((c, i) => {
+            if (i < 3) {
+              return (
+                <Card hoverable={true} isComment={true} key={i}>
+                  <Comment
+                    key={c.id}
+                    id={c.id}
+                    created_at={c.created_at}
+                    username={c.author.username}
+                    avatar={c.author.avatar}
+                    reputation={c.author.reputation}
+                    content={c.content}
+                    score={c.score}
+                    updatedScore={this.state.updatedScore[c.id]}
+                    upvoteComment={() => this.upvoteComment(1, c.id)}
+                    reportComment={() => this.reportComment(1, c.id)}
+                    amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+                    isLoggedIn={!!codeleakUser}
+                  />
+                </Card>
+              )
+            } else return null
+          })}
+        {!this.state.commentSummary &&
+          this.state.comments.map((c, i) => (
+            <Card hoverable={true} isComment={true} key={i}>
+              <Comment
+                key={c.id}
+                id={c.id}
+                created_at={c.created_at}
+                username={c.author.username}
+                avatar={c.author.avatar}
+                reputation={c.author.reputation}
+                content={c.content}
+                score={c.score}
+                updatedScore={this.state.updatedScore[c.id]}
+                upvoteComment={() => this.upvoteComment(1, c.id)}
+                reportComment={() => this.reportComment(1, c.id)}
+                amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+                isLoggedIn={!!codeleakUser}
+              />
+            </Card>
+          ))}
+
+        {this.state.comments.length > 3 && (
+          <ToggleAllComments onClick={this.handleCommentSummary}>
+            {this.state.commentSummary ? 'view all' : 'hide'}
+          </ToggleAllComments>
+        )}
+      </Wrapper>
+    )
+  }
 }
 
+const Title = styled.h3`
+  font-size: 1.3rem;
+  font-weight: bold;
+`
+const TagsList = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+`
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+`
+
+const Description = styled.div`
+  margin-bottom: 16px;
+`
+const ToggleAllComments = styled.span`
+  display: block;
+  padding: 4px;
+  text-align: right;
+  line-height: 1;
+  color: $antBlue;
+  cursor: pointer;
+`
 export default Question

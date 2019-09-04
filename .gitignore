@@ -88,9 +88,16 @@ target/
 __pycache__/
 local_settings.py
 
-.env
-db.sqlite3
-migrations
+*.env
+# migrations
 venv
-*.sqlite3
 statics
+*.sqlite3
+
+# sjebo sam env
+include
+Scripts
+lib
+tcl
+*.idea
+gunicorn_logfile

@@ -3,7 +3,12 @@
     {
       "name": "codeleak-next",
       "script": "./server.js",
-      "autorestart": false
+      "autorestart": false,
+      "env": {
+        "NODE_ENV": "production",
+        "CODE_ENV": "production",
+        "PORT": 3000
+      }
     }
   ]
 }

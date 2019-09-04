@@ -1,24 +1,58 @@
 from .home import HomeView
 from .search import user_question_tag_search
 from .question import (
-    CreateQuestionView,
-    UpdateQuestionView,
-    GetQuestionView,
-    UpdateQuestionScoreView
+    GetUpdateQuestionView,
+    UpdateQuestionScoreView,
+    ListCreateQuestionView,
+    ReportQuestionView
 )
-from .user import GetUpdateUserView
-from .tag import ListCreateTagView
+from .user import (
+    GetUserView,
+    UpdateUserView,
+    ListUserView,
+    MostHelpfulThisWeek,
+)
+from .tag import ListCreateTagView, GetTagView
 from .subscriber import CreateSubscriberView
+from .answer import (GetUpdateAnswerView, UpdateAnswerScoreView, AcceptAnswerView, ReportAnswerView, CreateAnswerView)
+from .comment import ListCreateCommentView, UpdateCommentScoreView, ReportCommentView
+from .auth import (
+    GithubLoginView,
+    VerifyEmailViewCustom,
+)
+from .notification import (
+    GetUnreadNotifications,
+    GetAllNotifications,
+    MarkAllAsRead,
+    MarkAllAsUnread,
+) 
 
 __all__ = [
     'HomeView',
-    'UpdateUser',
-    'GetUpdateUserView',
-    'CreateQuestionView',
-    'UpdateQuestionView',
+    'ListUserView',
+    'MostHelpfulThisWeek',
+    'GetUserView',
+    'UpdateUserView',
+    'ReportQuestionView',
     'ListCreateTagView',
+    'GetTagView',
     'user_question_tag_search',
-    'GetQuestionView',
-    'UpdateQuestionScoreView'
-    'CreateSubscriberView'
+    'GetUpdateQuestionView',
+    'UpdateQuestionScoreView',
+    'CreateSubscriberView',
+    'ListCreateQuestionView',
+    'CreateAnswerView',
+    'GetUpdateAnswerView',
+    'UpdateAnswerScoreView',
+    'AcceptAnswerView',
+    'ReportAnswerView',
+    'ListCreateCommentView',
+    'UpdateCommentScoreView',
+    'ReportCommentView',
+    'VerifyEmailViewCustom',
+    'GithubLoginView',
+    'GetUnreadNotifications',
+    'GetAllNotifications',
+    'MarkAllAsRead',
+    'MarkAllAsUnread'
 ]

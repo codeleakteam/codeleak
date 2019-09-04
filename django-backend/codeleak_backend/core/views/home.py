@@ -21,17 +21,11 @@ class CustomPagination(PageNumberPagination):
         })
 
 class HomeView(generics.ListAPIView):
+    permission_classes = ()
     pagination_class = CustomPagination
 
     # Used by self.get_serializer() down below
     # serializer_class = QuestionSerializer
-    """
-    authentication_classes = (authentication.TokenAuthentication,)
-    permission_classes = (permissions.IsAdminUser,)
-    * Requires token authentication.
-    * Only admin users are able to access this view.
-    """
-
     question_serializer = QuestionSerializer
     tag_serializer = TagSerializerMinimal
 
@@ -41,13 +35,12 @@ class HomeView(generics.ListAPIView):
     # Returns questions queryset
     def get_queryset(self):
         return Question.objects.all()
-
     def get_queryset_Tag(self):
         return Tag.objects.all()
 
     def get(self, request, *args, **kwargs):
         tags_serializer = self.tag_serializer(self.get_queryset_Tag(), many=True)
-        page = self.paginate_queryset(Question.objects.all())
+        page = self.paginate_queryset(Question.objects.all().order_by('-created_at'))
 
         if page is not None:
             questions_serializer = self.question_serializer(page, many=True)

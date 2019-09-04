@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils import timezone
 from .tag import Tag
@@ -6,9 +7,12 @@ class Question(models.Model):
     # Required
     title = models.CharField(max_length=150, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
-    slug = models.SlugField(blank=False, null=False)
+    slug = models.SlugField(blank=True, null=False)
+    stackblitz_template = models.CharField(max_length=100, blank=False, null=False)
+    fs = JSONField(null=True)
+    dependencies = JSONField(null=True)
     # Optional
-    repository_url = models.CharField(max_length=255, blank=True, null=True)
+    repository_url = models.CharField(max_length=255, blank=False, null=False)
     # FKs
     author = models.ForeignKey(
         'User',
@@ -24,6 +28,7 @@ class Question(models.Model):
     # Counters
     score = models.IntegerField(default=0, blank=True, null=False)
     reported_times = models.IntegerField(default=0, blank=True, null=False)
+    viewed_times = models.IntegerField(default=0, blank=True, null=False)
     # Flags
     has_accepted_answer = models.BooleanField(default=False, blank=True, null=False)
     has_comments = models.BooleanField(default=False, blank=True, null=False)

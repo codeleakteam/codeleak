@@ -1,108 +1,90 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd'
-import Logo from '../Logo'
-
-import classes from './index.scss'
+import { useSpring, animated } from 'react-spring'
+import styled from 'styled-components'
+import { Button } from 'antd'
 
 class Banner extends Component {
-  handleSubmit = e => {
-    e.preventDefault()
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values)
-      }
-    })
-  }
-
   render() {
-    const { getFieldDecorator } = this.props.form
     return (
-      <div className={classes.banner}>
-        <div className={classes.banner__container}>
-          <div className={classes.banner__text}>
-            <Logo />
-            <p className={classes.banner__description}>
-              An online-editor based question and answer platform for front-end developers
-            </p>
-          </div>
-          <div className={classes.banner__form}>
-            <div className={classes.banner__socials}>
-              <Button type="primary" icon="google" className={classes['banner__socials-item']}>
-                Google
-              </Button>
-              <Button type="primary" icon="twitter" className={classes['banner__socials-item']}>
-                Twitter
-              </Button>
-            </div>
-
-            <Form onSubmit={this.handleSubmit} className="login-form">
-              <Form.Item>
-                {getFieldDecorator('email', {
-                  rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
-                })(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />)}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator(
-                  'password',
-                  {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
-                  },
-                  {
-                    validator: this.compareToNextPass,
-                  }
-                )(
-                  <Input
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    type="password"
-                    placeholder="Password"
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator(
-                  'repeatPassword',
-                  {
-                    rules: [{ required: true, message: 'Please repeat your Password!' }],
-                  },
-                  {
-                    validator: this.compareToFirstPass,
-                  }
-                )(
-                  <Input
-                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    type="password"
-                    placeholder="Repeat password"
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                {getFieldDecorator('displayName', {
-                  rules: [{ required: true, message: 'Please input display name!' }],
-                })(
-                  <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    type="text"
-                    placeholder="Display name "
-                  />
-                )}
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={['login-form-button', classes['btn--register']].join(' ')}
-                >
-                  Register
-                </Button>
-              </Form.Item>
-            </Form>
-          </div>
-        </div>
-      </div>
+      <Wrapper>
+        <Container>
+          <AnimatedLeftSection />
+        </Container>
+      </Wrapper>
     )
   }
 }
 
-const WrapperBannerForm = Form.create({ name: 'BannerForm' })(Banner)
+const AnimatedLeftSection = () => {
+  const props = useSpring({ opacity: 1, from: { opacity: 0 } })
+  return (
+    <LeftSection {...props}>
+      <Title>codeleak</Title>
+      <Headline>
+        <LaptopEmoji>💻</LaptopEmoji>&nbsp; A whole new experience of asking and answering code-related questions
+      </Headline>
+      <div>
+        <Button icon="play-circle" type="primary">
+          watch demo
+        </Button>
+      </div>
+    </LeftSection>
+  )
+}
 
-export default WrapperBannerForm
+const Wrapper = styled.div`
+  color: white;
+  height: 380px;
+  overflow: hidden;
+  .ant-form-item {
+    margin: 0 0 5px 0;
+  }
+`
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 8px;
+  @media screen and (max-width: 740px) {
+    flex-direction: column;
+    margin-top: 80px;
+  }
+`
+
+const LeftSection = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45%;
+  margin: 0 auto;
+  text-align: center;
+  @media screen and (max-width: 740px) {
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
+  }
+`
+
+const Title = styled.h1`
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 16px;
+`
+
+const Headline = styled.p`
+  font-size: 1.2rem;
+  color: #314659;
+  margin-bottom: 16px;
+`
+
+const LaptopEmoji = styled.span`
+  @media screen and (max-width: 740px) {
+    display: none;
+  }
+`
+
+export default Banner

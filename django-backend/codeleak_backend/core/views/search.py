@@ -1,11 +1,25 @@
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
-from rest_framework.decorators import api_view
-from core.models import User, Question, Tag
-from core.serializers import UserSerializerMinimal, QuestionSerializer, TagSerializerMinimal
+from rest_framework.decorators import (
+        api_view,
+        authentication_classes,
+        permission_classes,
+)
+from core.models import (
+        User,
+        Question,
+        Tag
+)
+from core.serializers import (
+        UserSerializerMinimal,
+        QuestionSerializer,
+        TagSerializerMinimal
+)
 
 @api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
 def user_question_tag_search(request):
     q_str = request.GET.get('q', '')
 
