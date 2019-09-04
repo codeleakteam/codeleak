@@ -154,6 +154,7 @@ const UserAvatar = styled.img`
   height: 32px;
   border-radius: 100%;
   margin-right: 6px;
+  object-fit: cover;
   cursor: pointer;
 `
 

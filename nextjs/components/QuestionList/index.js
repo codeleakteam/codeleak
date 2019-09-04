@@ -47,9 +47,15 @@ class QuestionList extends React.Component {
   }
 
   render() {
+    const questionToBeObserved = this.props.questions[this.props.questions.length - 3]
+    const shouldObserveLastItem = questionToBeObserved === undefined
+
     return (
       <div>
         {this.props.questions.map((question, i) => {
+          const refCondition = shouldObserveLastItem
+            ? i === this.props.questions.length - 1
+            : i === this.props.questions.length - 3
           return (
             <QuestionSummary
               id={question.id}
@@ -68,7 +74,7 @@ class QuestionList extends React.Component {
               slug={question.slug}
               authorAvatar={question.author.avatar}
               repositoryUrl={question.repository_url}
-              setLastItemRef={this.props.questions.length - 1 === i ? this.setLastItemRef : undefined}
+              setLastItemRef={refCondition ? this.setLastItemRef : undefined}
             />
           )
         })}

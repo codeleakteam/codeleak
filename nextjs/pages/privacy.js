@@ -94,6 +94,10 @@ const Privacy = () => (
           For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page.
         </Text>
       </Section>
+      <Section>
+        <SectionHeading>Contact Us</SectionHeading>
+        <Text>If you have any questions about this Privacy Policy, please contact us by email: hi@codeleak.io</Text>
+      </Section>
     </StyledCard>
   </>
 )
