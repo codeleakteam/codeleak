@@ -35,13 +35,12 @@ class HomeView(generics.ListAPIView):
     # Returns questions queryset
     def get_queryset(self):
         return Question.objects.all()
-
     def get_queryset_Tag(self):
         return Tag.objects.all()
 
     def get(self, request, *args, **kwargs):
         tags_serializer = self.tag_serializer(self.get_queryset_Tag(), many=True)
-        page = self.paginate_queryset(Question.objects.all())
+        page = self.paginate_queryset(Question.objects.all().order_by('-created_at'))
 
         if page is not None:
             questions_serializer = self.question_serializer(page, many=True)
