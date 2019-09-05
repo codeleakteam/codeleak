@@ -4,7 +4,7 @@ import axios from 'axios'
 import styled, { css } from 'styled-components'
 import _ from 'lodash'
 import stackBlitzSdk from '@stackblitz/sdk'
-import { Input, Steps, Spin, Alert, Button, message } from 'antd'
+import { Form, Input, Steps, Spin, Alert, Button, message } from 'antd'
 import FormField from '../FormField'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
@@ -41,31 +41,14 @@ class AskQuestion extends Component {
     authToken: PropTypes.string.isRequired,
   }
 
-  handleTitleInputChange = e => this.setState({ title: e.target.value })
-
-  handleDescriptionInputChange = value => this.setState({ description: value })
-
-  handleTagsAutocompleteSelect = (value, id) => {
-    this.setState(prevState => ({
-      ...prevState,
-      selectedTags: [...prevState.selectedTags, id.key],
-    }))
-  }
-
-  handleTagsAutocompleteDeselect = tagTitle => {
-    const tag = this.state.tagsAutocompleteDatasource.filter(t => t.title === tagTitle)[0]
-    if (!tag) return
-    const selectedTags = this.state.selectedTags.filter(tId => tId !== tag.id)
-    this.setState({ selectedTags })
-  }
-
-  sendQuestion = async () => {
+  sendQuestion = async ({ title, description, tags }) => {
     try {
+      message.loading('Posting', 5)
       const res = await apiPost.sendQuestion({
         author: this.props.user.id,
-        title: this.state.title,
-        description: this.state.description,
-        tags: this.state.selectedTags,
+        title: title,
+        description: description,
+        tags: tags,
         repoUrl: `https://codesandbox.io/embed/${this.state.sandboxID}`,
         editor: 1,
         stackBlitzTemplate: this.state.chosenTemplate.stackBlitzTemplate,
@@ -77,14 +60,23 @@ class AskQuestion extends Component {
       const questionId = _.get(res, 'data.question.id', null)
       const questionSlug = _.get(res, 'data.question.slug', null)
       if (!question) throw new Error('Internal server error')
-      message.success('Question successfully submitted!')
+      message.destroy()
+      message.success('Your question has been added')
       Router.push(`/question/${questionId}/${questionSlug}`)
     } catch (error) {
+      console.error('[sendQuestion]', error)
+      message.destroy()
       message.error('Internal server error')
     }
   }
-
-  handleSubmit = () => this.sendQuestion()
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.sendQuestion(values)
+      }
+    })
+  }
 
   createAndEmbedStackblitzProject = async chosenTemplate => {
     let project = {
@@ -152,7 +144,9 @@ class AskQuestion extends Component {
   }
 
   render() {
-    const { editorState, _mounted, contentLoading } = this.state
+    const { contentLoading } = this.state
+
+    const { getFieldDecorator } = this.props.form
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>
@@ -189,38 +183,39 @@ class AskQuestion extends Component {
           <div id="stackblitz-iframe" />
         </IFrameWrapper>
         {!contentLoading && this.state.currentStep === 2 && (
-          <Column>
+          <Form>
             <FormField>
-              <InputLabel text="Title" />
-              <Input
-                placeholder="Question title"
-                size="large"
-                type="primary"
-                value={this.state.title}
-                onChange={this.handleTitleInputChange}
-              />
-            </FormField>
-
-            <FormField
-              css={`
-                margin-bottom: 50px;
-              `}
-            >
-              <InputLabel text="Description" />
-              <Quill
-                onChange={this.handleDescriptionInputChange}
-                value={this.state.description}
-                style={{ height: '500px' }}
-              />
+              <Form.Item label="Title">
+                {getFieldDecorator('title', {
+                  initialValue: this.state.title,
+                  rules: [{ required: true, message: 'Question title is required!' }],
+                })(<Input placeholder="Question title" size="large" type="primary" />)}
+              </Form.Item>
             </FormField>
 
             <FormField>
-              <InputLabel text="Tags" />
-              <QuestionTagsAutocomplete
-                dataSource={this.state.tagsAutocompleteDatasource}
-                onSelect={this.handleTagsAutocompleteSelect}
-                onDeselect={this.handleTagsAutocompleteDeselect}
-              />
+              <Form.Item label="Description">
+                {getFieldDecorator('description', {
+                  initialValue: this.state.description,
+                  rules: [{ required: true, message: 'Description is required!' }],
+                })(<Quill height="500px" />)}
+              </Form.Item>
+            </FormField>
+
+            <FormField>
+              <Form.Item label="Tags">
+                {getFieldDecorator('tags', {
+                  initialValue: [],
+                  rules: [{ required: true, message: 'Tags are required!' }],
+                })(
+                  <QuestionTagsAutocomplete
+                    dataSource={this.state.tagsAutocompleteDatasource}
+                    css={`
+                      width: 100%;
+                    `}
+                  />
+                )}
+              </Form.Item>
             </FormField>
             <Row>
               <Button
@@ -236,7 +231,7 @@ class AskQuestion extends Component {
                 Submit
               </Button>
             </Row>
-          </Column>
+          </Form>
         )}
       </div>
     )
@@ -301,4 +296,5 @@ const Column = styled.div`
   padding: 8px 0;
 `
 
-export default AskQuestion
+const AskQuestionWrapperComponent = Form.create({ name: 'ask_question' })(AskQuestion)
+export default AskQuestionWrapperComponent

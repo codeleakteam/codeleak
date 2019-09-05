@@ -1,9 +1,9 @@
 import React from 'react'
 import axios from 'axios'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
-import { Spin, Alert, Button, message } from 'antd'
+import { Form, Spin, Alert, Button, message } from 'antd'
 import stackBlitzSdk from '@stackblitz/sdk'
 import Quill from '../Quill'
 import { apiPost } from '../../api'
@@ -71,8 +71,9 @@ class AddAnswer extends React.Component {
 
   handleDescriptionChange = description => this.setState({ description })
 
-  postAnswer = async () => {
+  postAnswer = async ({ description }) => {
     try {
+      message.loading('Posting', 5)
       const files = await this._stackBlitzVm.getFsSnapshot()
       const dependencies = await this._stackBlitzVm.getDependencies()
 
@@ -95,7 +96,7 @@ class AddAnswer extends React.Component {
         authorId: this.props.user.id,
         questionId: this.props.question.id,
         title: this.props.question.title,
-        description: this.state.description,
+        description: description,
         stackBlitzTemplate: this.props.question.stackblitz_template,
         fs: files,
         dependencies: dependencies,
@@ -104,15 +105,26 @@ class AddAnswer extends React.Component {
         token: this.props.authToken,
       })
       this.setState({ contentLoading: true, vmMounted: false })
-
-      message.success('Answer successfully submitted!')
+      message.destroy()
+      message.success('Your answer has been added')
       Router.push(`/question/${this.props.question.id}/${this.props.question.slug}`)
     } catch (err) {
+      message.destroy()
       message.error('Could not send answer!')
     }
   }
 
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.postAnswer(values)
+      }
+    })
+  }
+
   render() {
+    const { getFieldDecorator } = this.props.form
     return (
       <div>
         {this.state.contentLoading && (
@@ -145,10 +157,17 @@ class AddAnswer extends React.Component {
         <StepsWrapper active={!this.state.contentLoading}>
           <h3>2. Explanation</h3>
           {!this.state.contentLoading && (
-            <Quill style={{ height: '200px' }} value={this.state.description} onChange={this.handleDescriptionChange} />
+            <Form>
+              <Form.Item>
+                {getFieldDecorator('description', {
+                  initialValue: this.state.description,
+                  rules: [{ required: true, message: 'Description is required!' }],
+                })(<Quill height="200px" />)}
+              </Form.Item>
+            </Form>
           )}
           {this.state.vmMounted && (
-            <Button type="primary" size="large" onClick={this.postAnswer} style={{ marginTop: '50px' }}>
+            <Button type="primary" size="large" onClick={this.handleSubmit} style={{ marginTop: '50px' }}>
               Submit
             </Button>
           )}
@@ -197,4 +216,5 @@ const SpinWrapper = styled.div`
   width: 100%;
 `
 
-export default AddAnswer
+const AddAnswerWrapperComponent = Form.create({ name: 'add_answer' })(AddAnswer)
+export default AddAnswerWrapperComponent

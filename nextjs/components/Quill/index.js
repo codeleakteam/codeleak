@@ -4,8 +4,9 @@ import styled from 'styled-components'
 
 class Quill extends Component {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    value: PropTypes.string,
+    height: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -19,8 +20,8 @@ class Quill extends Component {
     const Quill = this.quill
     if (Quill) {
       return (
-        <Wrapper>
-          <Quill onChange={this.props.onChange} style={{ ...this.props.style }} />
+        <Wrapper height={this.props.height}>
+          <Quill {...this.props} />
         </Wrapper>
       )
     } else {
@@ -41,6 +42,9 @@ const Wrapper = styled.div`
     background: white;
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
+  }
+  .ql-editor {
+    height: 500px;
   }
 `
 

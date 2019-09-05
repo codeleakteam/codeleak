@@ -182,7 +182,7 @@ const CustomAvatar = styled.div`
   width: 100%;
   height: 246px;
   background-image: url(${props => (props.linkToImage ? props.linkToImage : null)});
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 `
