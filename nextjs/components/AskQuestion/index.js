@@ -17,7 +17,7 @@ const { Step } = Steps
 
 class AskQuestion extends Component {
   state = {
-    currentStep: 2,
+    currentStep: 0,
 
     contentLoading: false,
     chosenTemplate: null,
@@ -43,11 +43,12 @@ class AskQuestion extends Component {
 
   sendQuestion = async ({ title, description, tags }) => {
     try {
+      message.loading('Posting', 5)
       const res = await apiPost.sendQuestion({
         author: this.props.user.id,
-        title: this.state.title,
-        description: this.state.description,
-        tags: this.state.selectedTags,
+        title: title,
+        description: description,
+        tags: tags,
         repoUrl: `https://codesandbox.io/embed/${this.state.sandboxID}`,
         editor: 1,
         stackBlitzTemplate: this.state.chosenTemplate.stackBlitzTemplate,
@@ -59,17 +60,18 @@ class AskQuestion extends Component {
       const questionId = _.get(res, 'data.question.id', null)
       const questionSlug = _.get(res, 'data.question.slug', null)
       if (!question) throw new Error('Internal server error')
-      message.success('Question successfully submitted!')
+      message.destroy()
+      message.success('Your question has been added')
       Router.push(`/question/${questionId}/${questionSlug}`)
     } catch (error) {
       console.error('[sendQuestion]', error)
+      message.destroy()
       message.error('Internal server error')
     }
   }
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
-      console.log('[handleSubmit]', { values })
       if (!err) {
         this.sendQuestion(values)
       }
@@ -142,9 +144,9 @@ class AskQuestion extends Component {
   }
 
   render() {
-    const { editorState, _mounted, contentLoading } = this.state
+    const { contentLoading } = this.state
 
-    const { getFieldDecorator, setFieldsValue } = this.props.form
+    const { getFieldDecorator } = this.props.form
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>
@@ -181,7 +183,7 @@ class AskQuestion extends Component {
           <div id="stackblitz-iframe" />
         </IFrameWrapper>
         {!contentLoading && this.state.currentStep === 2 && (
-          <Form onSubmit={this.onSubmit}>
+          <Form>
             <FormField>
               <Form.Item label="Title">
                 {getFieldDecorator('title', {
@@ -191,7 +193,7 @@ class AskQuestion extends Component {
               </Form.Item>
             </FormField>
 
-            <FormField css={``}>
+            <FormField>
               <Form.Item label="Description">
                 {getFieldDecorator('description', {
                   initialValue: this.state.description,
@@ -207,7 +209,6 @@ class AskQuestion extends Component {
                   rules: [{ required: true, message: 'Tags are required!' }],
                 })(
                   <QuestionTagsAutocomplete
-                    setFieldsValue={setFieldsValue}
                     dataSource={this.state.tagsAutocompleteDatasource}
                     css={`
                       width: 100%;
