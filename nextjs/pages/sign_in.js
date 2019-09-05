@@ -85,7 +85,8 @@ class SignIn extends Component {
             <Form onSubmit={this.handleSubmit} className="login-form">
               <Form.Item>
                 {getFieldDecorator('email', {
-                  rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
+                  validateTrigger: ['onBlur', 'onSubmit'],
+                  rules: [{ required: true, message: 'Please enter a valid email address!', type: 'email' }],
                 })(
                   <StyledInput
                     size="large"
@@ -98,7 +99,7 @@ class SignIn extends Component {
                 {getFieldDecorator(
                   'password',
                   {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
+                    rules: [{ required: true, message: 'Please enter your password!' }],
                   },
                   {
                     validator: this.compareToNextPass,

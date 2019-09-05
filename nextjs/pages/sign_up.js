@@ -75,7 +75,7 @@ class SignUp extends Component {
             <Form onSubmit={this.handleSubmit}>
               <Form.Item>
                 {getFieldDecorator('username', {
-                  rules: [{ required: true, message: 'Please input your username!' }],
+                  rules: [{ required: true, message: 'Please enter your username!' }],
                 })(
                   <StyledInput
                     size="large"
@@ -88,7 +88,7 @@ class SignUp extends Component {
 
               <Form.Item>
                 {getFieldDecorator('email', {
-                  rules: [{ required: true, message: 'Please input your email!', type: 'email' }],
+                  rules: [{ required: true, message: 'Please enter your email!', type: 'email' }],
                 })(
                   <StyledInput
                     size="large"
@@ -101,7 +101,7 @@ class SignUp extends Component {
                 {getFieldDecorator(
                   'password',
                   {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
+                    rules: [{ required: true, message: 'Please enter your password!' }],
                   },
                   {
                     validator: this.compareToNextPass,
@@ -119,7 +119,7 @@ class SignUp extends Component {
                 {getFieldDecorator(
                   'repeatPassword',
                   {
-                    rules: [{ required: true, message: 'Please repeat your Password!' }],
+                    rules: [{ required: true, message: 'Please repeat your password!' }],
                   },
                   {
                     validator: this.compareToFirstPass,

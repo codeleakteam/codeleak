@@ -145,7 +145,7 @@ class AddAnswer extends React.Component {
         <StepsWrapper active={!this.state.contentLoading}>
           <h3>2. Explanation</h3>
           {!this.state.contentLoading && (
-            <Quill style={{ height: '200px' }} value={this.state.description} onChange={this.handleDescriptionChange} />
+            <Quill height="200px" value={this.state.description} onChange={this.handleDescriptionChange} />
           )}
           {this.state.vmMounted && (
             <Button type="primary" size="large" onClick={this.postAnswer} style={{ marginTop: '50px' }}>

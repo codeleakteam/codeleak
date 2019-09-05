@@ -217,13 +217,13 @@ const regularPages = [
     name: 'Jobs',
     href: '/jobs',
   },
-  {
-    name: 'Tags',
-    href: '/tags',
-  },
+  // {
+  //   name: 'Tags',
+  //   href: '/tags',
+  // },
   {
     name: 'Become a Sponsor',
-    href: '/sponsor',
+    href: 'https://www.patreon.com/codeleak',
   },
 
   // {

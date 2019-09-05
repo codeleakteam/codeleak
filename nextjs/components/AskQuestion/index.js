@@ -4,7 +4,7 @@ import axios from 'axios'
 import styled, { css } from 'styled-components'
 import _ from 'lodash'
 import stackBlitzSdk from '@stackblitz/sdk'
-import { Input, Steps, Spin, Alert, Button, message } from 'antd'
+import { Form, Input, Steps, Spin, Alert, Button, message } from 'antd'
 import FormField from '../FormField'
 import InputLabel from '../InputLabel'
 import TemplateList from '../TemplateList'
@@ -17,7 +17,7 @@ const { Step } = Steps
 
 class AskQuestion extends Component {
   state = {
-    currentStep: 0,
+    currentStep: 2,
 
     contentLoading: false,
     chosenTemplate: null,
@@ -43,7 +43,10 @@ class AskQuestion extends Component {
 
   handleTitleInputChange = e => this.setState({ title: e.target.value })
 
-  handleDescriptionInputChange = value => this.setState({ description: value })
+  handleDescriptionInputChange = value =>
+    this.setState({ description: value }, () => {
+      console.log('[handleDescriptionInputChange]', this.state.description)
+    })
 
   handleTagsAutocompleteSelect = (value, id) => {
     this.setState(prevState => ({
@@ -80,11 +83,18 @@ class AskQuestion extends Component {
       message.success('Question successfully submitted!')
       Router.push(`/question/${questionId}/${questionSlug}`)
     } catch (error) {
+      console.error('[sendQuestion]', error)
       message.error('Internal server error')
     }
   }
-
-  handleSubmit = () => this.sendQuestion()
+  handleSubmit = e => {
+    e.preventDefault()
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        this.sendQuestion()
+      }
+    })
+  }
 
   createAndEmbedStackblitzProject = async chosenTemplate => {
     let project = {
@@ -153,6 +163,8 @@ class AskQuestion extends Component {
 
   render() {
     const { editorState, _mounted, contentLoading } = this.state
+
+    const { getFieldDecorator } = this.props.form
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>
@@ -189,38 +201,32 @@ class AskQuestion extends Component {
           <div id="stackblitz-iframe" />
         </IFrameWrapper>
         {!contentLoading && this.state.currentStep === 2 && (
-          <Column>
+          <Form onSubmit={this.onSubmit}>
             <FormField>
-              <InputLabel text="Title" />
-              <Input
-                placeholder="Question title"
-                size="large"
-                type="primary"
-                value={this.state.title}
-                onChange={this.handleTitleInputChange}
-              />
+              <Form.Item label="Title">
+                {getFieldDecorator('title', {
+                  initialValue: this.state.title,
+                  rules: [{ required: true, message: 'Question title is required!' }],
+                })(<Input placeholder="Question title" size="large" type="primary" />)}
+              </Form.Item>
             </FormField>
 
-            <FormField
-              css={`
-                margin-bottom: 50px;
-              `}
-            >
-              <InputLabel text="Description" />
-              <Quill
-                onChange={this.handleDescriptionInputChange}
-                value={this.state.description}
-                style={{ height: '500px' }}
-              />
+            <FormField css={``}>
+              <Form.Item label="Description">
+                {getFieldDecorator('description', {
+                  initialValue: this.state.description,
+                  rules: [{ required: true, message: 'Description is required!' }],
+                })(<Quill height="500px" />)}
+              </Form.Item>
             </FormField>
 
             <FormField>
-              <InputLabel text="Tags" />
-              <QuestionTagsAutocomplete
-                dataSource={this.state.tagsAutocompleteDatasource}
-                onSelect={this.handleTagsAutocompleteSelect}
-                onDeselect={this.handleTagsAutocompleteDeselect}
-              />
+              <Form.Item label="Tags">
+                {getFieldDecorator('tags', {
+                  initialValue: [],
+                  rules: [{ required: true, message: 'Tags are required!' }],
+                })(<QuestionTagsAutocomplete dataSource={this.state.tagsAutocompleteDatasource} />)}
+              </Form.Item>
             </FormField>
             <Row>
               <Button
@@ -236,7 +242,7 @@ class AskQuestion extends Component {
                 Submit
               </Button>
             </Row>
-          </Column>
+          </Form>
         )}
       </div>
     )
@@ -301,4 +307,5 @@ const Column = styled.div`
   padding: 8px 0;
 `
 
-export default AskQuestion
+const AskQuestionWrapperComponent = Form.create({ name: 'ask_question' })(AskQuestion)
+export default AskQuestionWrapperComponent
