@@ -41,28 +41,7 @@ class AskQuestion extends Component {
     authToken: PropTypes.string.isRequired,
   }
 
-  handleTitleInputChange = e => this.setState({ title: e.target.value })
-
-  handleDescriptionInputChange = value =>
-    this.setState({ description: value }, () => {
-      console.log('[handleDescriptionInputChange]', this.state.description)
-    })
-
-  handleTagsAutocompleteSelect = (value, id) => {
-    this.setState(prevState => ({
-      ...prevState,
-      selectedTags: [...prevState.selectedTags, id.key],
-    }))
-  }
-
-  handleTagsAutocompleteDeselect = tagTitle => {
-    const tag = this.state.tagsAutocompleteDatasource.filter(t => t.title === tagTitle)[0]
-    if (!tag) return
-    const selectedTags = this.state.selectedTags.filter(tId => tId !== tag.id)
-    this.setState({ selectedTags })
-  }
-
-  sendQuestion = async () => {
+  sendQuestion = async ({ title, description, tags }) => {
     try {
       const res = await apiPost.sendQuestion({
         author: this.props.user.id,
@@ -90,8 +69,9 @@ class AskQuestion extends Component {
   handleSubmit = e => {
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
+      console.log('[handleSubmit]', { values })
       if (!err) {
-        this.sendQuestion()
+        this.sendQuestion(values)
       }
     })
   }
@@ -164,7 +144,7 @@ class AskQuestion extends Component {
   render() {
     const { editorState, _mounted, contentLoading } = this.state
 
-    const { getFieldDecorator } = this.props.form
+    const { getFieldDecorator, setFieldsValue } = this.props.form
     return (
       <div>
         <StyledSteps current={this.state.currentStep}>
@@ -225,7 +205,15 @@ class AskQuestion extends Component {
                 {getFieldDecorator('tags', {
                   initialValue: [],
                   rules: [{ required: true, message: 'Tags are required!' }],
-                })(<QuestionTagsAutocomplete dataSource={this.state.tagsAutocompleteDatasource} />)}
+                })(
+                  <QuestionTagsAutocomplete
+                    setFieldsValue={setFieldsValue}
+                    dataSource={this.state.tagsAutocompleteDatasource}
+                    css={`
+                      width: 100%;
+                    `}
+                  />
+                )}
               </Form.Item>
             </FormField>
             <Row>

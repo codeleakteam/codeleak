@@ -7,6 +7,14 @@ import { apiGet } from '../../api'
 const Option = Select.Option
 
 class QuestionTagsAutocomplete extends React.Component {
+  static propTypes = {
+    dataSource: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+      })
+    ),
+  }
   state = {
     dataSource: [],
     selectedItems: [],
@@ -41,27 +49,23 @@ class QuestionTagsAutocomplete extends React.Component {
   }
 
   render() {
-    const { onSelect, onDeselect } = this.props
     const { selectedItems, fetching, dataSource } = this.state
 
     const filteredOptions = dataSource.filter(o => !selectedItems.includes(o.title))
-
     // console.log('datasrc', filteredOptions)
     return (
       <div>
         <Select
+          {...this.props}
           mode="multiple"
           size="large"
           onInputKeyDown={this.handleKeydown}
-          onSelect={(value, id) => onSelect(value, id)}
-          onDeselect={onDeselect}
-          style={{ width: '100%' }}
           placeholder="Select tags"
           notFoundContent={fetching ? <Spin size="small" /> : null}
         >
           {filteredOptions.map(tag => {
             return (
-              <Option key={tag.id} value={tag.title}>
+              <Option key={tag.id} value={tag.id}>
                 {tag.title}
               </Option>
             )
@@ -70,16 +74,6 @@ class QuestionTagsAutocomplete extends React.Component {
       </div>
     )
   }
-}
-
-QuestionTagsAutocomplete.propTypes = {
-  onSelect: PropTypes.func.isRequired,
-  dataSource: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-    })
-  ),
 }
 
 export default QuestionTagsAutocomplete
