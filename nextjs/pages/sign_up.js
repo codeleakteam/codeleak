@@ -50,7 +50,7 @@ class SignUp extends Component {
             <title>Sign up</title>
           </Head>
           <StyledLogo type="long" />
-          <Description>An online-editor based question and answer platform for front-end developers</Description>
+          <Description>An online-editor based question and answer platform for developers</Description>
           {/* <Socials>
           <StyledSocialButton type="primary" icon="google">
             Google

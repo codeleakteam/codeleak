@@ -1,7 +1,4 @@
 const withSourceMaps = require('@zeit/next-source-maps')()
-// const withSass = require('@zeit/next-sass')
-// const withCSS = require('@zeit/next-css')
-// const withPlugins = require('next-compose-plugins')
 
 // Webpack config for images in css
 // https://whoisryosuke.com/blog/2018/nextjs-tip-using-media-in-css/

@@ -58,6 +58,7 @@ class QuestionList extends React.Component {
             : i === this.props.questions.length - 3
           return (
             <QuestionSummary
+              key={i}
               id={question.id}
               score={question.score}
               viewedTimes={question.viewed_times}

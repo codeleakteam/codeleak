@@ -14,9 +14,9 @@ class Question extends Component {
   state = {
     editorState: null,
     comments: [],
-    commentsReversed: [],
     commentSummary: true,
     updatedScore: {},
+    comments: this.props.comments,
   }
 
   static propTypes = {
@@ -42,14 +42,6 @@ class Question extends Component {
     }),
   }
 
-  componentDidMount() {
-    const { comments, description, author } = this.props
-
-    this.setState({
-      comments,
-    })
-  }
-
   submitComment = async (question_id, author_id, content) => {
     try {
       message.loading('Posting', 5)
@@ -73,18 +65,16 @@ class Question extends Component {
     this.setState(state => ({ commentSummary: !state.commentSummary }))
   }
 
-  upvoteComment = async (userId, commentId) => {
-    console.log('upvoteComment', userId, commentId)
-
+  upvoteComment = async (authorID, commentID) => {
     try {
       message.loading('Voting', 5)
-      const res = await apiPut.updateCommentScore('true', userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
+      const res = await apiPut.updateCommentScore('true', authorID, 'QUESTION_COMMENT', commentID, this.props.authToken)
       let comment = _.get(res, 'data', null)
       if (!comment) throw new Error('Comment object is null or undefined')
       this.setState({
         updatedScore: {
           ...this.state.updatedScore,
-          [commentId]: comment.comment.score,
+          [commentID]: comment.comment.score,
         },
       })
       message.destroy()
@@ -97,10 +87,10 @@ class Question extends Component {
     }
   }
 
-  reportComment = async (userId, commentId) => {
+  reportComment = async commentID => {
     try {
       message.loading('Reporting', 5)
-      await apiPost.reportComment(userId, 'QUESTION_COMMENT', commentId, this.props.authToken)
+      await apiPost.reportComment(this.props.author.id, 'QUESTION_COMMENT', commentID, this.props.authToken)
       message.destroy()
       message.success('Thank you for reporting')
     } catch (err) {
@@ -126,7 +116,6 @@ class Question extends Component {
       updatedQuestionScore,
       authorReputation,
     } = this.props
-
     return (
       <Wrapper>
         <Card>
@@ -176,6 +165,7 @@ class Question extends Component {
             submitComment={this.submitComment}
             updateScore={updateQuestionScore}
             id={id}
+            authorID={author.id}
             score={score}
             updatedScore={updatedQuestionScore}
             amIAuthor={codeleakUser ? codeleakUser.id === author.id : false}
@@ -197,8 +187,8 @@ class Question extends Component {
                     content={c.content}
                     score={c.score}
                     updatedScore={this.state.updatedScore[c.id]}
-                    upvoteComment={() => this.upvoteComment(1, c.id)}
-                    reportComment={() => this.reportComment(1, c.id)}
+                    upvoteComment={() => this.upvoteComment(c.author.id, c.id)}
+                    reportComment={() => this.reportComment(c.author.id, c.id)}
                     amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
                     isLoggedIn={!!codeleakUser}
                   />
@@ -219,8 +209,8 @@ class Question extends Component {
                 content={c.content}
                 score={c.score}
                 updatedScore={this.state.updatedScore[c.id]}
-                upvoteComment={() => this.upvoteComment(1, c.id)}
-                reportComment={() => this.reportComment(1, c.id)}
+                upvoteComment={() => this.upvoteComment(c.author.id, c.id)}
+                reportComment={() => this.reportComment(c.author.id, c.id)}
                 amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
                 isLoggedIn={!!codeleakUser}
               />

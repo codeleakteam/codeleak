@@ -97,10 +97,10 @@ class Answer extends Component {
     }
   }
 
-  reportComment = async (userId, commentId) => {
+  reportComment = async (commentAuthorID, commentID) => {
     try {
       message.loading('Reporting', 5)
-      await apiPost.reportComment(userId, 'ANSWER_COMMENT', commentId, this.props.authToken)
+      await apiPost.reportComment(commentAuthorID, 'ANSWER_COMMENT', commentID, this.props.authToken)
       message.destroy()
       message.success('Thank you for reporting')
     } catch (err) {
@@ -168,30 +168,33 @@ class Answer extends Component {
             disableAnswerWithCode={true}
             amIAuthor={codeleakUser ? codeleakUser.id === author.id : false}
             isLoggedIn={!!codeleakUser}
+            authorID={author.id}
           />
         </Card>
 
-        {comments.map((c, i) => (
-          <Card isComment={true} key={i}>
-            <Comment
-              key={c.id}
-              id={c.id}
-              created_at={c.created_at}
-              username={c.author.username}
-              avatar={c.author.avatar}
-              reputation={c.author.reputation}
-              content={c.content}
-              score={c.score}
-              upvoteComment={() => this.upvoteComment(1, c.id)}
-              reportComment={() => this.reportComment(1, c.id)}
-              amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
-              isLoggedIn={!!codeleakUser}
-            />
-            {this.state.comments.length > 3 && (
-              <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
-            )}
-          </Card>
-        ))}
+        {comments.map((c, i) => {
+          return (
+            <Card isComment={true} key={i}>
+              <Comment
+                key={c.id}
+                id={c.id}
+                created_at={c.created_at}
+                username={c.author.username}
+                avatar={c.author.avatar}
+                reputation={c.author.reputation}
+                content={c.content}
+                score={c.score}
+                upvoteComment={() => this.upvoteComment(c.author.id, c.id)}
+                reportComment={() => this.reportComment(c.author.id, c.id)}
+                amIAuthor={codeleakUser ? codeleakUser.id === c.author.id : false}
+                isLoggedIn={!!codeleakUser}
+              />
+              {this.state.comments.length > 3 && (
+                <span onClick={this.handleCommentSummary}>{this.state.commentSummary ? 'view all' : 'hide'}</span>
+              )}
+            </Card>
+          )
+        })}
       </React.Fragment>
     )
   }

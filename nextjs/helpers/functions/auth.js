@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import Router from 'next/router'
-import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import nextCookie from 'next-cookies'
+import cookie from 'js-cookie'
 import { message } from 'antd'
 
 const protectedRoutes = ['/questions/ask', '/profile/edit']
@@ -11,8 +12,8 @@ const guestRoutes = ['/login', '/register']
 export const login = async ({ user, token }) => {
   try {
     const userJSON = JSON.stringify(user)
-    setCookie(undefined, 'codeleakUser', userJSON, { path: '/' })
-    setCookie(undefined, 'codeleakAuthToken', token, { path: '/' })
+    cookie.set('codeleakUser', userJSON)
+    cookie.set('codeleakAuthToken', token)
     Router.push('/')
   } catch (err) {
     // Ignorguardialo on successguardialo on successe
@@ -21,14 +22,11 @@ export const login = async ({ user, token }) => {
 }
 
 export const logout = () => {
-  destroyCookie(undefined, 'codeleakUser')
-  destroyCookie(undefined, 'codeleakAuthToken')
+  cookie.remove('codeleakUser')
+  cookie.remove('codeleakAuthToken')
 
-  // window.localStorage.setItem("logout", Date.now()guardialo on successguardialo on success);
-
-  console.log('Logged out. Redirecting')
+  message.success('Logged out')
   Router.push('/')
-  message.success('Successfully logged out!')
 }
 
 // Gets the display name of a JSX component for dev tools
@@ -60,7 +58,7 @@ export const withAuthSync = WrappedComponent =>
   }
 
 export const auth = ctx => {
-  const { codeleakAuthToken, codeleakUser } = parseCookies(ctx)
+  const { codeleakAuthToken, codeleakUser } = nextCookie(ctx)
   const isLoggedIn = !!codeleakAuthToken && !!codeleakUser
   // console.log('[auth] isLoggedIn ', isLoggedIn)
   // console.log('[auth] codeleakUser', codeleakUser)
@@ -91,7 +89,6 @@ export const auth = ctx => {
     isGuestRoute = guestRoutes.filter(r => r === ctx.pathname)[0] ? true : false
 
     if (isProtectedRoute && !isLoggedIn) {
-      console.log('Route is protected. Redirecting')
       Router.push('/sign_in')
     }
 

@@ -84,10 +84,7 @@ class MyDocument extends Document {
           <link rel="icon" type="image/png" sizes="16x16" href="../../static/favicons/favicon16x16.png" />
           <meta name="msapplication-TileImage" content="../../static/favicons/favicon144x144.png" />
           {/* metas */}
-          <meta
-            name="description"
-            content="An online-editor based question and answer platform for front-end developers"
-          />
+          <meta name="description" content="An online-editor based question and answer platform for developers" />
           {/* <link href="../../static/css/draftjs.css" rel="stylesheet" /> */}
           {/* {process.env.NODE_ENV == 'production' && (
             <link rel="stylesheet" type="text/css" href={'/_next/static/css/styles.chunk.css?v=' + Date.now()} />
