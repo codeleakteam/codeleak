@@ -11,6 +11,7 @@ export default class PostCTAS extends React.Component {
   static propTypes = {
     // Not used yet
     postType: PropTypes.string.isRequired,
+    // Question/Author ID
     id: PropTypes.number.isRequired,
     score: PropTypes.number.isRequired,
     updateScore: PropTypes.func.isRequired,
@@ -22,6 +23,7 @@ export default class PostCTAS extends React.Component {
     }),
     amIAuthor: PropTypes.bool.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
+    authorID: PropTypes.number.isRequired,
   }
 
   static defaultProps = {
@@ -39,24 +41,24 @@ export default class PostCTAS extends React.Component {
     }))
 
   handleCommentInputChange = e => this.setState({ commentValue: e.target.value })
-  handleVoteButtonClick = (isVote, id) => {
-    if (this.props.isLoggedIn) this.props.updateScore(isVote, id, 1)
+  handleVoteButtonClick = isVote => {
+    if (this.props.isLoggedIn) this.props.updateScore(isVote, this.props.id, this.props.authorID)
     else Router.push('/sign_in')
   }
   render() {
-    const { isLoggedIn, amIAuthor, id, score, updatedScore, object } = this.props
+    const { authorID, isLoggedIn, amIAuthor, score, updatedScore, object } = this.props
     const buttonProps = {}
     if (amIAuthor) buttonProps.disabled = true
     return (
       <Column>
         <Row>
           <div>
-            <VoteButton {...buttonProps} onClick={() => this.handleVoteButtonClick('true', id)}>
+            <VoteButton {...buttonProps} onClick={() => this.handleVoteButtonClick('true')}>
               <VoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
               <CounterValue>{updatedScore ? updatedScore : score}</CounterValue>
             </VoteButton>
             {!amIAuthor && (
-              <VoteButton onClick={() => this.handleVoteButtonClick('false', id)}>
+              <VoteButton onClick={() => this.handleVoteButtonClick('false')}>
                 <DownvoteIcon src="https://d3h1a9qmjahky9.cloudfront.net/app-1-min.png" />
               </VoteButton>
             )}

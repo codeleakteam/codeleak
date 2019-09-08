@@ -21,7 +21,7 @@ const AnimatedLeftSection = () => {
     <LeftSection {...props}>
       <Title>codeleak</Title>
       <Headline>
-        <LaptopEmoji>💻</LaptopEmoji>&nbsp; A whole new experience of asking and answering code-related questions
+        <LaptopEmoji>💻</LaptopEmoji>&nbsp; A better experience of asking and answering code-related questions
       </Headline>
       <div>
         <Button icon="play-circle" type="primary">

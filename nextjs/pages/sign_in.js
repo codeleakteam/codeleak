@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
+import cookie from 'js-cookie'
 import { Alert, Form, Icon, Input, Button, Spin } from 'antd'
 import _ from 'lodash'
 import styled from 'styled-components'
 import Card from '../components/Card'
 import Logo from '../components/Logo'
-import { destroyCookie } from 'nookies'
 import { apiPost } from '../api'
 import { login } from '../helpers/functions/auth'
 
@@ -15,8 +15,8 @@ class SignIn extends Component {
     loading: false,
   }
   componentDidMount() {
-    destroyCookie(undefined, 'codeleakUser')
-    destroyCookie(undefined, 'codeleakAuthToken')
+    cookie.remove('codeleakUser')
+    cookie.remove('codeleakAuthToken')
   }
 
   login = async ({ email, password }) => {
@@ -58,7 +58,7 @@ class SignIn extends Component {
             <title>Sign In</title>
           </Head>
           <StyledLogo type="long" />
-          <Description>An online-editor based question and answer platform for front-end developers</Description>
+          <Description>An online-editor based question and answer platform for developers</Description>
           {/* <Socials>
           <StyledSocialButton type="primary" icon="google">
             Google

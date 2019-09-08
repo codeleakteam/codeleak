@@ -1,9 +1,9 @@
 import React from 'react'
 import _ from 'lodash'
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import Router, { withRouter } from 'next/router'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
-import { parseCookies } from 'nookies'
+import nextCookie from 'next-cookies'
 import * as Sentry from '@sentry/browser'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import Navigation from '../components/Navigation'
@@ -40,7 +40,7 @@ class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
 
-    const { codeleakAuthToken } = parseCookies(ctx)
+    const { codeleakAuthToken } = nextCookie(ctx)
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({ ...ctx, codeleakAuthToken })
     }
@@ -81,7 +81,7 @@ class MyApp extends App {
 
     return (
       <ThemeProvider theme={theme}>
-        <Container>
+        <div>
           <GlobalStyle />
           <Navigation
             isMenuActive={this.state.isMenuActive}
@@ -96,7 +96,7 @@ class MyApp extends App {
           <MainContentWrapper>
             <Component {...pageProps} authToken={this.props.codeleakAuthToken} codeleakUser={pageProps.codeleakUser} />
           </MainContentWrapper>
-        </Container>
+        </div>
       </ThemeProvider>
     )
   }

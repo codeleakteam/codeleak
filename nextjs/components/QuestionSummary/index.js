@@ -52,10 +52,7 @@ class QuestionSummary extends Component {
     const answersAndCommentsCount = answers.length + comments.length
 
     return (
-      <Card
-        key={id}
-        ref={setLastItemRef ? lastItemRef => setLastItemRef({ lastItemRef, lastItemRefFakeId: id }) : undefined}
-      >
+      <Card ref={setLastItemRef ? lastItemRef => setLastItemRef({ lastItemRef, lastItemRefFakeId: id }) : undefined}>
         <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
           <Title>{title}</Title>
         </Link>

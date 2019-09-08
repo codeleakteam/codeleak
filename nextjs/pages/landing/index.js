@@ -13,7 +13,7 @@ const Landing = () => {
       <Banner>
         <InnerWrapper>
           <Logo size={42} />
-          <Description>An online-editor based question and answer platform for front-end developers</Description>
+          <Description>An online-editor based question and answer platform for developers</Description>
           <InputWithButton />
         </InnerWrapper>
       </Banner>

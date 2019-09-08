@@ -37,7 +37,6 @@ const EditProfile = props => {
     Object.entries(data)
       .filter(([k, v]) => v !== null)
       .forEach(([k, v]) => {
-        console.log({ k, v })
         if (k === 'website_url' && !v.match(/^[a-zA-Z]+:\/\//)) {
           formData.append(k, 'http://' + v)
         } else {
@@ -49,7 +48,6 @@ const EditProfile = props => {
 
     try {
       const res = await apiPut.updateUser(formData, props.userData.id, props.token)
-      console.log('[handleEditSave]', res.data)
       message.destroy()
       message.success('Updated')
       Router.push(`/profile/${props.userData.id}/${props.userData.username}`)
@@ -72,7 +70,6 @@ const EditProfile = props => {
 
   // Ant upload component change
   const handleChange = ({ file, fileList }) => {
-    console.log('[file]eChange] fired', { file, fileList })
     setAvatarFileObj(file.originFileObj)
     const reader = new FileReader()
     reader.onload = e => setImageUrl(e.target.result)

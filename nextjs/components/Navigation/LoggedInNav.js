@@ -450,6 +450,9 @@ const List = styled.ul`
 
 const StyledAvatar = styled(Avatar)`
   cursor: pointer;
+  img {
+    object-fit: cover;
+  }
 `
 
 const regularPages = [

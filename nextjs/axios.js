@@ -7,12 +7,9 @@ instance.interceptors.response.use(
   response => response,
   err => {
     if (err.response && err.response.status === 401) {
-      console.log('[instance.interceptors.response] redirecting')
       try {
         Router.push('/sign_in')
-      } catch (err) {
-        console.log('serverside')
-      }
+      } catch (err) {}
     }
     return Promise.reject(err)
   }
