@@ -20,16 +20,22 @@ const AnimatedLeftSection = () => {
   return (
     <LeftSection {...props}>
       <Title>codeleak</Title>
-      <Headline>
-        Better experience of asking and answering code-related questions
-      </Headline>
+      <Headline>Better experience of asking and answering code-related questions</Headline>
       <div>
-      <FeaturingText>
-        Featuring <a target="_blank" href="https://stackblitz.com/">StackBlitz</a> and <a target="_blank" href="https://codesandbox.io/">CodeSandbox</a> online code editors 🚀
-      </FeaturingText>
-        <Button icon="play-circle" type="primary">
+        <FeaturingText>
+          Featuring{' '}
+          <a target="_blank" href="https://stackblitz.com/">
+            StackBlitz
+          </a>{' '}
+          and{' '}
+          <a target="_blank" href="https://codesandbox.io/">
+            CodeSandbox
+          </a>{' '}
+          online code editors 🚀
+        </FeaturingText>
+        {/* <Button icon="play-circle" type="primary">
           watch demo
-        </Button>
+        </Button> */}
       </div>
     </LeftSection>
   )
