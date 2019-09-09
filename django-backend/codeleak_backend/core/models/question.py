@@ -5,7 +5,7 @@ from .tag import Tag
 
 class Question(models.Model):
     # Required
-    title = models.CharField(max_length=150, blank=False, null=False)
+    title = models.CharField(max_length=250, blank=False, null=False)
     description = models.TextField(blank=False, null=False)
     slug = models.SlugField(blank=True, null=False)
     stackblitz_template = models.CharField(max_length=100, blank=False, null=False)

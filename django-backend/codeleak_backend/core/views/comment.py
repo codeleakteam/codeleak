@@ -246,6 +246,7 @@ class UpdateCommentScoreView(UpdateAPIView):
 
                 print("before increasing reputation", user.reputation)
                 user.reputation += vote_value * 2
+                user.reputation_this_week += vote_value * 2
                 user.save()
                 print("aferr increasing reputation", user.reputation)
 
@@ -293,6 +294,7 @@ class UpdateCommentScoreView(UpdateAPIView):
 
             print("before increasing reputation", user.reputation)
             user.reputation += vote_value * 2
+            user.reputation_this_week += vote_value * 2
             user.save()
             print("aferr increasing reputation", user.reputation)
 

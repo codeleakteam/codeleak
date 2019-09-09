@@ -1,0 +1,23 @@
+image: docker:19.03.0
+stages:
+  - build_push
+
+variables:
+  DJANGO_BACKEND_IMAGE: registry.gitlab.com/zivanovicb/codeleak/django-backend
+  DOCKER_DRIVER: overlay2
+
+# DOCKER LOGIN
+before_script:
+  - docker info
+  - docker login registry.gitlab.com/zivanovicb/codeleak -u zivanovicb -p $CI_GITLAB_PASSWORD
+
+# BUILD & PUSH
+build_push_django_backend:
+  only:
+    - master
+  stage: build_push
+  script:
+    - docker pull $DJANGO_BACKEND_IMAGE:latest || true
+    - cd django-backend && docker build --cache-from $DJANGO_BACKEND_IMAGE:latest -t $DJANGO_BACKEND_IMAGE:$CI_COMMIT_SHA -t $DJANGO_BACKEND_IMAGE:latest -f Dockerfile .
+    - docker push $DJANGO_BACKEND_IMAGE:$CI_COMMIT_SHA
+    - docker push $DJANGO_BACKEND_IMAGE:latest

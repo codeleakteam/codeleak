@@ -250,6 +250,7 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 answer.save()
 
                 user.reputation += vote_value * 2
+                user.reputation_this_week += vote_value * 2
                 user.save()
 
                 notify.send(
@@ -290,6 +291,8 @@ class UpdateAnswerScoreView(UpdateAPIView):
             answer.save()
 
             user.reputation += vote_value
+            user.reputation_this_week += vote_value
+
             user.save()
 
             notify.send(

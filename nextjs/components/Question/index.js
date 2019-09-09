@@ -127,9 +127,7 @@ class Question extends Component {
             postedAt={created_at}
             avatar={author.avatar}
           />
-          <Description>
-            <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
-          </Description>
+          <Description dangerouslySetInnerHTML={{ __html: this.props.description }}/>
           <TagsList>
             {tags.map(q => {
               return (
