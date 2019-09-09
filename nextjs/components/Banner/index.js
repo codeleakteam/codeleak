@@ -21,9 +21,12 @@ const AnimatedLeftSection = () => {
     <LeftSection {...props}>
       <Title>codeleak</Title>
       <Headline>
-        <LaptopEmoji>💻</LaptopEmoji>&nbsp; A better experience of asking and answering code-related questions
+        Better experience of asking and answering code-related questions
       </Headline>
       <div>
+      <FeaturingText>
+        Featuring <a target="_blank" href="https://stackblitz.com/">StackBlitz</a> and <a target="_blank" href="https://codesandbox.io/">CodeSandbox</a> online code editors 🚀
+      </FeaturingText>
         <Button icon="play-circle" type="primary">
           watch demo
         </Button>
@@ -69,14 +72,14 @@ const LeftSection = styled(animated.div)`
 `
 
 const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.85);
   margin-bottom: 16px;
 `
 
 const Headline = styled.p`
-  font-size: 1.2rem;
+  font-size: 1.35rem;
   color: #314659;
   margin-bottom: 16px;
 `
@@ -85,6 +88,12 @@ const LaptopEmoji = styled.span`
   @media screen and (max-width: 740px) {
     display: none;
   }
+`
+
+const FeaturingText = styled.p`
+  color: #314659;
+  font-size: 1rem;
+  margin-bottom: 16px;
 `
 
 export default Banner

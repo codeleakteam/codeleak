@@ -130,7 +130,6 @@ class UpdateQuestionScoreView(UpdateAPIView):
         # If user is not found, ObjectDoesNotExist will be caught
         try:
             user = User.objects.get(pk=user_id)
-            print("AAAA", user)
         except ObjectDoesNotExist:
             return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -171,6 +170,7 @@ class UpdateQuestionScoreView(UpdateAPIView):
 
                 print("before", user.reputation)
                 user.reputation += vote_value * 2
+                user.reputation_this_week += vote_value * 2
                 user.save()
                 print("after", user.reputation)
 
@@ -213,6 +213,7 @@ class UpdateQuestionScoreView(UpdateAPIView):
             question.save()
 
             user.reputation += vote_value
+            user.reputation_this_week += vote_value
             user.save()
 
             notify.send(

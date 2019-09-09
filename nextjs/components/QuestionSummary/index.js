@@ -86,9 +86,10 @@ class QuestionSummary extends Component {
 
         <Description
           dangerouslySetInnerHTML={{
-            __html: description,
+            __html: description
           }}
-        />
+        >
+        </Description>
         <TagsList>
           {tags.map(tag => (
             <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" style={{ marginRight: '5px' }} />
@@ -176,7 +177,7 @@ const Date = styled.span`
   font-size: 14px;
 `
 
-const Description = styled.p`
+const Description = styled.div`
   color: ${props => props.theme.darkGrey};
   font-size: 0.9rem;
 `

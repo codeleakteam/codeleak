@@ -23,6 +23,9 @@ const Text = styled.p`
 
 const StyledCard = styled(Card)`
   padding: 2rem;
+  @media screen and (max-width: 768px){
+    padding: 1rem;
+  }
 `
 
 const Ul = styled.ul`
