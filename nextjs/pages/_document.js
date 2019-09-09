@@ -59,6 +59,7 @@ class MyDocument extends Document {
 
   render() {
     const { isProduction } = this.props
+    console.log('[render]', { isProduction })
     return (
       <Html>
         <Head>
@@ -93,14 +94,9 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          {/* We only want to add the scripts if in production */}
-          {isProduction && (
-            <React.Fragment>
-              <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138467146-1" />
-              {/* We call the function above to inject the contents of the script tag */}
-              <script dangerouslySetInnerHTML={this.setGoogleTags()} />
-            </React.Fragment>
-          )}
+          <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138467146-1" />
+          {/* We call the function above to inject the contents of the script tag */}
+          <script dangerouslySetInnerHTML={this.setGoogleTags()} />
         </body>
       </Html>
     )
