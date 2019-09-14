@@ -33,10 +33,11 @@
     "styled-components": "^4.3.1"
   },
   "scripts": {
-    "dev": "node server.js",
-    "next-dev": "next",
-    "build": "next build",
-    "start": "NODE_ENV=production PORT=3000 node server.js"
+    "dev:setup": "/bin/bash setup.sh",
+    "dev:api": "docker-compose -f django-backend/compose-dev.yml up",
+    "dev:next": "node server.js",
+    "build:next": "next build",
+    "start:next": "NODE_ENV=production PORT=3000 node server.js"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.0",

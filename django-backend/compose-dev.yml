@@ -12,19 +12,18 @@ services:
       - .:/code
     ports:
       - '8000:8000'
-#   db:
-#     image: postgres
-#     restart: always
-#     networks:
-#       - postgres_django
-#     environment:
-#       POSTGRES_USER: codeleak_user
-#       POSTGRES_DB: codeleak
-#       POSTGRES_PASSWORD: lamerajlame 
-#     ports:
-#       - '5432:5432'
-
-# networks:
-#   postgres_django:
-#     external: true
+  db:
+    image: postgres
+    restart: always
+    networks:
+      - postgres_django
+    environment:
+      POSTGRES_USER: codeleak_user
+      POSTGRES_DB: codeleak
+      POSTGRES_PASSWORD: abcdefghijklmnopqrstuvwxyz 
+    ports:
+      - '5432:5432'
+networks:
+  postgres_django:
+    external: true
   
