@@ -6,19 +6,22 @@ services:
     command: python /code/codeleak_backend/manage.py runserver 0.0.0.0:8000
     env_file:
       - ./env/dev.env
-    # networks: 
-    #   - postgres_django
+    networks: 
+      - postgres_django
     volumes:
       - .:/code
+    entrypoint: ''
     ports:
       - '8000:8000'
+    depends_on:
+      - db 
   db:
     image: postgres
     restart: always
     networks:
       - postgres_django
     environment:
-      POSTGRES_USER: codeleak_user
+      POSTGRES_USER: codeleak_admin 
       POSTGRES_DB: codeleak
       POSTGRES_PASSWORD: abcdefghijklmnopqrstuvwxyz 
     ports:

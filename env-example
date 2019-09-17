@@ -1,0 +1,8 @@
+CODELEAK_SECRET_KEY=abcdefghijklmnopqrstuvwxyz
+DATABASE_NAME=codeleak
+DATABASE_USER=codeleak_admin
+DATABASE_PASSWORD=abcdefghijklmnopqrstuvwxyz
+DATABASE_HOST=db
+DATABASE_PORT=5432
+FRONT_END_APP_URL=http://localhost:3000
+DEBUG=True

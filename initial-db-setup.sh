@@ -1,0 +1,1 @@
+docker exec -it $(docker ps | grep django-backend_web | awk '{print $1}') bash initial-migrations.sh
