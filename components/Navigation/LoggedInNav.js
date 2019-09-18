@@ -269,9 +269,9 @@ class LoggedInNav extends React.Component {
                         <Anchor href="mailto:hi@codeleak.io">Send us an email</Anchor>
                       </Menu.Item>
                       <Menu.Item key="5">
-                        <StatefulLink href="/sponsor">
-                          <Anchor>Become a sponsor ❤️</Anchor>
-                        </StatefulLink>
+                        <Anchor href="https://www.patreon.com/codeleak" target="_blank">
+                          Become a sponsor ❤️
+                        </Anchor>
                       </Menu.Item>
 
                       <SubMenu
@@ -347,6 +347,11 @@ class LoggedInNav extends React.Component {
                     </ListItem>
                   )
                 })}
+                <ListItem key={Math.random().toString()}>
+                  <Anchor href="https://www.patreon.com/codeleak" onClick={handleBurgerMenu} target="_blank">
+                    Become a sponsor
+                  </Anchor>
+                </ListItem>
               </List>
             </div>
 
@@ -468,11 +473,6 @@ const regularPages = [
   //   name: 'Tags',
   //   href: '/tags',
   // },
-  {
-    name: 'Become a Sponsor',
-    href: 'https://www.patreon.com/codeleak',
-  },
-
   // {
   //   name: 'Blog',
   //   href: '/medium/blog',
