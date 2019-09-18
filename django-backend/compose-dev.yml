@@ -7,10 +7,9 @@ services:
     env_file:
       - ./env/dev.env
     networks: 
-      - postgres_django
+      - codeleak_postgres_django
     volumes:
       - .:/code
-    entrypoint: ''
     ports:
       - '8000:8000'
     depends_on:
@@ -19,7 +18,7 @@ services:
     image: postgres
     restart: always
     networks:
-      - postgres_django
+      - codeleak_postgres_django
     environment:
       POSTGRES_USER: codeleak_admin 
       POSTGRES_DB: codeleak
@@ -27,6 +26,6 @@ services:
     ports:
       - '5432:5432'
 networks:
-  postgres_django:
+  codeleak_postgres_django:
     external: true
   

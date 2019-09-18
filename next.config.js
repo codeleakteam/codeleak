@@ -12,10 +12,6 @@ const productionConfig = {
   baseUrl: 'https://api.codeleak.io',
 }
 
-// const nextConfig = {
-//   publicRuntimeConfig: isProduction ? productionConfig : developmentConfig,
-// }
-
 module.exports = withSourceMaps({
   webpack(config, options) {
     return config
