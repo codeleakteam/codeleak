@@ -199,7 +199,8 @@ class ReportAnswerView(APIView):
 class UpdateAnswerScoreView(UpdateAPIView):
     def put(self, request, answer_id):
         is_upvote = request.data.get('is_upvote')
-
+        user_id = request.data.get('user_id')
+        
         # Field checks
         if is_upvote == None:
             return Response({ 'message': 'is_upvote param not provided'}, status.HTTP_400_BAD_REQUEST)
@@ -209,9 +210,9 @@ class UpdateAnswerScoreView(UpdateAPIView):
 
         # If user is not found, ObjectDoesNotExist will be caught
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = User.objects.get(pk=user_id)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + request.user.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         # If answer is not found, ObjectDoesNotExist will be caught
         try:
@@ -249,6 +250,7 @@ class UpdateAnswerScoreView(UpdateAPIView):
                 answer.save()
 
                 user.reputation += vote_value * 2
+                user.reputation_this_week += vote_value * 2
                 user.save()
 
                 notify.send(
@@ -289,6 +291,8 @@ class UpdateAnswerScoreView(UpdateAPIView):
             answer.save()
 
             user.reputation += vote_value
+            user.reputation_this_week += vote_value
+
             user.save()
 
             notify.send(
