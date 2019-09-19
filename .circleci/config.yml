@@ -24,13 +24,13 @@ jobs:
           name: Build NextJS image
           command: docker build -t $NEXT_IMAGE_NAME:latest -t $NEXT_IMAGE_NAME:$CIRCLE_SHA1 .
       - run:
-        name: Publish Docker Images to Docker Hub
-        command: |
-          docker login -u "$DOCKERHUB_USERNAME" -p "lamerajlame4321"
-          docker push $DJANGO_IMAGE_NAME:latest
-          docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
-          docker push $NEXT_IMAGE_NAME:latest
-          docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1
+          name: Publish Docker Images to Docker Hub
+          command: |
+            docker login -u "$DOCKERHUB_USERNAME" -p "lamerajlame4321"
+            docker push $DJANGO_IMAGE_NAME:latest
+            docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
+            docker push $NEXT_IMAGE_NAME:latest
+            docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1
 workflows:
   version: 2
   build-push-n-deploy-master:
