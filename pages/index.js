@@ -130,13 +130,15 @@ class Index extends Component {
                       </Row>
 
                       <Row>
-                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">🐛 Bug reports</a>
+                        <a href="https://spectrum.chat/codeleak/bugs-reports?tab=posts">🐛 Bug reports</a>
                         <Link href="/cookies">
                           <a>Cookies</a>
                         </Link>
                       </Row>
                       <Row>
-                        <a href="https://spectrum.chat/codeleak/feature-requests?tab=posts">❤️ Become a sponsor</a>
+                        <a href="https://www.patreon.com/codeleak" target="_blank">
+                          ❤️ Become a sponsor
+                        </a>
                       </Row>
                     </div>
                   </CodeleakSection>

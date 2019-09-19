@@ -1,0 +1,47 @@
+version: 2
+jobs:
+  build:
+    environment:
+      DJANGO_IMAGE_NAME: codeleak/codeleak-django-backend
+      NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Django Docker image
+          command: sudo docker build -t $DJANGO_IMAGE_NAME:latest -t $DJANGO_IMAGE_NAME:$CIRCLE_SHA1 ./django-backend
+      - run:
+          name: Build NextJS image
+          command: sudo docker build -t $NEXT_IMAGE_NAME:latest -t $NEXT_IMAGE_NAME:$CIRCLE_SHA1 .
+
+  deploy:
+    environment:
+      DJANGO_IMAGE_NAME: codeleak/codeleak-django-backend
+      NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Publish Docker Images to Docker Hub
+          command: |
+            sudo docker login -u "$DOCKERHUB_USERNAME" -p "lamerajlame4321"
+            sudo docker push $DJANGO_IMAGE_NAME:latest
+            sudo docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
+            sudo docker push $NEXT_IMAGE_NAME:latest
+            sudo docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1
+
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - deploy:
+          filters:
+            branches:
+              only: master
