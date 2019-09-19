@@ -8,11 +8,10 @@ ENV CODE_ENV $NODE_ENV
 
 WORKDIR /opt/app
 COPY package.json yarn.lock ./
+
 RUN yarn 
+
 COPY . .
 RUN yarn run build:next
 
-FROM nginx:1.15.3-alpine
-COPY --from=build /opt/app/.next /var/www
-EXPOSE 80
-ENTRYPOINT ["nginx","-g","daemon off;"]
+CMD ["/opt/app/node_modules/pm2/bin/pm2-runtime", "start", "pm2-apps.json"]
