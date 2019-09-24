@@ -197,7 +197,14 @@ class LoggedInNav extends React.Component {
     const menu = (
       <Menu style={{ width: '300px' }}>
         <Menu.Item key="0">
-          <a href={`/profile/${this.props.user.id}/${this.props.user.username}`}>My profile</a>
+          <StatefulLink
+            href={`/profile/${this.props.user.id}/${this.props.user.username}`}
+            textStyle={{
+              textTransform: 'none',
+            }}
+          >
+            My Profile
+          </StatefulLink>
         </Menu.Item>
         <Menu.Divider />
         {/* <Menu.Item key="2">
@@ -251,20 +258,16 @@ class LoggedInNav extends React.Component {
                   content={
                     <Menu style={{ width: 256 }} mode="inline">
                       <Menu.Item key="1">
-                        <StatefulLink href="/">
-                          <Anchor>Questions</Anchor>
-                        </StatefulLink>
+                        <StatefulLink href="/">Questions</StatefulLink>
                       </Menu.Item>
                       <Menu.Item key="2">
-                        <StatefulLink href="/jobs">
-                          <Anchor>Jobs</Anchor>
-                        </StatefulLink>
+                        <StatefulLink href="/jobs">Jobs</StatefulLink>
                       </Menu.Item>
-                      <Menu.Item key="3">
-                        <StatefulLink href="/tags">
-                          <Anchor>Tags</Anchor>
-                        </StatefulLink>
-                      </Menu.Item>
+                      {/*
+                        <Menu.Item key="3">
+                          <StatefulLink href="/tags">Tags</StatefulLink>
+                        </Menu.Item>
+                     */}
                       <Menu.Item key="4">
                         <Anchor href="mailto:hi@codeleak.io">Send us an email</Anchor>
                       </Menu.Item>
@@ -287,19 +290,13 @@ class LoggedInNav extends React.Component {
                         }
                       >
                         <Menu.Item key="6">
-                          <StatefulLink href="/privacy">
-                            <Anchor>Privacy</Anchor>
-                          </StatefulLink>
+                          <StatefulLink href="/privacy">Privacy</StatefulLink>
                         </Menu.Item>
                         <Menu.Item key="7">
-                          <StatefulLink href="/cookies">
-                            <Anchor>Cookie</Anchor>
-                          </StatefulLink>
+                          <StatefulLink href="/cookies">Cookie</StatefulLink>
                         </Menu.Item>
                         <Menu.Item key="8">
-                          <StatefulLink href="/terms">
-                            <Anchor>Terms of Use</Anchor>
-                          </StatefulLink>
+                          <StatefulLink href="/terms">Terms Of Use</StatefulLink>
                         </Menu.Item>
                       </SubMenu>
                     </Menu>
@@ -341,14 +338,12 @@ class LoggedInNav extends React.Component {
                 {regularPages.map(l => {
                   return (
                     <ListItem key={l.name}>
-                      <StatefulLink href={l.href}>
-                        <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
-                      </StatefulLink>
+                      <StatefulLink href={l.href}>{l.name}</StatefulLink>
                     </ListItem>
                   )
                 })}
                 <ListItem key={Math.random().toString()}>
-                  <Anchor href="https://www.patreon.com/codeleak" onClick={handleBurgerMenu} target="_blank">
+                  <Anchor target="_blank" href="https://www.patreon.com/codeleak" target="_blank" color="black">
                     Become a sponsor
                   </Anchor>
                 </ListItem>
@@ -436,6 +431,11 @@ class LoggedInNav extends React.Component {
     )
   }
 }
+
+const UserMenuAnchor = styled(Anchor)`
+  text-transform: none;
+  color: rgba(0, 0, 0, 0.65);
+`
 
 const List = styled.ul`
   width: 100%;

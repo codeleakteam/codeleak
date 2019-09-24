@@ -86,7 +86,6 @@ class MyApp extends App {
           <Navigation
             isMenuActive={this.state.isMenuActive}
             handleBurgerMenuClick={this.handleBurgerMenuClick}
-            showLogo={true}
             showBurger={true}
             isLoggedIn={isLoggedIn}
             user={pageProps.codeleakUser}

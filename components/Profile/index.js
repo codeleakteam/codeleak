@@ -281,6 +281,9 @@ const UserBio = styled.span`
   color: ${props => props.theme.darkerDarkGrey};
   line-height: 22px;
   margin-bottom: 16px;
+  @media screen and (max-width: 740px) {
+    text-align: center;
+  }
 `
 
 const getAvatarLetter = (username, full_name) => {
