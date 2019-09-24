@@ -26,7 +26,9 @@ jobs:
       - run:
           name: Publish Docker Images to Docker Hub
           command: |
-            echo "$DOCKERHUB_PASSWORD" | docker login --username $DOCKERHUB_USERNAME --password-stdin"
+            echo $DOCKERHUB_PASSWORD 
+            echo $DOCKERHUB_USERNAME
+            echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin"
             docker push $DJANGO_IMAGE_NAME:latest
             docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
             docker push $NEXT_IMAGE_NAME:latest
