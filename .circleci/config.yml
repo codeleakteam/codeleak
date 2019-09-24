@@ -49,4 +49,3 @@ workflows:
   build-push-n-deploy-master:
     jobs:
       - build
-      - deploy
