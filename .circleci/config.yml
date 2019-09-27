@@ -6,9 +6,6 @@ jobs:
       NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
     docker:
       - image: circleci/buildpack-deps:stretch
-    branches:
-      only:
-        - master
     steps:
       - checkout
       - setup_remote_docker
@@ -38,4 +35,9 @@ workflows:
   version: 2
   build-push-n-deploy-master:
     jobs:
-      - build
+      - build:
+          filters: 
+            branches:
+              only:
+                - master
+
