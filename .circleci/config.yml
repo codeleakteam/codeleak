@@ -6,6 +6,9 @@ jobs:
       NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
     docker:
       - image: circleci/buildpack-deps:stretch
+    branches:
+      only:
+        - master
     steps:
       - checkout
       - setup_remote_docker
@@ -26,26 +29,11 @@ jobs:
       - run:
           name: Publish Docker Images to Docker Hub
           command: |
-            echo $DOCKERHUB_PASSWORD 
-            echo $DOCKERHUB_USERNAME
-            echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin"
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
             docker push $DJANGO_IMAGE_NAME:latest
             docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
             docker push $NEXT_IMAGE_NAME:latest
             docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1
-  deploy:
-    environment:
-      DJANGO_IMAGE_NAME: codeleak/codeleak-django-backend
-      NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
-      SWARM_STACK_NAME: django-next
-    machine:
-      enabled: true
-    steps:
-      - run:
-          name: Blue green deployment
-          command: |
-            ssh $SSH_USER@$SSH_HOST "VERSION=CIRCLE_SHA1 docker stack deploy -c stack.yml $SWARM_STACK_NAME"
-
 workflows:
   version: 2
   build-push-n-deploy-master:
