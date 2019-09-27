@@ -1,8 +1,9 @@
 import React from 'react'
 import Head from 'next/head'
+import { withAuthSync } from '../helpers/functions/auth'
 import InDevelopment from '../components/InDevelopment'
 
-export default function() {
+function Jobs() {
   return (
     <React.Fragment>
       <Head>
@@ -13,3 +14,5 @@ export default function() {
     </React.Fragment>
   )
 }
+
+export default withAuthSync(Jobs)

@@ -1,5 +1,6 @@
 import React, { Children } from 'react'
 import { withRouter } from 'next/router'
+import { Button } from 'antd'
 import Link from 'next/link'
 import styled, { css } from 'styled-components'
 
@@ -11,17 +12,33 @@ export const Wrapper = styled.div`
   flex: 1;
 `
 
-export const Anchor = styled.a`
-color: ${props => props.color || 'black'};
+const AnchorText = styled.span`
+  color: ${props => props.color || 'black'};
   ${props =>
     props.isActive &&
     css`
       color: ${props.theme.antBlue}!important;
     `}
-  /* color: ${props => (!props.isActive ? 'white' : props.theme.antBlue)}!important; */
+
+  &:hover {
+    color: ${props => props.theme.antBlue};
+  }
   text-transform: uppercase;
   font-weight: 500;
 `
+
+export const Anchor = React.forwardRef(({ children, color, isActive, href, className, ...rest }, ref) => {
+  // Calling forwardRef separates a ref prop from actual component props
+  const anchorTextProps = {}
+  if (className !== undefined) anchorTextProps.className = className
+  return (
+    <a href={href} {...rest}>
+      <AnchorText color={color} isActive={isActive} {...anchorTextProps}>
+        {children}
+      </AnchorText>
+    </a>
+  )
+})
 
 export const ListItem = styled.li`
   display: block;
@@ -38,10 +55,28 @@ export const ListItem = styled.li`
   }
 `
 
-export const StatefulLink = withRouter(({ router, children, as, href, ...rest }) => (
-  <Link {...rest} href={href} as={as}>
-    {React.cloneElement(Children.only(children), {
-      isActive: router.asPath === href || router.asPath === as,
-    })}
-  </Link>
-))
+export const StatefulLink = withRouter(({ router, children, as, href, color, textStyle, ...rest }) => {
+  return (
+    <Link {...rest} href={href} as={as}>
+      <a>
+        <AnchorText isActive={router.asPath === href || router.asPath === as} color={color} style={textStyle}>
+          {children}
+        </AnchorText>
+      </a>
+    </Link>
+  )
+})
+
+export const ButtonLink = withRouter(({ router, children, as, href, color, buttonType, style, ...rest }) => {
+  const buttonProps = {}
+  if (buttonType !== undefined) buttonProps.type = buttonType
+  return (
+    <Link {...rest} href={href} as={as}>
+      <a>
+        <Button {...buttonProps} style={style}>
+          {children}
+        </Button>
+      </a>
+    </Link>
+  )
+})

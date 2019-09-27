@@ -6,7 +6,7 @@ import LoggedInNav from './LoggedInNav'
 import LoggedOutNav from './LoggedOutNav'
 
 const Navigation = withRouter(
-  ({ router, user, isMenuActive, handleBurgerMenuClick, showLogo, showBurger, isLoggedIn, authToken }) => {
+  ({ router, user, isMenuActive, handleBurgerMenuClick, showBurger, isLoggedIn, authToken }) => {
     const navJSX =
       isLoggedIn && authToken ? (
         <LoggedInNav
@@ -52,7 +52,6 @@ const Container = styled.div`
 Navigation.propTypes = {
   isMenuActive: PropTypes.bool.isRequired,
   handleBurgerMenuClick: PropTypes.func.isRequired,
-  showLogo: PropTypes.bool.isRequired,
   showBurger: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     id: PropTypes.number.isRequired,
