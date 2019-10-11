@@ -1,6 +1,6 @@
 ---
-name: Custom bug-report/feature/discussion/question template
-about: Custom bug-report/feature/discussion/question template
+name: Bug report
+about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
