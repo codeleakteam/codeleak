@@ -39,7 +39,7 @@ jobs:
       - run: 
           name: Release
           command: |
-            npm i -g npx
+            sudo npm i -g npx
             npx semantic-release 
 workflows:
   version: 2
