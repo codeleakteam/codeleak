@@ -176,7 +176,10 @@ class UpdateCommentScoreView(UpdateAPIView):
     def put(self, request, comment_id):
         is_upvote = request.data.get('is_upvote', None)
         comment_type = request.data.get('comment_type', None)
+        user_id = request.data.get('user_id', None)
+
         COMMENT_TYPES = self.COMMENT_TYPES
+
         # Field checks
         if comment_type == None:
             return Response({ 'message': 'comment_type param not provided'}, status.HTTP_400_BAD_REQUEST)
@@ -220,9 +223,10 @@ class UpdateCommentScoreView(UpdateAPIView):
         comment_key = COMMENT_TYPES[comment_type]['key']
 
         try:
-            user = User.objects.get(pk=request.user.id)
+            user = User.objects.get(pk=user_id)
+            print("got user", user)
         except ObjectDoesNotExist:
-            return Response({ 'message': 'User with the ID: ' + request.user.id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({ 'message': 'User with the ID: ' + user_id + ' does not exist.'}, status=status.HTTP_404_NOT_FOUND)
 
         try:
             if comment_type == 'QUESTION_COMMENT':
@@ -240,8 +244,11 @@ class UpdateCommentScoreView(UpdateAPIView):
                 comment.score += vote_value * 2
                 comment.save()
 
+                print("before increasing reputation", user.reputation)
                 user.reputation += vote_value * 2
+                user.reputation_this_week += vote_value * 2
                 user.save()
+                print("aferr increasing reputation", user.reputation)
 
 
                 notify.send(
@@ -284,6 +291,12 @@ class UpdateCommentScoreView(UpdateAPIView):
 
             comment.score += vote_value
             comment.save()
+
+            print("before increasing reputation", user.reputation)
+            user.reputation += vote_value * 2
+            user.reputation_this_week += vote_value * 2
+            user.save()
+            print("aferr increasing reputation", user.reputation)
 
             notify.send(
                 verb=verb,

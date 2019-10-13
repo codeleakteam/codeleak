@@ -16,6 +16,7 @@ class User(AbstractUser):
     # Optional
     full_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.FileField(null=True)
+    headline = models.CharField(max_length=255, blank=True, null=True)
     biography = models.CharField(max_length=255, blank=True, null=True)
     website_url = models.URLField(blank=True, null=True)
     cv_url = models.URLField(blank=True, null=True)

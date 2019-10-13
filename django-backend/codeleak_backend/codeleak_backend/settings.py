@@ -118,7 +118,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'debug_toolbar', 
     'core',
     'rest_framework',
     'rest_framework.authtoken',
@@ -128,13 +127,13 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'django_extensions',
-    # needed for social
+    # needed for social accounts
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'corsheaders',
     'notifications',
     'storages',
-    'raven.contrib.django.raven_compat'
+    'raven.contrib.django.raven_compat',
 ]
 
 # Needed for rest-auth/allauth
