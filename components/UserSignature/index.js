@@ -9,22 +9,24 @@ export default function UserSignature({ id, username, full_name, reputation, pos
   return (
     <Wrapper {...rest}>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
-        {avatar ? (
-          <AuthorAvatar src={avatar} alt={username} />
-        ) : (
-          <Avatar
-            size={40}
-            style={{
-              marginRight: '16px',
-              verticalAlign: 'middle',
-              cursor: 'pointer',
-              color: '#f56a00',
-              backgroundColor: '#fde3cf',
-            }}
-          >
-            {getAvatarLetter(username, full_name)}
-          </Avatar>
-        )}
+        <a>
+          {avatar ? (
+            <AuthorAvatar src={avatar} alt={username} />
+          ) : (
+            <Avatar
+              size={40}
+              style={{
+                marginRight: '16px',
+                verticalAlign: 'middle',
+                cursor: 'pointer',
+                color: '#f56a00',
+                backgroundColor: '#fde3cf',
+              }}
+            >
+              {getAvatarLetter(username, full_name)}
+            </Avatar>
+          )}
+        </a>
       </Link>
       <Column>
         <Row>
@@ -53,22 +55,24 @@ export function MostHelpfulUserSignature({ id, username, full_name, reputation, 
   return (
     <Wrapper {...rest}>
       <Link href={`/profile/${id}`} as={`/profile/${id}/${username}`}>
-        {avatar ? (
-          <AuthorAvatar src={avatar} alt={username} />
-        ) : (
-          <Avatar
-            size={40}
-            style={{
-              marginRight: '16px',
-              verticalAlign: 'middle',
-              cursor: 'pointer',
-              color: '#f56a00',
-              backgroundColor: '#fde3cf',
-            }}
-          >
-            {getAvatarLetter(username, full_name)}
-          </Avatar>
-        )}
+        <a>
+          {avatar ? (
+            <AuthorAvatar src={avatar} alt={username} />
+          ) : (
+            <Avatar
+              size={40}
+              style={{
+                marginRight: '16px',
+                verticalAlign: 'middle',
+                cursor: 'pointer',
+                color: '#f56a00',
+                backgroundColor: '#fde3cf',
+              }}
+            >
+              {getAvatarLetter(username, full_name)}
+            </Avatar>
+          )}
+        </a>
       </Link>
       <Column>
         <Row>

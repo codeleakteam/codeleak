@@ -55,4 +55,4 @@ const addLinkPluginPlugin = {
   ],
 }
 
-export default addLinkPluginPlugin;
+export default addLinkPluginPlugin

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button, Alert, message } from 'antd'
 import QuestionList from '../components/QuestionList'
 import { withAuthSync } from '../helpers/functions/auth'
-import PopularTags from '../components/SideWidgets/PopularTags'
+// import PopularTags from '../componendts/SideWidgets/PopularTags'
 import MostHelpfulUsers from '../components/MostHelpfulUsers'
 import TwoSideLayout from '../components/TwoSideLayout'
 import { apiGet } from '../api'
@@ -73,7 +73,7 @@ class Index extends Component {
     return (
       <Wrapper>
         <Head>
-          <title>codeleak</title>
+          <title>Codeleak - Debug code together</title>
         </Head>
         {this.props.error && <Alert message="Internal server error" type="error" />}
         {!this.props.error && (
@@ -81,7 +81,9 @@ class Index extends Component {
             <Heading>
               <Title>Questions</Title>
               <Link href="/questions/ask">
-                <Button icon="laptop">submit question</Button>
+                <a>
+                  <Button icon="laptop">submit question</Button>
+                </a>
               </Link>
             </Heading>
             <TwoSideLayout
@@ -163,10 +165,11 @@ const CodeleakSection = styled.div`
   border: 1px solid #e0e0e0;
 `
 
-const SectionLinksWrapper = styled.div`
+/* const SectionLinksWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-`
+` 
+*/
 
 const SectionTitle = styled.h4`
   color: #000;

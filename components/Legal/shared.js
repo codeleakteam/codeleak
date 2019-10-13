@@ -23,7 +23,11 @@ const Text = styled.p`
 
 const StyledCard = styled(Card)`
   padding: 2rem;
+<<<<<<< HEAD:components/Legal/shared.js
   @media screen and (max-width: 768px){
+=======
+  @media screen and (max-width: 768px) {
+>>>>>>> documentation:components/Legal/shared.js
     padding: 1rem;
   }
 `

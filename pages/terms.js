@@ -45,7 +45,7 @@ const TermsOfService = () => (
         </Text>
       </Section>
       <Section>
-        <SectionHeading>Your accuont</SectionHeading>
+        <SectionHeading>Your account</SectionHeading>
         <Text>
           When you create an account or use another service to log in to the Service, you agree to maintain the security
           of your password and accept all risks of unauthorized access to any data or other information you provide to

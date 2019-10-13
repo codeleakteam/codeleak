@@ -53,27 +53,33 @@ class QuestionSummary extends Component {
 
     return (
       <Card ref={setLastItemRef ? lastItemRef => setLastItemRef({ lastItemRef, lastItemRefFakeId: id }) : undefined}>
-        <Link as={`question/${questionId}/${slug}`} href={`question/${questionId}/${slug}`}>
-          <Title>{title}</Title>
+        <Link href={`question/${questionId}/${slug}`}>
+          <a>
+            <Title>{title}</Title>
+          </a>
         </Link>
 
         <Row>
           <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
             {authorAvatar ? (
-              <UserAvatar src={authorAvatar} alt={authorUsername} />
+              <a>
+                <UserAvatar src={authorAvatar} alt={authorUsername} />
+              </a>
             ) : (
-              <Avatar
-                size={32}
-                style={{
-                  marginRight: '16px',
-                  verticalAlign: 'middle',
-                  cursor: 'pointer',
-                  color: '#f56a00',
-                  backgroundColor: '#fde3cf',
-                }}
-              >
-                {getAvatarLetter(authorUsername, authorFullName)}
-              </Avatar>
+              <a>
+                <Avatar
+                  size={32}
+                  style={{
+                    marginRight: '16px',
+                    verticalAlign: 'middle',
+                    cursor: 'pointer',
+                    color: '#f56a00',
+                    backgroundColor: '#fde3cf',
+                  }}
+                >
+                  {getAvatarLetter(authorUsername, authorFullName)}
+                </Avatar>
+              </a>
             )}
           </Link>
           <Link href={`profile/${authorId}`} as={`profile/${authorId}/${authorUsername}`}>
@@ -86,10 +92,9 @@ class QuestionSummary extends Component {
 
         <Description
           dangerouslySetInnerHTML={{
-            __html: description
+            __html: description,
           }}
-        >
-        </Description>
+        ></Description>
         <TagsList>
           {tags.map(tag => (
             <TagWithLink key={tag.id + tag.slug} text={tag.title} url="/" style={{ marginRight: '5px' }} />
@@ -132,7 +137,7 @@ const Row = styled.div`
   margin: 8px 0;
 `
 
-const Title = styled.p`
+const Title = styled.span`
   font-size: 20px;
   font-weight: bold;
   line-height: 28px;
@@ -156,7 +161,7 @@ const UserAvatar = styled.img`
   cursor: pointer;
 `
 
-const UserDisplayName = styled.span`
+const UserDisplayName = styled.a`
   color: #000;
   font-size: 0.95rem;
   font-weight: bold;

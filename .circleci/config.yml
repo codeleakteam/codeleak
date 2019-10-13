@@ -10,38 +10,46 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv /tmp/docker/* /usr/bin
+      - run:
           name: Build Django Docker image
-          command: sudo docker build -t $DJANGO_IMAGE_NAME:latest -t $DJANGO_IMAGE_NAME:$CIRCLE_SHA1 ./django-backend
+          command: docker build -t $DJANGO_IMAGE_NAME:latest -t $DJANGO_IMAGE_NAME:$CIRCLE_SHA1 ./django-backend
       - run:
           name: Build NextJS image
-          command: sudo docker build -t $NEXT_IMAGE_NAME:latest -t $NEXT_IMAGE_NAME:$CIRCLE_SHA1 .
-
-  deploy:
-    environment:
-      DJANGO_IMAGE_NAME: codeleak/codeleak-django-backend
-      NEXT_IMAGE_NAME: codeleak/codeleak-nextjs
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - setup_remote_docker
+          command: docker build -t $NEXT_IMAGE_NAME:latest -t $NEXT_IMAGE_NAME:$CIRCLE_SHA1 .
       - run:
           name: Publish Docker Images to Docker Hub
           command: |
-            sudo docker login -u "$DOCKERHUB_USERNAME" -p "lamerajlame4321"
-            sudo docker push $DJANGO_IMAGE_NAME:latest
-            sudo docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
-            sudo docker push $NEXT_IMAGE_NAME:latest
-            sudo docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1
-
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+            docker push $DJANGO_IMAGE_NAME:latest
+            docker push $DJANGO_IMAGE_NAME:$CIRCLE_SHA1
+            docker push $NEXT_IMAGE_NAME:latest
+            docker push $NEXT_IMAGE_NAME:$CIRCLE_SHA1\
+  release:
+    docker:
+      - image: circleci/node:10.16.3 
+    steps:
+      - checkout
+      - run: 
+          name: Release
+          command: |
+            sudo npm i -g npx
+            npx semantic-release 
 workflows:
   version: 2
-  build-master:
+  build-push-n-release-master:
     jobs:
       - build:
-          filters:
+          filters: 
             branches:
-              only: master
-      - deploy:
-          filters:
-            branches:
-              only: master
+              only:
+                - master
+      - release:
+          requires:
+            - build

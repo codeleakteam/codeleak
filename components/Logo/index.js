@@ -19,7 +19,9 @@ const Logo = ({ type, size, className }) => {
   )
   return (
     <Link href="/">
-      <Wrapper {...wrapperProps}>{type === 'short' ? shortLogoJSX : fullLogoJSX}</Wrapper>
+      <a>
+        <Wrapper {...wrapperProps}>{type === 'short' ? shortLogoJSX : fullLogoJSX}</Wrapper>
+      </a>
     </Link>
   )
 }

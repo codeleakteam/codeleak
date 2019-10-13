@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import Link from 'next/link'
 import Logo from '../Logo'
 import { Input, Button, Popover, Menu, Icon } from 'antd'
-import { Wrapper, ListItem, Anchor, StatefulLink } from './shared'
+import { Wrapper, ListItem, Anchor, StatefulLink, ButtonLink } from './shared'
 import Search from '../Search'
 
 const { SubMenu } = Menu
@@ -40,20 +40,16 @@ class LoggedOutNav extends React.Component {
                 content={
                   <Menu onClick={this.handleClick} style={{ width: 256 }} mode="inline">
                     <Menu.Item key="1">
-                      <StatefulLink href="/">
-                        <Anchor>Questions</Anchor>
-                      </StatefulLink>
+                      <StatefulLink href="/">Questions</StatefulLink>
                     </Menu.Item>
                     <Menu.Item key="2">
-                      <StatefulLink href="/jobs">
-                        <Anchor>Jobs</Anchor>
-                      </StatefulLink>
+                      <StatefulLink href="/jobs">Jobs</StatefulLink>
                     </Menu.Item>
-                    <Menu.Item key="3">
-                      <StatefulLink href="/tags">
-                        <Anchor>Tags</Anchor>
-                      </StatefulLink>
-                    </Menu.Item>
+                    {/*
+                        <Menu.Item key="3">
+                          <StatefulLink href="/tags">Tags</StatefulLink>
+                        </Menu.Item>
+                     */}
                     <Menu.Item key="4">
                       <Anchor href="mailto:hi@codeleak.io">Send us an email</Anchor>
                     </Menu.Item>
@@ -76,19 +72,13 @@ class LoggedOutNav extends React.Component {
                       }
                     >
                       <Menu.Item key="6">
-                        <StatefulLink href="/privacy">
-                          <Anchor>Privacy</Anchor>
-                        </StatefulLink>
+                        <StatefulLink href="/privacy">Privacy</StatefulLink>
                       </Menu.Item>
                       <Menu.Item key="7">
-                        <StatefulLink href="/cookies">
-                          <Anchor>Cookie</Anchor>
-                        </StatefulLink>
+                        <StatefulLink href="/cookies">Cookie</StatefulLink>
                       </Menu.Item>
                       <Menu.Item key="8">
-                        <StatefulLink href="/terms">
-                          <Anchor>Terms of Use</Anchor>
-                        </StatefulLink>
+                        <StatefulLink href="/terms">Terms Of Use</StatefulLink>
                       </Menu.Item>
                     </SubMenu>
                   </Menu>
@@ -138,14 +128,12 @@ class LoggedOutNav extends React.Component {
                 {regularPages.map(l => {
                   return (
                     <StyledListItem key={l.name}>
-                      <StatefulLink href={l.href}>
-                        <Anchor onClick={handleBurgerMenu}>{l.name}</Anchor>
-                      </StatefulLink>
+                      <StatefulLink href={l.href}>{l.name}</StatefulLink>
                     </StyledListItem>
                   )
                 })}
                 <StyledListItem key={Math.random().toString()}>
-                  <Anchor target="_blank" href="https://www.patreon.com/codeleak" onClick={handleBurgerMenu}>
+                  <Anchor href="https://www.patreon.com/codeleak" target="_blank" color="black">
                     Become a sponsor
                   </Anchor>
                 </StyledListItem>
@@ -193,7 +181,7 @@ class LoggedOutNav extends React.Component {
                       display: inline-block;
                     `}
                   >
-                    <LoginButton href="/sign_in">Sign In</LoginButton>
+                    <SignInButton href="/sign_in">Sign In</SignInButton>
                   </StyledListItem>
 
                   <StyledListItem
@@ -232,11 +220,7 @@ const regularPages = [
   // },
 ]
 
-const StyledListItem = styled(ListItem)`
-  a:hover {
-    color: ${props => props.theme.antBlue};
-  }
-`
+const StyledListItem = styled(ListItem)``
 
 const List = styled.ul`
   width: 100%;
@@ -272,20 +256,16 @@ const StyledSearch = styled(Search)`
   }
 `
 
-const LoginButton = ({ children, href }) => {
+const SignInButton = ({ children, href }) => {
   const size = useWindowSize()
   return (
     <React.Fragment>
       {size.width < 768 ? (
-        <Link href={href}>
-          <Button>
-            <Anchor>{children}</Anchor>
-          </Button>
-        </Link>
+        <ButtonLink href={href} as={href} color="white" style={{ textTransform: 'uppercase' }}>
+          {children}
+        </ButtonLink>
       ) : (
-        <Link href={href}>
-          <Anchor>{children}</Anchor>
-        </Link>
+        <StatefulLink href={href}>{children}</StatefulLink>
       )}
     </React.Fragment>
   )
@@ -296,17 +276,13 @@ const RegisterButton = ({ children, href }) => {
   return (
     <React.Fragment>
       {size.width < 768 ? (
-        <Link href={href}>
-          <Button type="primary">
-            <Anchor>{children}</Anchor>
-          </Button>
-        </Link>
+        <ButtonLink buttonType="primary" href={href} as={href} color="white" style={{ textTransform: 'uppercase' }}>
+          {children}
+        </ButtonLink>
       ) : (
-        <Link href={href}>
-          <Button>
-            <Anchor>{children}</Anchor>
-          </Button>
-        </Link>
+        <ButtonLink href={href} as={href} color="white" style={{ textTransform: 'uppercase' }}>
+          {children}
+        </ButtonLink>
       )}
     </React.Fragment>
   )

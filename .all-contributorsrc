@@ -1,0 +1,50 @@
+{
+  "projectName": "codeleak",
+  "projectOwner": "Branko Zivanovic",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "zivanovicb1",
+      "name": "Branko Zivanovic",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/28143370?v=4",
+      "profile": "https://github.com/zivanovicb1",
+      "contributions": [
+        "code",
+        "design",
+        "doc",
+        "ideas",
+        "review",
+        "infra",
+        "bug"
+      ]
+    },
+    {
+      "login": "MilePaor",
+      "name": "Bojan Milicev",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/20985604?v=4",
+      "profile": "https://github.com/MilePaor",
+      "contributions": [
+        "code",
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "gengar3",
+      "name": "gengar3",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/23714920?v=4",
+      "profile": "https://github.com/gengar3",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
