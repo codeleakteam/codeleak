@@ -10,7 +10,7 @@
 <hr />
 
 [![PRs Welcome][prs-badge]][prs]
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 [![Code of Conduct][coc-badge]][coc]
 [![Join the community on Spectrum][spectrum-badge]][spectrum]
 
@@ -142,6 +142,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/zivanovicb1"><img src="https://avatars2.githubusercontent.com/u/28143370?v=4" width="100px;" alt="Branko Zivanovic"/><br /><sub><b>Branko Zivanovic</b></sub></a><br /><a href="https://github.com/Branko Zivanovic/codeleak/commits?author=zivanovicb1" title="Code">💻</a> <a href="#design-zivanovicb1" title="Design">🎨</a> <a href="https://github.com/Branko Zivanovic/codeleak/commits?author=zivanovicb1" title="Documentation">📖</a> <a href="#ideas-zivanovicb1" title="Ideas, Planning, & Feedback">🤔</a> <a href="#review-zivanovicb1" title="Reviewed Pull Requests">👀</a> <a href="#infra-zivanovicb1" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/Branko Zivanovic/codeleak/issues?q=author%3Azivanovicb1" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/MilePaor"><img src="https://avatars3.githubusercontent.com/u/20985604?v=4" width="100px;" alt="Bojan Milicev"/><br /><sub><b>Bojan Milicev</b></sub></a><br /><a href="https://github.com/Branko Zivanovic/codeleak/commits?author=MilePaor" title="Code">💻</a> <a href="#ideas-MilePaor" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/Branko Zivanovic/codeleak/issues?q=author%3AMilePaor" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/gengar3"><img src="https://avatars2.githubusercontent.com/u/23714920?v=4" width="100px;" alt="gengar3"/><br /><sub><b>gengar3</b></sub></a><br /><a href="https://github.com/Branko Zivanovic/codeleak/issues?q=author%3Agengar3" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/acanik84"><img src="https://avatars1.githubusercontent.com/u/3494731?v=4" width="100px;" alt="acanik84"/><br /><sub><b>acanik84</b></sub></a><br /><a href="https://github.com/Branko Zivanovic/codeleak/issues?q=author%3Aacanik84" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
