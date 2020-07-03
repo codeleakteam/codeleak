@@ -21,6 +21,16 @@ from django.utils.log import DEFAULT_LOGGING
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
+# Gets from env or throws an err
+def get_env_value(env_variable):
+    try:
+      	return os.environ[env_variable]
+    except KeyError:
+        error_msg = 'Set the {} environment variable'.format(var_name)
+        raise ImproperlyConfigured(error_msg)
+    
+
+# Logging setup
 LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
 
 sentry_logging = LoggingIntegration(
@@ -28,11 +38,9 @@ sentry_logging = LoggingIntegration(
     event_level=logging.ERROR  # Send errors as events
 )
 sentry_sdk.init(
-    dsn="https://66e6fd9fe82e42f1b636c99f0e5cc527@sentry.io/1510922",
+    dsn=get_env_value('SENTRY_DSN'),
     integrations=[DjangoIntegration(), sentry_logging]
 )
-
-
 
 LOGGING_CONFIG = None
 
@@ -45,7 +53,7 @@ print("BASE_DIR", BASE_DIR)
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('CODELEAK_SECRET_KEY', '')
+SECRET_KEY = get_env_value('CODELEAK_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ast.literal_eval(os.getenv('DEBUG', 'True'))
@@ -60,11 +68,11 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_PORT = 587
+EMAIL_HOST = get_env_value('EMAIL_HOST')
+EMAIL_PORT = get_env_value('EMAIL_PORT')
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'support@codeleak.io'
-EMAIL_HOST_PASSWORD = '5eab2c91367e887ffc1f0bf2de1df85a-fd0269a6-d9b79fcb'
+EMAIL_HOST_USER = get_env_value('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_env_value('EMAIL_HOST_PASSWORD')
 
 # Does not work. Signup/register will ask for password1&password2 fields
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE=False
@@ -81,9 +89,9 @@ AUTH_USER_MODEL = 'core.User'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_ACCESS_KEY_ID='Z6B6SM3XFN7Z4T6EJUGD'
-AWS_SECRET_ACCESS_KEY='WoX8mWzjbHQwHzA88Hq1W/GRNQgby279aqITj3gCgo4'
-AWS_S3_ENDPOINT_URL='https://sfo2.digitaloceanspaces.com'
+AWS_ACCESS_KEY_ID = get_env_value('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = get_env_value('AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = get_env_value('AWS_S3_ENDPOINT_URL')
 
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
@@ -100,10 +108,10 @@ PRIVATE_FILE_STORAGE = 'core.storage_backends.PrivateMediaStorage'
 
 # AWS_LOCATION = 'static'
 
-STATIC_URL = "https://codeleak.sfo2.digitaloceanspaces.com/%s/" % (AWS_STATIC_LOCATION)
+STATIC_URL = "%s/%s/" % (get_env_value('SPACES_URL_BASE'), AWS_STATIC_LOCATION)
 AWS_AUTO_CREATE_BUCKET = True
 AWS_BUCKET_ACL = None
-AWS_STORAGE_BUCKET_NAME = "codeleak"
+AWS_STORAGE_BUCKET_NAME = get_env_value('AWS_STORAGE_BUCKET_NAME')
 
 # Removes unecessary query params from manually uploaded file on s3
 AWS_QUERYSTRING_AUTH = False

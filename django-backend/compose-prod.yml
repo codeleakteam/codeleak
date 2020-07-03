@@ -1,11 +1,25 @@
 version: '3'
 
 services:
-  app:
+  db:
+    image: postgres
+    restart: always
+    networks:
+      - codeleak_postgres_django
+    environment:
+      POSTGRES_USER: codeleak_admin 
+      POSTGRES_DB: codeleak
+      POSTGRES_PASSWORD: abcdefghijklmnopqrstuvwxyz 
+    ports:
+      - '5432:5432'
+  
+  web:
     build: .
     container_name: django-gunicorn
     command: python /code/codeleak_backend/manage.py runserver 0.0.0.0:8000
     restart: always
+    networks: 
+      - codeleak_postgres_django
     env_file:
       - ./env/prod.env
     volumes:
@@ -14,3 +28,9 @@ services:
       - "8000:8000"
     command:
       "gunicorn --pythonpath /code/codeleak_backend --workers=5 --log-file /code/codeleak_backend/gunicorn_logfile --bind=0.0.0.0:8000 codeleak_backend.wsgi:application"
+    depends_on:
+      - db
+
+networks:
+    codeleak_postgres_django:
+      external: true
